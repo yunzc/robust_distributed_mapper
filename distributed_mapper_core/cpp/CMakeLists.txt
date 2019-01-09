@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(distributed-mapper)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
+set(CMAKE_BUILD_TYPE Debug)
 
 ###########################################################################
 # Find GTSAM
@@ -23,8 +24,8 @@ message("Boost Libraries: ${Boost_LIBRARIES}")
 
 ###########################################################################
 # Distributed Mapper
-file(GLOB srcs "src/*.cpp" "src/*.h")
-include_directories(src)
+file(GLOB srcs "src/distributed_mapper/*.cpp" "src/distributed_mapper/*.h")
+include_directories(src/distributed_mapper)
 add_library (distributed-mapper SHARED ${srcs} ${GTSAM_LIBRARIES})
 add_library (distributed-mapper-static STATIC ${srcs} ${GTSAM_LIBRARIES})
 target_link_libraries(distributed-mapper ${Boost_LIBRARIES} gtsam)
@@ -45,7 +46,7 @@ add_subdirectory(tests)
 
 ###########################################################################
 # Install
-file(GLOB headers "src/*.h")
+file(GLOB headers "src/distributed_mapper/*.h")
 install(FILES ${headers} DESTINATION include/distributed_mapper/)
 configure_file (${PROJECT_SOURCE_DIR}/DistributedMapperConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/DistributedMapperConfig.cmake @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/DistributedMapperConfig.cmake DESTINATION share/distributed_mapper)
