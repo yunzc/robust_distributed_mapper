@@ -1,6 +1,12 @@
 #pragma once 
 
 #include <DistributedMapper.h>
+#include "graph_utils/graph_types.h"
+/*#include "graph_utils/graph_utils_functions.h"
+#include "pairwise_consistency/pairwise_consistency.h"
+#include "robot_local_map/robot_local_map.h"
+#include "global_map_solver/global_map_solver.h"
+#include "findClique.h"*/
 #include <fstream>
 #include <algorithm>
 #include <map>
@@ -547,7 +553,61 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
       distMappers[robot]->setFlaggedInit(useFlaggedInit);
       distMappers[robot]->setUpdateType(updateType);
       distMappers[robot]->setGamma(gamma);
+  }
+
+  /*auto factor1 = distMappers[0]->currentGraph().at(1)->dim(); // TODO: Only a test, to be removed
+  auto factor2 = distMappers[0]->currentGraph().at(2)->dim();
+  boost::shared_ptr<gtsam::BetweenFactor<gtsam::Pose3> > factor3 =
+                  boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(distMappers[0]->currentGraph().at(3));
+  auto relPoseSeparator3 = factor3->measured();
+  boost::shared_ptr<gtsam::BetweenFactor<gtsam::Pose3> > factor4 =
+                  boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(distMappers[0]->currentGraph().at(3));
+  auto relPoseSeparator4 = factor4->measured();
+  auto relPoseSeparator5 = relPoseSeparator3.compose(relPoseSeparator4.inverse());*/
+  std::vector<std::vector<std::pair<gtsam::Key, gtsam::Key>>> separatorsKeyPairsVectors;
+  std::map<std::pair<gtsam::Key,gtsam::Key>, gtsam::Pose3> edgesMap;
+  for(auto distMapper : distMappers){
+    // What information do I have access?
+
+    // auto separatorEdge = (*separatorEdges[0]); // gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>
+    // auto measurement = separatorEdge.measured(); // measurements between the nodes : gtsam::LieGroup<gtsam::Pose3, 6>
+    // auto rotation = separatorEdge.measured().R(); // rotation part : gtsam::LieGroup<gtsam::Rot3, 3>
+    // auto translation = separatorEdge.measured().t(); // transaltion part : Eigen::Matrix<double, 3, 1, 0, 3, 1>
+    // auto node1 = separatorEdge.key1(); // Key : uint64_t
+    // auto node2 = separatorEdge.key2(); // Key : uint64_t
+    
+    // Store separators key pairs
+    std::vector<std::pair<gtsam::Key, gtsam::Key>> separatorsKeyPairs;
+    for(auto id : distMapper->seperatorEdge()){
+      auto separatorEdge = boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(distMapper->currentGraph().at(id));
+      separatorsKeyPairs.emplace_back(std::make_pair(separatorEdge->key1(), separatorEdge->key2()));
     }
+    separatorsKeyPairsVectors.emplace_back(separatorsKeyPairs);
+    // Place all measurement edges in a map and store the keys of separators
+    // std::cout << "currentGraph size: " << distMapper->currentGraph().size() << '\n';
+    for(auto factorPtr : distMapper->currentGraph()){
+      auto edgePtr = boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(factorPtr);
+      if (edgePtr){ // Possible bug : the graph size is 17, however there are only 16 edges..
+        edgesMap.insert(std::make_pair(std::make_pair(edgePtr->key1(),edgePtr->key2()), edgePtr->measured()));
+      }
+    }
+  }
+
+  // Apply PCM for each robot
+  for(int robot=1; robot<distMappers.size(); robot++){
+      // TODO: Communication of the factors needed for optimization
+      // For now I will work with perfect information : edgesMap
+
+      // TODO: Build Relevant types for PCM
+
+      // TODO: Call Pairwise Consistency maximization
+
+      // TODO: Retrieve indexes of selected measurements
+
+      // TODO: Remove measurements not in the max clique
+
+      int debug_stop = 1;
+  }
 
   if(debug)
     std::cout << "Starting Optimizer"  << std::endl;

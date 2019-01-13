@@ -1,0 +1,100 @@
+// Copyright (C) 2018 by Pierre-Yves Lajoie <lajoie.py@gmail.com>
+
+#include "graph_utils/graph_utils_functions.h"
+
+#include <fstream>
+#include <iostream>
+#include <math.h>
+#include <eigen3/Eigen/Geometry>
+
+namespace graph_utils {
+
+void poseCompose(const gtsam::Pose3 &a,
+                 const gtsam::Pose3 &b,
+                 gtsam::Pose3 &out) {
+  out = a.compose(b);
+}
+
+void poseInverse(const gtsam::Pose3 &a,
+                 gtsam::Pose3 &out) {
+  out = a.inverse();
+}
+
+void poseInverseCompose(const gtsam::Pose3 &a,
+                        const gtsam::Pose3 &b,
+                        gtsam::Pose3 &out) {
+  out = a.compose(b.inverse());
+}
+
+Trajectory buildTrajectory(const Transforms& transforms) {
+    // Initialization
+    Trajectory trajectory;
+    trajectory.start_id = transforms.start_id;
+    trajectory.end_id = transforms.end_id;
+    size_t current_pose_id = trajectory.start_id;
+    gtsam::Pose3 temp_pose, total_pose;
+
+    // Add first pose at the origin
+    graph_utils::TrajectoryPose current_pose;
+    current_pose.id = current_pose_id;
+    temp_pose = current_pose.pose;
+    trajectory.trajectory_poses.insert(std::make_pair(current_pose_id, current_pose));
+
+    // Initialization
+    std::pair<size_t, size_t> temp_pair = std::make_pair(current_pose_id, current_pose_id + 1);
+    auto temp_it = transforms.transforms.find(temp_pair);
+
+    // Compositions in chain on the trajectory transforms.
+    while (temp_it != transforms.transforms.end() && !(*temp_it).second.is_loop_closure) {
+        graph_utils::poseCompose(temp_pose, (*temp_it).second.pose, total_pose);             
+        temp_pose = total_pose;
+        current_pose_id++;
+        current_pose.id = current_pose_id;
+        current_pose.pose = total_pose;
+        trajectory.trajectory_poses.insert(std::make_pair(current_pose_id, current_pose));
+        temp_pair = std::make_pair(current_pose_id, current_pose_id + 1);
+        temp_it = transforms.transforms.find(temp_pair);
+    }
+
+    return trajectory;
+}
+
+void printConsistencyGraph(const Eigen::MatrixXi& consistency_matrix, const std::string& file_name) {
+    // Intialization
+    int nb_consistent_measurements = 0;
+    
+    // Format edges.
+    std::stringstream ss;
+    for (int i = 0; i < consistency_matrix.rows(); i++) {
+      for (int j = i; j < consistency_matrix.cols(); j++) {
+        if (consistency_matrix(i,j) == 1) {
+          ss << i+1 << " " << j+1 << std::endl;
+          nb_consistent_measurements++;
+        }
+      }
+    }
+    
+    // Write to file
+    std::ofstream output_file;
+    output_file.open(file_name);
+    output_file << "%%MatrixMarket matrix coordinate pattern symmetric" << std::endl;
+    output_file << consistency_matrix.rows() << " " << consistency_matrix.cols() << " " << nb_consistent_measurements << std::endl;
+    output_file << ss.str();
+    output_file.close();
+}
+
+bool isInTrajectory(const Trajectory& trajectory, const size_t& pose_id) {
+  return trajectory.trajectory_poses.find(pose_id) != trajectory.trajectory_poses.end();
+}
+
+void printConsistentLoopClosures(const LoopClosures& loop_closures, const std::vector<int>& max_clique_data, const std::string& file_name){
+  std::ofstream output_file;
+  output_file.open(file_name);
+  for (auto loop_closure_id: max_clique_data) {
+    // -1 because fast max-clique finder is one-based.
+    output_file << loop_closures[loop_closure_id-1].first << " " << loop_closures[loop_closure_id-1].second << std::endl;
+  }
+  output_file.close();
+}
+
+}
