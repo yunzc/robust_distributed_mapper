@@ -21,7 +21,8 @@ namespace robot_local_map {
          * \brief Constructor
          * @param file_name
          */
-        RobotMeasurements(const std::string & file_name, const bool& is_only_loop_closures);
+        RobotMeasurements(const graph_utils::Transforms& transforms,
+                        const graph_utils::LoopClosures& loop_closures);
 
         /*
          * Accessors

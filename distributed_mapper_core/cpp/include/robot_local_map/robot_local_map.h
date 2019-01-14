@@ -15,7 +15,8 @@ namespace robot_local_map {
          * \brief Constructor
          * @param file_name Name of the file containing the robot measurements.
          */
-        RobotLocalMap(const std::string & file_name);
+        RobotLocalMap(const graph_utils::Transforms& transforms,
+                      const graph_utils::LoopClosures& loop_closures);
 
         /*
          * Accessors

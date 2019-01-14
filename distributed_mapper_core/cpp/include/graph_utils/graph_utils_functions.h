@@ -29,9 +29,9 @@ uint8_t parseG2ofile(const std::string &file_name, size_t &num_poses,
  * @param[in] a,b Geometric poses with covariance information
  * @param[out] out a + b
  */
-void poseCompose(const gtsam::LieGroup<gtsam::Pose3, 6> &a,
-                 const gtsam::LieGroup<gtsam::Pose3, 6> &b,
-                 gtsam::LieGroup<gtsam::Pose3, 6> &out);
+void poseCompose(const gtsam::Pose3  &a,
+                 const gtsam::Pose3 &b,
+                 gtsam::Pose3 &out);
 
 /** \brief This function compose (-) geometric poses with covariance.
  *
@@ -39,9 +39,9 @@ void poseCompose(const gtsam::LieGroup<gtsam::Pose3, 6> &a,
  * @param[in] a,b Geometric poses with covariance information
  * @param[out] out a - b
  */
-void poseInverseCompose(const gtsam::LieGroup<gtsam::Pose3, 6> &a,
-                const gtsam::LieGroup<gtsam::Pose3, 6> &b,
-                gtsam::LieGroup<gtsam::Pose3, 6> &out);
+void poseInverseCompose(const gtsam::Pose3 &a,
+                        const gtsam::Pose3 &b,
+                        gtsam::Pose3 &out);
 
 /** \brief This function invert a geometric pose with covariance.
  *
@@ -49,8 +49,8 @@ void poseInverseCompose(const gtsam::LieGroup<gtsam::Pose3, 6> &a,
  * @param[in] a Geometric poses with covariance information
  * @param[out] out I - a
  */
-void poseInverse(const gtsam::LieGroup<gtsam::Pose3, 6> &a,
-                 gtsam::LieGroup<gtsam::Pose3, 6> &out);
+void poseInverse(const gtsam::Pose3 &a,
+                 gtsam::Pose3 &out);
 
 /** \brief This function precompute the trajectory by composing the successive poses.
  *

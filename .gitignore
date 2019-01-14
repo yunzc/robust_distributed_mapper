@@ -13,3 +13,5 @@ data/example_25robots/fullGraph.g2o
 data/example_36robots/fullGraph.g2o
 data/example_49robots/fullGraph.g2o
 .vscode
+*.idea/
+*cmake-build-debug/

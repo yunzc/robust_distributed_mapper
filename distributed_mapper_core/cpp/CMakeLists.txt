@@ -85,8 +85,16 @@ file(GLOB srcs "src/distributed_mapper/*.cpp" "src/distributed_mapper/*.h")
 include_directories(src/distributed_mapper)
 add_library (distributed-mapper SHARED ${srcs} ${GTSAM_LIBRARIES})
 add_library (distributed-mapper-static STATIC ${srcs} ${GTSAM_LIBRARIES})
-target_link_libraries(distributed-mapper ${Boost_LIBRARIES} gtsam global_map_solver)
-target_link_libraries(distributed-mapper-static ${Boost_LIBRARIES} gtsam global_map_solver)
+target_link_libraries(distributed-mapper ${Boost_LIBRARIES}
+        gtsam
+        graph_utils
+        robot_local_map
+        global_map_solver)
+target_link_libraries(distributed-mapper-static ${Boost_LIBRARIES}
+        gtsam
+        graph_utils
+        robot_local_map
+        global_map_solver)
 export(PACKAGE DistributedMapper)
 install(TARGETS distributed-mapper DESTINATION lib)
 install(TARGETS distributed-mapper-static DESTINATION lib)

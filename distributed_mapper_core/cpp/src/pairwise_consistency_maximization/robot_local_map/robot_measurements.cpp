@@ -5,8 +5,12 @@
 
 namespace robot_local_map {
 
-RobotMeasurements::RobotMeasurements(const std::string & file_name, const bool& is_only_loop_closures){
-    nb_degree_freedom_ = graph_utils::parseG2ofile(file_name, num_poses_, transforms_, loop_closures_, is_only_loop_closures);
+RobotMeasurements::RobotMeasurements(const graph_utils::Transforms& transforms,
+                                     const graph_utils::LoopClosures& loop_closures){
+    num_poses_ = transforms.transforms.size() + 1;
+    loop_closures_ = loop_closures;
+    transforms_ = transforms;
+    nb_degree_freedom_ = 6; // TODO: support 2D case
 }
 
 const graph_utils::Transforms& RobotMeasurements::getTransforms() const {

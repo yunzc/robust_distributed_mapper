@@ -104,7 +104,7 @@ double PairwiseConsistency::computeSquaredMahalanobisDistance(const gtsam::Pose3
 //    double distance = pose_vector.transpose() * covariance_matrix * pose_vector;
 //    return distance;
     // TODO: Find how to compute Mahalanobis distance
-    return 0.1;
+    return 0;
 }
 
 gtsam::Pose3 PairwiseConsistency::composeOnTrajectory(const size_t& id1, const size_t& id2, const size_t& robot_id) {
