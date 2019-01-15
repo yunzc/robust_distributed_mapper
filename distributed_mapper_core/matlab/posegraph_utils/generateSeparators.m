@@ -1,11 +1,9 @@
-function [poses, measurements, edges_id] = generateSeparators(robot_poses, node_offset_robot1, node_offset_robot2, number_of_separators, trajectory_size, sigma_R, sigma_t)
+function [measurements, edges_id] = generateSeparators(robot_poses, node_offset_robot1, node_offset_robot2, number_of_separators, trajectory_size, sigma_R, sigma_t)
 
-poses(1).R = eye(3);
-poses(1).t = [0 0 0];
 measurements.between(1).R = eye(3);
 measurements.between(1).t = [0; 0; 0];
 measurements.between(1).Info = eye(6);
-edges_id = [];
+edges_id = uint64([]);
 for i=1:number_of_separators
     robot1_id = ceil(rand*(trajectory_size-1));
     robot2_id = ceil(rand*(trajectory_size-1));

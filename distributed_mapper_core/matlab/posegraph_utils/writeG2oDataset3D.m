@@ -1,4 +1,4 @@
-function [] = writeG2oDataset3D(inputFile, measurements, edges_id, poses, id_offset)
+function [] = writeG2oDataset3D(inputFile, measurements, edges_id, poses, id_offset, append)
 %
 % Reads an input file in g2o format:
 % VERTEX_SE3:QUAT id(0-based) x y z qx qy qz qw (position & quaternion)
@@ -25,7 +25,15 @@ function [] = writeG2oDataset3D(inputFile, measurements, edges_id, poses, id_off
 % Georgia Institute of Technology
 % Aug 6, 2014
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-fid_g2o = fopen(inputFile,'w');
+if nargin < 6
+    append = 0;
+end
+
+if append==1
+    fid_g2o = fopen(inputFile,'a+');  
+else
+    fid_g2o = fopen(inputFile,'w');    
+end
 
 nrPoses =  length(poses);
 m = size(edges_id,1);
@@ -42,7 +50,7 @@ for i = 1:nrPoses % write the n+1 vertices, indexed from 0
   end
   qw = q(1); qx = q(2); qy = q(3); qz = q(4);
   id = id_offset+i-1;
-  fprintf(fid_g2o,'VERTEX_SE3:QUAT %d %f %f %f %.7f %.7f %.7f %.7f\n',id, x, y, z, qx, qy, qz, qw);
+  fprintf(fid_g2o,'VERTEX_SE3:QUAT %u %f %f %f %.7f %.7f %.7f %.7f\n',id, x, y, z, qx, qy, qz, qw);
 end
 
 for k=1:m % write the m edges
@@ -60,7 +68,7 @@ for k=1:m % write the m edges
    dqw = dq(1); dqx = dq(2); dqy = dq(3); dqz = dq(4);
    I = measurements.between(k).Info;
                        
-   fprintf(fid_g2o,'EDGE_SE3:QUAT %d %d   %f %f %f   %.7f %.7f %.7f %.7f   %f %f %f %f %f %f   %f %f %f %f %f   %f %f %f %f   %f %f %f   %f %f   %f\n', ...
+   fprintf(fid_g2o,'EDGE_SE3:QUAT %u %u   %f %f %f   %.7f %.7f %.7f %.7f   %f %f %f %f %f %f   %f %f %f %f %f   %f %f %f %f   %f %f %f   %f %f   %f\n', ...
      id1, id2, dx, dy, dz, dqx, dqy, dqz, dqw, ...
       I(1,1), I(1,2), I(1,3), I(1,4), I(1,5), I(1,6), ...
               I(2,2), I(2,3), I(2,4), I(2,5), I(2,6), ...

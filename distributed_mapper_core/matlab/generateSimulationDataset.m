@@ -8,12 +8,13 @@ clc
 %% Settings
 dataset_folder = horzcat(pwd, '/../sim_data/');
 number_of_robots = 2; % Only 2 is supported.
-id_offset = 1000;
+id_offset = 96; % letter a = 97 (ASCII)
 sigma_R = 0.01;
 sigma_t = 0.1;
 trajectory_size = 20;
 number_of_separators = 10;
 percentage_of_outliers = 0;% Not supported yet
+trajectory_offsets = {[0; 0; 0], [(rand*10)-5; (rand*10)-5; (rand*10)-5]};
 
 %% Setup
 addpath(genpath('./posegraph_utils'));
@@ -29,12 +30,20 @@ end
 %% Generate trajectories
 robot_poses = {};
 for robot=1:number_of_robots
-    [poses, measurements, edges_id] = generateTrajectory(robot*id_offset, trajectory_size);
-    writeG2oDataset3D(file_names{robot}, measurements, edges_id, poses, robot*id_offset)
+    robot_offset = bitshift(uint64(robot+id_offset), 56); % GTSAM format
+    [poses, measurements, edges_id] = generateTrajectory(robot_offset, trajectory_size, trajectory_offsets{robot});
+    poses_to_write = poses;
+    for i=1:size(poses_to_write,2)
+        poses_to_write(i).t = poses_to_write(i).t - trajectory_offsets{robot};
+    end
+    writeG2oDataset3D(file_names{robot}, measurements, edges_id, poses_to_write, robot_offset)
     robot_poses{end+1} = poses;
 end
 
 %% Add separators
-[poses, measurements, edges_id] = generateSeparators(robot_poses, id_offset, 2*id_offset, number_of_separators, trajectory_size, sigma_R, sigma_t);
-separator_file_name = horzcat(example_folder,'separators.g2o');
-writeG2oDataset3D(separator_file_name, measurements, edges_id, poses, 0);
+robot1_offset = bitshift(uint64(1+id_offset), 56); % GTSAM format
+robot2_offset = bitshift(uint64(2+id_offset), 56); % GTSAM format
+[measurements, edges_id] = generateSeparators(robot_poses, robot1_offset, robot2_offset, number_of_separators, trajectory_size, sigma_R, sigma_t);
+for robot=1:number_of_robots
+    writeG2oDataset3D(file_names{robot}, measurements, edges_id, [], 0, 1);
+end
