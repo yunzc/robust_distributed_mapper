@@ -628,7 +628,7 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
   auto interrobotMeasurements = robot_local_map::RobotMeasurements(separatorsTransforms, allLoopClosures);
 
   auto solver = global_map_solver::GlobalMapSolver(robot1LocalMap, robot2LocalMap, interrobotMeasurements);
-  int max_clique_size = solver.solveGlobalMap();
+  std::vector<int> max_clique = solver.solveGlobalMap();
 
   // TODO: Retrieve indexes of selected measurements
 

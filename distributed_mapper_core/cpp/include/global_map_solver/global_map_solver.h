@@ -39,7 +39,7 @@ namespace global_map_solver {
          *
          * @return the size of the maximum clique.
          */
-        int solveGlobalMap();
+        std::vector<int> solveGlobalMap();
 
       private:
         pairwise_consistency::PairwiseConsistency pairwise_consistency_; ///< Pairwise consistency solver.

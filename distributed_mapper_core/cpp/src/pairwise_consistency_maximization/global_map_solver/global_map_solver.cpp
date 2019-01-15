@@ -19,7 +19,7 @@ GlobalMapSolver::GlobalMapSolver(const robot_local_map::RobotLocalMap& robot1_lo
                             robot1_local_map.getNbDegreeFreedom()){}
 
 
-int GlobalMapSolver::solveGlobalMap() {
+std::vector<int> GlobalMapSolver::solveGlobalMap() {
     // Compute consistency matrix
     Eigen::MatrixXi consistency_matrix = pairwise_consistency_.computeConsistentMeasurementsMatrix();
     graph_utils::printConsistencyGraph(consistency_matrix, CONSISTENCY_MATRIX_FILE_NAME);
@@ -34,12 +34,7 @@ int GlobalMapSolver::solveGlobalMap() {
     // Print results
     graph_utils::printConsistentLoopClosures(pairwise_consistency_.getLoopClosures(), max_clique_data, CONSISTENCY_LOOP_CLOSURES_FILE_NAME);
 
-    // Clean up
-    max_clique_data.clear();
-
-    // TODO: Return information to select the measurements
-
-    return max_clique_size;
+    return max_clique_data;
 }
 
 }

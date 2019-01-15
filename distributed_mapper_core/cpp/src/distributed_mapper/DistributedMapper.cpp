@@ -27,6 +27,11 @@ DistributedMapper::createSubgraphInnerAndSepEdges(const NonlinearFactorGraph& su
     }
     Symbol key0 = keys.at(0);
     Symbol key1 = keys.at(1);
+    size_t keyBits = sizeof(Key) * 8;
+    size_t chrBits = sizeof(unsigned char) * 8;
+    size_t indexBits = keyBits - chrBits;
+    Key chrMask = Key(UCHAR_MAX)  << indexBits; // For some reason, std::numeric_limits<unsigned char>::max() fails
+    Key indexMask = ~chrMask;
 
     char robot0 = symbolChr(key0);
     char robot1 = symbolChr(key1);
