@@ -1,0 +1,6 @@
+<map id="cpp/include/pairwise_consistency_maximization/global_map/global_map.h" name="cpp/include/pairwise_consistency_maximization/global_map/global_map.h">
+<area shape="rect" id="node2" href="$_distributed_mapper_utils_8h.html" title="cpp/include/distributed\l_mapper/DistributedMapperUtils.h" alt="" coords="89,117,309,158"/>
+<area shape="rect" id="node5" href="$global__map_8cpp.html" title="cpp/src/pairwise_consistency\l_maximization/global_map\l/global_map.cpp" alt="" coords="334,109,529,165"/>
+<area shape="rect" id="node3" href="$run_distributed_mapper_8cpp.html" title="script for running g2o files " alt="" coords="5,213,193,255"/>
+<area shape="rect" id="node4" href="$test_distributed_mapper_8cpp.html" title="unit tests for test multi robot case simulated by loading the datasets " alt="" coords="218,213,383,255"/>
+</map>

@@ -7,6 +7,9 @@
 #include "pairwise_consistency/pairwise_consistency.h"
 #include <string>
 
+/** \namespace global_map
+ *  \brief This namespace encapsulates functions and classes to aggregate measurements in a global map
+ */
 namespace global_map {
     /** \class GlobalMap
      * \brief Class storing the global map from multiple robots local maps to compute PCM.

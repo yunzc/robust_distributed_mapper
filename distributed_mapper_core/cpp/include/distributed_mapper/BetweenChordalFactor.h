@@ -20,7 +20,6 @@
 #include <gtsam/base/Testable.h>
 #include <gtsam/base/Lie.h>
 #include <gtsam/nonlinear/NonlinearFactor.h>
-
 namespace gtsam {
 
   typedef Eigen::Matrix<double, 9, 1> Vector9;
@@ -29,7 +28,6 @@ namespace gtsam {
   /**
    * A class for a measurement predicted by "between(config[key1],config[key2])", uses Chordal relaxation
    * @tparam VALUE the Value type
-   * @addtogroup SLAM
    */
   template<class VALUE>
   class BetweenChordalFactor: public NoiseModelFactor2<VALUE, VALUE> {

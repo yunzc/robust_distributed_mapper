@@ -19,6 +19,7 @@
 #include <gtsam/inference/Symbol.h>
 #include <gtsam/inference/graph.h>
 
+/** @ingroup distributed_mapper */
 namespace distributed_mapper{
 
 
