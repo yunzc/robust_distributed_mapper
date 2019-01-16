@@ -614,24 +614,32 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
       }
 
       // Apply PCM for each robot
-      // for(int robot=1; robot<distMappers.size(); robot++){ // TODO: Consider N robots case.
+      // TODO: Consider N robots case.
       // TODO: Communication of the factors needed for optimization
       // For now I will work with perfect information
 
-      // TODO: Call Pairwise Consistency maximization
-      // TODO: Sort local loop closures and separators
       auto robot1LocalMap = robot_local_map::RobotLocalMap(transformsByRobot[0], separatorsByRobot[0]);
       auto robot2LocalMap = robot_local_map::RobotLocalMap(transformsByRobot[1], separatorsByRobot[1]);
       auto interrobotMeasurements = robot_local_map::RobotMeasurements(separatorsTransforms, separatorsByRobot[0]);
 
       auto globalMap = global_map::GlobalMap(robot1LocalMap, robot2LocalMap, interrobotMeasurements);
-      std::vector<int> max_clique = globalMap.pairwiseConsistencyMaximization();
+      std::vector<int> maxClique = globalMap.pairwiseConsistencyMaximization();
 
-      // TODO: Retrieve indexes of selected measurements
-
-      // TODO: Remove measurements not in the max clique
-
-      //}
+      // Retrieve indexes of rejected measurements
+      for (auto distMapper : distMappers) {
+          auto separatorsIds = distMapper->seperatorEdge();
+          std::vector<int> rejectedSeparatorIds;
+          for (int i = 0; i < separatorsIds.size(); i++) {
+              if (std::find(maxClique.begin(), maxClique.end(), i) == maxClique.end()) {
+                  rejectedSeparatorIds.emplace_back(i);
+              }
+          }
+          // Remove measurements not in the max clique
+          for (auto index : rejectedSeparatorIds) {
+              distMapper->eraseFactor(separatorsIds[index]);
+              distMapper->eraseSeparatorId(separatorsIds[index]);
+          }
+      }
   }
 
   if(debug)

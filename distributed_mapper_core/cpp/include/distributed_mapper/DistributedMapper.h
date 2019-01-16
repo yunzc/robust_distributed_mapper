@@ -162,6 +162,20 @@ class DistributedMapper{
     /** @brief neighbors returns the neighboring values  */
     gtsam::Values neighbors() {return neighbors_;}
 
+    /** @brief allows to erase a factor from the graph.
+     *  @param index is the factor index in the graph
+     */
+    void eraseFactor(const int& index){
+        graph_.erase(graph_.begin() + index);
+    }
+
+    /** @brief allows to erase a separator ID.
+     *  @param id is the id to be removed
+     */
+    void eraseSeparatorId(const int& id){
+        separatorEdgeIds_.erase(find(separatorEdgeIds_.begin(), separatorEdgeIds_.end(), id));
+    }
+
     /**
      * @brief insertValue updates inneer nodes with the new value
      * @param sym is symbol

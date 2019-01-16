@@ -16,6 +16,11 @@ namespace global_map {
      */ 
     class GlobalMap {
       public:
+        /** \var LOG_DIRECTORY
+         * \brief Directory name for log files
+         */
+        static const std::string LOG_DIRECTORY;
+
         /** \var CONSISTENCY_MATRIX_FILE_NAME
          * \brief File name in which the consistency matrix will be saved
          */

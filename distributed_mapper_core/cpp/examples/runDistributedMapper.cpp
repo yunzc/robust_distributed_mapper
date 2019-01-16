@@ -266,7 +266,7 @@ int main(int argc, char* argv[])
         // try optimizing
         vector< Values > estimates =  distributedOptimizer(distMappers, maxIter, updateType, gamma,
                                                            rotationEstimateChangeThreshold, poseEstimateChangeThreshold, useFlaggedInit, useLandmarks,
-                                                           debug, rotationTrace, poseTrace, subgraphRotationTrace, subgraphPoseTrace, rotationVectorValuesTrace);
+                                                           debug, true, rotationTrace, poseTrace, subgraphRotationTrace, subgraphPoseTrace, rotationVectorValuesTrace);
 
         if(debug)
           cout << "Done" << endl;
