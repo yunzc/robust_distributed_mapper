@@ -29,19 +29,9 @@ uint8_t parseG2ofile(const std::string &file_name, size_t &num_poses,
  * @param[in] a,b Geometric poses with covariance information
  * @param[out] out a + b
  */
-void poseCompose(const gtsam::Pose3  &a,
-                 const gtsam::Pose3 &b,
-                 gtsam::Pose3 &out);
-
-/** \brief This function compose (-) geometric poses with covariance.
- *
- * Uses the mrpt library : https://www.mrpt.org/
- * @param[in] a,b Geometric poses with covariance information
- * @param[out] out a - b
- */
-void poseInverseCompose(const gtsam::Pose3 &a,
-                        const gtsam::Pose3 &b,
-                        gtsam::Pose3 &out);
+void poseCompose(const graph_utils::PoseWithCovariance  &a,
+                 const graph_utils::PoseWithCovariance &b,
+                 graph_utils::PoseWithCovariance &out);
 
 /** \brief This function invert a geometric pose with covariance.
  *
@@ -49,8 +39,8 @@ void poseInverseCompose(const gtsam::Pose3 &a,
  * @param[in] a Geometric poses with covariance information
  * @param[out] out I - a
  */
-void poseInverse(const gtsam::Pose3 &a,
-                 gtsam::Pose3 &out);
+void poseInverse(const graph_utils::PoseWithCovariance &a,
+                 graph_utils::PoseWithCovariance &out);
 
 /** \brief This function precompute the trajectory by composing the successive poses.
  *

@@ -586,6 +586,12 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
     loopClosuresByRobot.emplace_back(loopClosures);
     // Place all measurement edges in a map and store the keys of separators
     // std::cout << "currentGraph size: " << distMapper->currentGraph().size() << '\n';
+    gtsam::Matrix covariance(6,6); covariance << 0.01, 0, 0, 0, 0, 0,
+                                                 0, 0.01, 0, 0, 0, 0,
+                                                 0, 0, 0.01, 0, 0, 0,
+                                                 0, 0, 0, 0.01, 0, 0,
+                                                 0, 0, 0, 0, 0.01, 0,
+                                                 0, 0, 0, 0, 0, 0.01; // TODO: Read covariance from file or add option
     graph_utils::Transforms transforms;
     bool idInitialized = false;
     for(auto factorPtr : distMapper->currentGraph()){
@@ -594,7 +600,8 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
           graph_utils::Transform transform;
           transform.i = edgePtr->key1();
           transform.j = edgePtr->key2();
-          transform.pose = edgePtr->measured();
+          transform.pose.pose = edgePtr->measured();
+          transform.pose.covariance_matrix = covariance;
           transform.is_loop_closure = std::find(loopClosures.begin(),loopClosures.end(),std::make_pair(edgePtr->key1(),edgePtr->key2())) != loopClosures.end();
           if (!transform.is_loop_closure) {
               if (!idInitialized) {

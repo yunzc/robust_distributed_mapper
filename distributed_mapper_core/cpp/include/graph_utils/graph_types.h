@@ -16,12 +16,17 @@
  */
 namespace graph_utils {
 
+struct PoseWithCovariance {
+    gtsam::Pose3 pose;
+    gtsam::Matrix covariance_matrix;
+};
+
 /** \struct Transform
  *  \brief Structure defining a transformation between two poses
  */
 struct Transform {
     gtsam::Key i, j;
-    gtsam::Pose3 pose;
+    graph_utils::PoseWithCovariance pose;
     bool is_loop_closure;
 };
 
@@ -38,7 +43,7 @@ struct Transforms {
  */
 struct TrajectoryPose {
     gtsam::Key id;
-    gtsam::Pose3 pose;
+    graph_utils::PoseWithCovariance pose;
 };
 
 /** \struct Trajectory

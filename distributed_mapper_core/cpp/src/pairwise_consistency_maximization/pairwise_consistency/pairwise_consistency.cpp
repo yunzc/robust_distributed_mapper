@@ -39,9 +39,9 @@ Eigen::MatrixXi PairwiseConsistency::computeConsistentMeasurementsMatrix() {
                 // Compute only if they are interrobot loop closures
                 if (is_config_r12 || is_config_r21) {
                     // Extract transforms
-                    gtsam::Pose3 abZik = (*transforms_interrobot_.transforms.find(loop_closure_1)).second.pose;
-                    gtsam::Pose3 abZjl = (*transforms_interrobot_.transforms.find(loop_closure_2)).second.pose; 
-                    gtsam::Pose3 aXij, bXlk;
+                    graph_utils::PoseWithCovariance abZik = (*transforms_interrobot_.transforms.find(loop_closure_1)).second.pose;
+                    graph_utils::PoseWithCovariance abZjl = (*transforms_interrobot_.transforms.find(loop_closure_2)).second.pose; 
+                    graph_utils::PoseWithCovariance aXij, bXlk;
                     if (is_config_r12) {
                         aXij = composeOnTrajectory(i, j, 1);  
                         bXlk = composeOnTrajectory(l, k, 2); 
@@ -50,9 +50,9 @@ Eigen::MatrixXi PairwiseConsistency::computeConsistentMeasurementsMatrix() {
                         bXlk = composeOnTrajectory(l, k, 1); 
                     }
                     // Compute the consistency pose (should be near Identity if consistent)
-                    gtsam::Pose3 consistency_pose = computeConsistencyPose(aXij, bXlk, abZik, abZjl);
+                    std::pair<gtsam::Vector6, gtsam::Matrix> consistency_error = computeConsistencyError(aXij, bXlk, abZik, abZjl);
                     // Compute the Mahalanobis distance
-                    double distance = computeSquaredMahalanobisDistance(consistency_pose);
+                    double distance = computeSquaredMahalanobisDistance(consistency_error);
                     // Apply threshold on the chi-squared distribution
                     if (distance < threshold) {
                         consistency_matrix(u,v) = 1;
@@ -68,46 +68,32 @@ Eigen::MatrixXi PairwiseConsistency::computeConsistentMeasurementsMatrix() {
     return consistency_matrix;
 }
 
-gtsam::Pose3 PairwiseConsistency::computeConsistencyPose(const gtsam::Pose3& aXij, 
-                                                        const gtsam::Pose3& bXlk, 
-                                                        const gtsam::Pose3& abZik, 
-                                                        const gtsam::Pose3& abZjl) {
+std::pair<gtsam::Vector6, gtsam::Matrix> PairwiseConsistency::computeConsistencyError(
+                                                        const graph_utils::PoseWithCovariance& aXij,
+                                                        const graph_utils::PoseWithCovariance& bXlk,
+                                                        const graph_utils::PoseWithCovariance& abZik, 
+                                                        const graph_utils::PoseWithCovariance& abZjl) {
     // Consistency loop : aXij + abZjl + bXlk - abZik
-    gtsam::Pose3 out1, out2, result;
+    graph_utils::PoseWithCovariance out1, out2, inv_abZik, out3;
     graph_utils::poseCompose(aXij, abZjl, out1);
     graph_utils::poseCompose(out1, bXlk, out2);
-    graph_utils::poseInverseCompose(out2, abZik, result);
 
-    return result;
+    gtsam::Vector6 consistency_error = gtsam::Pose3::Logmap( out2.pose.between(abZik.pose) );
+
+    graph_utils::poseInverse(abZik, inv_abZik);
+    graph_utils::poseCompose(out2, inv_abZik, out3);
+
+    gtsam::Matrix consistency_covariance = out3.covariance_matrix;
+
+    return std::make_pair(consistency_error, consistency_covariance);
 }
 
-double PairwiseConsistency::computeSquaredMahalanobisDistance(const gtsam::Pose3& transform) {
-    // Extraction of the covariance matrix
-//    Eigen::Matrix<double, 6, 6> covariance_matrix;
-//    for (int i = 0; i < 6; i++) {
-//        for (int j = 0; j < 6; j++) {
-//            covariance_matrix(i,j) = transform.covariance[i*6+j];
-//        }
-//    }
-//
-//    // Extraction of the pose vector
-//    Eigen::Matrix<double, 6, 1> pose_vector(6);
-//    pose_vector(0) = transform.pose.position.x;
-//    pose_vector(1) = transform.pose.position.y;
-//    pose_vector(2) = transform.pose.position.z;
-//    pose_vector(3) = transform.pose.orientation.x;
-//    pose_vector(4) = transform.pose.orientation.y;
-//    pose_vector(5) = transform.pose.orientation.z;
-//
-//    // Computation of the squared Mahalanobis distance
-//
-//    double distance = pose_vector.transpose() * covariance_matrix * pose_vector;
-//    return distance;
-    // TODO: Find how to compute Mahalanobis distance
-    return 0;
+double PairwiseConsistency::computeSquaredMahalanobisDistance(const std::pair<gtsam::Vector6, gtsam::Matrix>& consistency_error) {
+    double distance = std::sqrt(  consistency_error.first.transpose() * consistency_error.second * consistency_error.first  );
+    return distance;
 }
 
-gtsam::Pose3 PairwiseConsistency::composeOnTrajectory(const size_t& id1, const size_t& id2, const size_t& robot_id) {
+graph_utils::PoseWithCovariance PairwiseConsistency::composeOnTrajectory(const size_t& id1, const size_t& id2, const size_t& robot_id) {
     // Select trajectory
     graph_utils::Trajectory trajectory;
     if (robot_id == 1) {
@@ -120,8 +106,10 @@ gtsam::Pose3 PairwiseConsistency::composeOnTrajectory(const size_t& id1, const s
     graph_utils::TrajectoryPose pose1 = (*trajectory.trajectory_poses.find(id1)).second;
     graph_utils::TrajectoryPose pose2 = (*trajectory.trajectory_poses.find(id2)).second;
     // Computation of the transformation
-    gtsam::Pose3 result;
-    graph_utils::poseInverseCompose(pose2.pose, pose1.pose, result);
+    graph_utils::PoseWithCovariance inv_pose1;
+    graph_utils::poseInverse(pose1.pose, inv_pose1);
+    graph_utils::PoseWithCovariance result;
+    graph_utils::poseCompose(pose2.pose, inv_pose1, result);
     return result;
 }
 

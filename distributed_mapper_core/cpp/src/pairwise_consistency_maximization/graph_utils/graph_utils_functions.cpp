@@ -9,21 +9,20 @@
 
 namespace graph_utils {
 
-void poseCompose(const gtsam::Pose3 &a,
-                 const gtsam::Pose3 &b,
-                 gtsam::Pose3 &out) {
-  out = a.compose(b);
+void poseCompose(const graph_utils::PoseWithCovariance &a,
+                 const graph_utils::PoseWithCovariance &b,
+                 graph_utils::PoseWithCovariance &out) {
+  gtsam::Matrix Ha, Hb;
+  out.pose = a.pose.compose(b.pose, Ha, Hb);
+  out.covariance_matrix = Ha * a.covariance_matrix * Ha.transpose() +
+          Hb * b.covariance_matrix * Hb.transpose();
 }
 
-void poseInverse(const gtsam::Pose3 &a,
-                 gtsam::Pose3 &out) {
-  out = a.inverse();
-}
-
-void poseInverseCompose(const gtsam::Pose3 &a,
-                        const gtsam::Pose3 &b,
-                        gtsam::Pose3 &out) {
-  out = a.compose(b.inverse());
+void poseInverse(const graph_utils::PoseWithCovariance &a,
+                 graph_utils::PoseWithCovariance &out) {
+  gtsam::Matrix Ha;
+  out.pose = a.pose.inverse(Ha);
+  out.covariance_matrix = Ha * a.covariance_matrix * Ha.transpose();
 }
 
 Trajectory buildTrajectory(const Transforms& transforms) {
@@ -32,10 +31,17 @@ Trajectory buildTrajectory(const Transforms& transforms) {
     trajectory.start_id = transforms.start_id;
     trajectory.end_id = transforms.end_id;
     size_t current_pose_id = trajectory.start_id;
-    gtsam::Pose3 temp_pose, total_pose;
+    graph_utils::PoseWithCovariance temp_pose, total_pose;
 
     // Add first pose at the origin
     graph_utils::TrajectoryPose current_pose;
+    gtsam::Matrix covariance(6,6); covariance << 0.01, 0, 0, 0, 0, 0,
+            0, 0.01, 0, 0, 0, 0,
+            0, 0, 0.01, 0, 0, 0,
+            0, 0, 0, 0.01, 0, 0,
+            0, 0, 0, 0, 0.01, 0,
+            0, 0, 0, 0, 0, 0.01;  // TODO: Read covariance from file or add option
+    current_pose.pose.covariance_matrix = covariance;
     current_pose.id = current_pose_id;
     temp_pose = current_pose.pose;
     trajectory.trajectory_poses.insert(std::make_pair(current_pose_id, current_pose));

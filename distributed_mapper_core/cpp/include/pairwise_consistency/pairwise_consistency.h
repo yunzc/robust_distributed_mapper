@@ -90,10 +90,10 @@ namespace pairwise_consistency {
          * @param abZjl Transformation between pose j of robot A trajectory and pose l of robot B trajectory
          * @return
          */
-        gtsam::Pose3 computeConsistencyPose(const gtsam::Pose3& aXij, 
-                                                        const gtsam::Pose3& bXlk, 
-                                                        const gtsam::Pose3& abZik, 
-                                                        const gtsam::Pose3& abZjl);
+        std::pair<gtsam::Vector6, gtsam::Matrix> computeConsistencyError(const graph_utils::PoseWithCovariance& aXij,
+                                                                        const graph_utils::PoseWithCovariance& bXlk,
+                                                                        const graph_utils::PoseWithCovariance& abZik,
+                                                                        const graph_utils::PoseWithCovariance& abZjl);
 
         /**
          * \brief Compute the Mahalanobis Distance of the input pose (result of pose_a-pose_b)
@@ -101,7 +101,7 @@ namespace pairwise_consistency {
          * @param transform pose measurement describing the difference between two poses.
          * @returns Mahalanobis Distance
          */
-        double computeSquaredMahalanobisDistance(const gtsam::Pose3& transform);
+        double computeSquaredMahalanobisDistance(const std::pair<gtsam::Vector6, gtsam::Matrix>& consistency_error);
 
         /**
          * \brief This function returns the transform the two specified poses on the desired robot trajectory
@@ -111,7 +111,7 @@ namespace pairwise_consistency {
          * @param robot_id robot ID to select to desired trajectory
          * @return transform (pose measurements) between the two poses
          */
-        gtsam::Pose3 composeOnTrajectory(const size_t& id1, const size_t& id2, const size_t& robot_id);
+        graph_utils::PoseWithCovariance composeOnTrajectory(const size_t& id1, const size_t& id2, const size_t& robot_id);
 
         graph_utils::LoopClosures loop_closures_;///< loop_closures to consider
 
