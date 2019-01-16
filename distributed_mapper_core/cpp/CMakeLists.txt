@@ -11,7 +11,7 @@ include_directories(${GTSAM_INCLUDE_DIR})
 link_directories(${GTSAM_LIBRARY_DIRS})
 message("GTSAM Libraries: ${GTSAM_LIBRARIES}")
 
-# for unittest scripts
+# for unittest examples
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${GTSAM_DIR}/../GTSAMCMakeTools")
 include(GtsamTesting)
 
@@ -25,10 +25,10 @@ message("Boost Libraries: ${Boost_LIBRARIES}")
 ###########################################################################
 # Pairwise Consistency Maximization
 
-#if(FALSE) # fake a block comment
 # Overall include directories
 include_directories(
   include
+  include/pairwise_consistency_maximization
   ${CMAKE_CURRENT_SOURCE_DIR}/src/pairwise_consistency_maximization/third_parties/fast_max-clique_finder/src/
 )
 
@@ -70,14 +70,13 @@ target_link_libraries(robot_local_map
 
 # Global map solver library
 add_library(global_map_solver
-    src/pairwise_consistency_maximization/global_map_solver/global_map_solver.cpp
+        src/pairwise_consistency_maximization/global_map/global_map.cpp
 )
 target_link_libraries(global_map_solver
    graph_utils
    pairwise_consistency
    fast_max-clique_finder
 )
-#endif()
 
 ###########################################################################
 # Distributed Mapper  
@@ -101,7 +100,7 @@ install(TARGETS distributed-mapper-static DESTINATION lib)
 
 ###########################################################################
 # Add executable
-add_executable (runDistributedMapper  scripts/runDistributedMapper.cpp)
+add_executable (runDistributedMapper examples/runDistributedMapper.cpp)
 target_link_libraries (runDistributedMapper distributed-mapper ${Boost_LIBRARIES} gtsam global_map_solver)
 install(TARGETS runDistributedMapper DESTINATION bin)
 

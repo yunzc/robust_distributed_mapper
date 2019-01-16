@@ -68,12 +68,28 @@ Eigen::MatrixXi PairwiseConsistency::computeConsistentMeasurementsMatrix() {
     return consistency_matrix;
 }
 
-std::pair<gtsam::Vector6, gtsam::Matrix> PairwiseConsistency::computeConsistencyError(
+graph_utils::ConsistencyErrorData PairwiseConsistency::computeConsistencyError(
                                                         const graph_utils::PoseWithCovariance& aXij,
                                                         const graph_utils::PoseWithCovariance& bXlk,
                                                         const graph_utils::PoseWithCovariance& abZik, 
                                                         const graph_utils::PoseWithCovariance& abZjl) {
-    // Consistency loop : aXij + abZjl + bXlk - abZik
+    /*  Consistency loop : aXij + abZjl + bXlk - abZik
+     *
+     *  *   :   robot poses
+     *  |   :   odometry measurements
+     *  --  :   interrobot measurements
+     *
+     *                  abZik
+     *        Xai*---------------->Xbk*
+     *         |                    ^
+     *         |                    |
+     *    aXij |                    | bXlk
+     *         |                    |
+     *         v                    |
+     *        Xaj*---------------->Xbl*
+     *                  abZjl
+     *
+     */
     graph_utils::PoseWithCovariance out1, out2, inv_abZik, out3;
     graph_utils::poseCompose(aXij, abZjl, out1);
     graph_utils::poseCompose(out1, bXlk, out2);

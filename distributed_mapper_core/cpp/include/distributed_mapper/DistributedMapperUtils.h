@@ -1,12 +1,9 @@
 #pragma once 
 
-#include <DistributedMapper.h>
+#include <distributed_mapper/DistributedMapper.h>
 #include "graph_utils/graph_types.h"
 #include "robot_local_map/robot_local_map.h"
-#include "global_map_solver/global_map_solver.h"
-/*#include "graph_utils/graph_utils_functions.h"
-#include "pairwise_consistency/pairwise_consistency.h"
-#include "findClique.h"*/
+#include "global_map/global_map.h"
 #include <fstream>
 #include <algorithm>
 #include <map>
@@ -586,12 +583,8 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
     loopClosuresByRobot.emplace_back(loopClosures);
     // Place all measurement edges in a map and store the keys of separators
     // std::cout << "currentGraph size: " << distMapper->currentGraph().size() << '\n';
-    gtsam::Matrix covariance(6,6); covariance << 0.01, 0, 0, 0, 0, 0,
-                                                 0, 0.01, 0, 0, 0, 0,
-                                                 0, 0, 0.01, 0, 0, 0,
-                                                 0, 0, 0, 0.01, 0, 0,
-                                                 0, 0, 0, 0, 0.01, 0,
-                                                 0, 0, 0, 0, 0, 0.01; // TODO: Read covariance from file or add option
+
+    // TODO: Read covariance from file or add option
     graph_utils::Transforms transforms;
     bool idInitialized = false;
     for(auto factorPtr : distMapper->currentGraph()){
@@ -601,7 +594,7 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
           transform.i = edgePtr->key1();
           transform.j = edgePtr->key2();
           transform.pose.pose = edgePtr->measured();
-          transform.pose.covariance_matrix = covariance;
+          transform.pose.covariance_matrix = graph_utils::FIXED_COVARIANCE;
           transform.is_loop_closure = std::find(loopClosures.begin(),loopClosures.end(),std::make_pair(edgePtr->key1(),edgePtr->key2())) != loopClosures.end();
           if (!transform.is_loop_closure) {
               if (!idInitialized) {
@@ -634,8 +627,8 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
   allLoopClosures.insert( allLoopClosures.end(), loopClosuresByRobot[1].begin(), loopClosuresByRobot[1].end());
   auto interrobotMeasurements = robot_local_map::RobotMeasurements(separatorsTransforms, allLoopClosures);
 
-  auto solver = global_map_solver::GlobalMapSolver(robot1LocalMap, robot2LocalMap, interrobotMeasurements);
-  std::vector<int> max_clique = solver.solveGlobalMap();
+  auto globalMap = global_map::GlobalMap(robot1LocalMap, robot2LocalMap, interrobotMeasurements);
+  std::vector<int> max_clique = globalMap.pairwiseConsistencyMaximization();
 
   // TODO: Retrieve indexes of selected measurements
 

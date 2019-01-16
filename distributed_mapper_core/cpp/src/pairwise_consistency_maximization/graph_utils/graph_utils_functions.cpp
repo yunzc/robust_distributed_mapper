@@ -35,13 +35,8 @@ Trajectory buildTrajectory(const Transforms& transforms) {
 
     // Add first pose at the origin
     graph_utils::TrajectoryPose current_pose;
-    gtsam::Matrix covariance(6,6); covariance << 0.01, 0, 0, 0, 0, 0,
-            0, 0.01, 0, 0, 0, 0,
-            0, 0, 0.01, 0, 0, 0,
-            0, 0, 0, 0.01, 0, 0,
-            0, 0, 0, 0, 0.01, 0,
-            0, 0, 0, 0, 0, 0.01;  // TODO: Read covariance from file or add option
-    current_pose.pose.covariance_matrix = covariance;
+    // TODO: Read covariance from file or add option
+    current_pose.pose.covariance_matrix = graph_utils::FIXED_COVARIANCE;
     current_pose.id = current_pose_id;
     temp_pose = current_pose.pose;
     trajectory.trajectory_poses.insert(std::make_pair(current_pose_id, current_pose));

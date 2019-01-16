@@ -1,16 +1,16 @@
 // Copyright (C) 2018 by Pierre-Yves Lajoie <lajoie.py@gmail.com>
 
-#include "global_map_solver/global_map_solver.h"
+#include "global_map/global_map.h"
 #include "findClique.h"
 #include <math.h>
 
 
-namespace global_map_solver {
+namespace global_map {
 
-const std::string GlobalMapSolver::CONSISTENCY_MATRIX_FILE_NAME = std::string("results/consistency_matrix.clq.mtx");
-const std::string GlobalMapSolver::CONSISTENCY_LOOP_CLOSURES_FILE_NAME = std::string("results/consistent_loop_closures.txt");
+const std::string GlobalMap::CONSISTENCY_MATRIX_FILE_NAME = std::string("results/consistency_matrix.clq.mtx");
+const std::string GlobalMap::CONSISTENCY_LOOP_CLOSURES_FILE_NAME = std::string("results/consistent_loop_closures.txt");
 
-GlobalMapSolver::GlobalMapSolver(const robot_local_map::RobotLocalMap& robot1_local_map,
+GlobalMap::GlobalMap(const robot_local_map::RobotLocalMap& robot1_local_map,
                 const robot_local_map::RobotLocalMap& robot2_local_map,
                 const robot_local_map::RobotMeasurements& interrobot_measurements): 
                 pairwise_consistency_(robot1_local_map.getTransforms(), robot2_local_map.getTransforms(), 
@@ -19,7 +19,7 @@ GlobalMapSolver::GlobalMapSolver(const robot_local_map::RobotLocalMap& robot1_lo
                             robot1_local_map.getNbDegreeFreedom()){}
 
 
-std::vector<int> GlobalMapSolver::solveGlobalMap() {
+std::vector<int> GlobalMap::pairwiseConsistencyMaximization() {
     // Compute consistency matrix
     Eigen::MatrixXi consistency_matrix = pairwise_consistency_.computeConsistentMeasurementsMatrix();
     graph_utils::printConsistencyGraph(consistency_matrix, CONSISTENCY_MATRIX_FILE_NAME);

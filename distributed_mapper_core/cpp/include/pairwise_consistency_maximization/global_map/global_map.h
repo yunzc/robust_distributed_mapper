@@ -7,11 +7,11 @@
 #include "pairwise_consistency/pairwise_consistency.h"
 #include <string>
 
-namespace global_map_solver {
-    /** \class GlobalMapSolver
-     * \brief Class computing the global map from multiple robots local maps.
+namespace global_map {
+    /** \class GlobalMap
+     * \brief Class storing the global map from multiple robots local maps to compute PCM.
      */ 
-    class GlobalMapSolver {
+    class GlobalMap {
       public:
         /** \var CONSISTENCY_MATRIX_FILE_NAME
          * \brief File name in which the consistency matrix will be saved
@@ -30,7 +30,7 @@ namespace global_map_solver {
          * @param robot2_local_map Local map of robot 2.
          * @param interrobot_measurements Inter-robot measurements.
          */
-        GlobalMapSolver(const robot_local_map::RobotLocalMap& robot1_local_map,
+        GlobalMap(const robot_local_map::RobotLocalMap& robot1_local_map,
                         const robot_local_map::RobotLocalMap& robot2_local_map,
                         const robot_local_map::RobotMeasurements& interrobot_measurements);
 
@@ -39,7 +39,7 @@ namespace global_map_solver {
          *
          * @return the size of the maximum clique.
          */
-        std::vector<int> solveGlobalMap();
+        std::vector<int> pairwiseConsistencyMaximization();
 
       private:
         pairwise_consistency::PairwiseConsistency pairwise_consistency_; ///< Pairwise consistency solver.

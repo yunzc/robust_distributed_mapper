@@ -88,9 +88,9 @@ namespace pairwise_consistency {
          * @param bXlk Transformation between poses l and k on robot B trajectory
          * @param abZik Transformation between pose i of robot A trajectory and pose k of robot B trajectory
          * @param abZjl Transformation between pose j of robot A trajectory and pose l of robot B trajectory
-         * @return
+         * @returns Consistency error data : pose error vector and its associated covariance
          */
-        std::pair<gtsam::Vector6, gtsam::Matrix> computeConsistencyError(const graph_utils::PoseWithCovariance& aXij,
+        graph_utils::ConsistencyErrorData computeConsistencyError(const graph_utils::PoseWithCovariance& aXij,
                                                                         const graph_utils::PoseWithCovariance& bXlk,
                                                                         const graph_utils::PoseWithCovariance& abZik,
                                                                         const graph_utils::PoseWithCovariance& abZjl);
@@ -104,12 +104,13 @@ namespace pairwise_consistency {
         double computeSquaredMahalanobisDistance(const std::pair<gtsam::Vector6, gtsam::Matrix>& consistency_error);
 
         /**
-         * \brief This function returns the transform the two specified poses on the desired robot trajectory
+         * \brief This function returns the pose with covariance obtained
+         * from the composition of the two specified poses on the desired robot trajectory
          *
          * @param id1 first pose ID
          * @param id2 second pose ID
          * @param robot_id robot ID to select to desired trajectory
-         * @return transform (pose measurements) between the two poses
+         * @return pose with covariance between the two poses
          */
         graph_utils::PoseWithCovariance composeOnTrajectory(const size_t& id1, const size_t& id2, const size_t& robot_id);
 

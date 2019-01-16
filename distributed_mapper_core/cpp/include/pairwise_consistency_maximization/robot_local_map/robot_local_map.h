@@ -3,7 +3,7 @@
 #ifndef ROBOT_LOCAL_MAP_H
 #define ROBOT_LOCAL_MAP_H
 
-#include "robot_local_map/robot_measurements.h"
+#include "robot_measurements.h"
 
 namespace robot_local_map {
     /** \class RobotLocalMap

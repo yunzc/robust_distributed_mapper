@@ -3,9 +3,9 @@
  * @brief script for running g2o files
  */
 
-#include <DistributedMapperUtils.h>
-#include <MultiRobotUtils.h>
-#include <BetweenChordalFactor.h>
+#include <distributed_mapper/DistributedMapperUtils.h>
+#include <distributed_mapper/MultiRobotUtils.h>
+#include <distributed_mapper/BetweenChordalFactor.h>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>

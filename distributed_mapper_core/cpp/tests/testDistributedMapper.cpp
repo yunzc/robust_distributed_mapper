@@ -4,9 +4,9 @@
  * @brief unit tests for test multi robot case simulated by loading the datasets
  */
 
-#include <DistributedMapper.h>
-#include <DistributedMapperUtils.h>
-#include <MultiRobotUtils.h>
+#include <distributed_mapper/DistributedMapper.h>
+#include <distributed_mapper/DistributedMapperUtils.h>
+#include <distributed_mapper/MultiRobotUtils.h>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/variate_generator.hpp>

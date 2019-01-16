@@ -1,6 +1,6 @@
 #pragma once
 
-#include <BetweenChordalFactor.h>
+#include <distributed_mapper/BetweenChordalFactor.h>
 #include <gtsam/slam/InitializePose3.h>
 #include <gtsam/slam/dataset.h>
 #include <gtsam/slam/PriorFactor.h>

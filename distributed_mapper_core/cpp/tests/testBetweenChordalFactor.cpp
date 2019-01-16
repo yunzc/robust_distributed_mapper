@@ -4,8 +4,8 @@
  * @brief unit tests for between chordal factor
  */
 
-#include <DistributedMapper.h>
-#include <BetweenChordalFactor.h>
+#include <distributed_mapper/DistributedMapper.h>
+#include <distributed_mapper/BetweenChordalFactor.h>
 #include <gtsam/base/Testable.h>
 #include <CppUnitLite/TestHarness.h>
 
