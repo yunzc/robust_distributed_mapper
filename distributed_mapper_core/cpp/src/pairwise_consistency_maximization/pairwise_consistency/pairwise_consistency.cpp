@@ -6,11 +6,15 @@ namespace pairwise_consistency {
 
 Eigen::MatrixXi PairwiseConsistency::computeConsistentMeasurementsMatrix() {
     // Determination of the chi squared threshold (numbers from chi-squared table)
+    // Using 90% probability // TODO: Should be a parameter
     double threshold;
     if (nb_degree_freedom_ == 3){
         threshold = 0.58;
-    } else {
+    } else if (nb_degree_freedom_ == 6) {
         threshold = 2.20;
+    } else {
+        std::cerr << std::endl << nb_degree_freedom_ << " dof is not supported" << std::endl;
+        std::abort();
     }
 
     // Preallocate consistency matrix
