@@ -532,7 +532,8 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
                      double poseEstimateChangeThreshold = 1e-6,
                      bool useFlaggedInit = false,
                      bool useLandmarks = false,
-                     bool debug = false,                     
+                     bool debug = false,
+                     bool contains_odometry = true,
                      boost::optional<std::vector<gtsam::Values>&> rotationTrace = boost::none,
                      boost::optional<std::vector<gtsam::Values>&> poseTrace  = boost::none,
                      boost::optional<std::vector<gtsam::Values>&> subgraphRotationTrace = boost::none,
@@ -552,89 +553,86 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
       distMappers[robot]->setGamma(gamma);
   }
 
-  /*auto factor1 = distMappers[0]->currentGraph().at(1)->dim(); // TODO: Only tests, to be removed
-  auto factor2 = distMappers[0]->currentGraph().at(2)->dim();
-  boost::shared_ptr<gtsam::BetweenFactor<gtsam::Pose3> > factor3 =
-                  boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(distMappers[0]->currentGraph().at(3));
-  auto relPoseSeparator3 = factor3->measured();
-  boost::shared_ptr<gtsam::BetweenFactor<gtsam::Pose3> > factor4 =
-                  boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(distMappers[0]->currentGraph().at(3));
-  auto relPoseSeparator4 = factor4->measured();
-  auto relPoseSeparator5 = relPoseSeparator3.compose(relPoseSeparator4.inverse());*/
-  std::vector<graph_utils::LoopClosures> loopClosuresByRobot;
-  std::vector<graph_utils::Transforms> transformsByRobot;
-  graph_utils::Transforms separatorsTransforms;
-  for(auto distMapper : distMappers){
-    // What information do I have access?
+  // TODO: Support N robots instead of 2.
+  if (distMappers.size() == 2 && contains_odometry) {
+      std::vector<graph_utils::LoopClosures> separatorsByRobot;
+      std::vector<graph_utils::Transforms> transformsByRobot;
+      graph_utils::Transforms separatorsTransforms;
+      for (auto distMapper : distMappers) {
+          // What information do I have access?
 
-    // auto separatorEdge = (*separatorEdges[0]); // gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>
-    // auto measurement = separatorEdge.measured(); // measurements between the nodes : gtsam::LieGroup<gtsam::Pose3, 6>
-    // auto rotation = separatorEdge.measured().R(); // rotation part : gtsam::LieGroup<gtsam::Rot3, 3>
-    // auto translation = separatorEdge.measured().t(); // transaltion part : Eigen::Matrix<double, 3, 1, 0, 3, 1>
-    // auto node1 = separatorEdge.key1(); // Key : uint64_t
-    // auto node2 = separatorEdge.key2(); // Key : uint64_t
-    
-    // Store separators key pairs
-    graph_utils::LoopClosures loopClosures;
-    for(auto id : distMapper->seperatorEdge()){
-      auto separatorEdge = boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(distMapper->currentGraph().at(id));
-        loopClosures.emplace_back(std::make_pair(separatorEdge->key1(), separatorEdge->key2()));
-    }
-    loopClosuresByRobot.emplace_back(loopClosures);
-    // Place all measurement edges in a map and store the keys of separators
-    // std::cout << "currentGraph size: " << distMapper->currentGraph().size() << '\n';
+          // auto separatorEdge = (*separatorEdges[0]); // gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>
+          // auto measurement = separatorEdge.measured(); // measurements between the nodes : gtsam::LieGroup<gtsam::Pose3, 6>
+          // auto rotation = separatorEdge.measured().R(); // rotation part : gtsam::LieGroup<gtsam::Rot3, 3>
+          // auto translation = separatorEdge.measured().t(); // transaltion part : Eigen::Matrix<double, 3, 1, 0, 3, 1>
+          // auto node1 = separatorEdge.key1(); // Key : uint64_t
+          // auto node2 = separatorEdge.key2(); // Key : uint64_t
 
-    // TODO: Read covariance from file or add option
-    graph_utils::Transforms transforms;
-    bool idInitialized = false;
-    for(auto factorPtr : distMapper->currentGraph()){
-      auto edgePtr = boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(factorPtr);
-      if (edgePtr){ // Possible bug : the graph size is 17, however there are only 16 edges..
-          graph_utils::Transform transform;
-          transform.i = edgePtr->key1();
-          transform.j = edgePtr->key2();
-          transform.pose.pose = edgePtr->measured();
-          transform.pose.covariance_matrix = graph_utils::FIXED_COVARIANCE;
-          transform.is_loop_closure = std::find(loopClosures.begin(),loopClosures.end(),std::make_pair(edgePtr->key1(),edgePtr->key2())) != loopClosures.end();
-          if (!transform.is_loop_closure) {
-              if (!idInitialized) {
-                  transforms.start_id = transform.i;
-                  transforms.end_id = transform.j;
-                  idInitialized = true;
-              } else {
-                  transforms.start_id = std::min(transforms.start_id, transform.i);
-                  transforms.end_id = std::max(transforms.end_id, transform.j);
-              }
-              transforms.transforms.insert(std::make_pair(std::make_pair(edgePtr->key1(),edgePtr->key2()), transform));
-          } else {
-              separatorsTransforms.transforms.insert(std::make_pair(std::make_pair(edgePtr->key1(),edgePtr->key2()), transform));
+          // Store separators key pairs
+          graph_utils::LoopClosures separators;
+          for (auto id : distMapper->seperatorEdge()) {
+              auto separatorEdge = boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(
+                      distMapper->currentGraph().at(id));
+              separators.emplace_back(std::make_pair(separatorEdge->key1(), separatorEdge->key2()));
           }
+          separatorsByRobot.emplace_back(separators);
+          // Place all measurement edges in a map and store the keys of separators
+          // std::cout << "currentGraph size: " << distMapper->currentGraph().size() << '\n';
+
+          // TODO: Read covariance from file or add option
+          graph_utils::Transforms transforms;
+          bool idInitialized = false;
+          for (auto factorPtr : distMapper->currentGraph()) {
+              auto edgePtr = boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(factorPtr);
+              if (edgePtr) { // Possible bug : the graph size is 17, however there are only 16 edges..
+                  graph_utils::Transform transform;
+                  transform.i = edgePtr->key1();
+                  transform.j = edgePtr->key2();
+                  transform.pose.pose = edgePtr->measured();
+                  transform.pose.covariance_matrix = graph_utils::FIXED_COVARIANCE;
+                  transform.is_separator = std::find(separators.begin(), separators.end(),
+                                                     std::make_pair(edgePtr->key1(), edgePtr->key2())) !=
+                                           separators.end();
+                  if (!transform.is_separator) {
+                      if (!idInitialized) {
+                          transforms.start_id = transform.i;
+                          transforms.end_id = transform.j;
+                          idInitialized = true;
+                      } else {
+                          transforms.start_id = std::min(transforms.start_id, transform.i);
+                          transforms.end_id = std::max(transforms.end_id, transform.j);
+                      }
+                      transforms.transforms.insert(
+                              std::make_pair(std::make_pair(edgePtr->key1(), edgePtr->key2()), transform));
+                  } else {
+                      separatorsTransforms.transforms.insert(
+                              std::make_pair(std::make_pair(edgePtr->key1(), edgePtr->key2()), transform));
+                  }
+              }
+          }
+          transformsByRobot.emplace_back(transforms);
       }
-    }
-    transformsByRobot.emplace_back(transforms);
+
+      // Apply PCM for each robot
+      // for(int robot=1; robot<distMappers.size(); robot++){ // TODO: Consider N robots case.
+      // TODO: Communication of the factors needed for optimization
+      // For now I will work with perfect information
+
+      // TODO: Call Pairwise Consistency maximization
+      // TODO: Sort local loop closures and separators
+      auto robot1LocalMap = robot_local_map::RobotLocalMap(transformsByRobot[0], separatorsByRobot[0]);
+      auto robot2LocalMap = robot_local_map::RobotLocalMap(transformsByRobot[1], separatorsByRobot[1]);
+      auto interrobotMeasurements = robot_local_map::RobotMeasurements(separatorsTransforms, separatorsByRobot[0]);
+
+      auto globalMap = global_map::GlobalMap(robot1LocalMap, robot2LocalMap, interrobotMeasurements);
+      std::vector<int> max_clique = globalMap.pairwiseConsistencyMaximization();
+
+      // TODO: Retrieve indexes of selected measurements
+
+      // TODO: Remove measurements not in the max clique
+
+      //}
   }
-
-  // Apply PCM for each robot
-  // for(int robot=1; robot<distMappers.size(); robot++){ // TODO: Consider N robots case.
-  // TODO: Communication of the factors needed for optimization
-  // For now I will work with perfect information
-
-  // TODO: Call Pairwise Consistency maximization
-  // TODO: Sort local loop closures and separators
-  auto robot1LocalMap = robot_local_map::RobotLocalMap(transformsByRobot[0], loopClosuresByRobot[0]);
-  auto robot2LocalMap = robot_local_map::RobotLocalMap(transformsByRobot[1], loopClosuresByRobot[1]);
-  auto allLoopClosures = loopClosuresByRobot[0];
-  allLoopClosures.insert( allLoopClosures.end(), loopClosuresByRobot[1].begin(), loopClosuresByRobot[1].end());
-  auto interrobotMeasurements = robot_local_map::RobotMeasurements(separatorsTransforms, allLoopClosures);
-
-  auto globalMap = global_map::GlobalMap(robot1LocalMap, robot2LocalMap, interrobotMeasurements);
-  std::vector<int> max_clique = globalMap.pairwiseConsistencyMaximization();
-
-  // TODO: Retrieve indexes of selected measurements
-
-  // TODO: Remove measurements not in the max clique
-
-  //}
 
   if(debug)
     std::cout << "Starting Optimizer"  << std::endl;

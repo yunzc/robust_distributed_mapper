@@ -46,7 +46,7 @@ Trajectory buildTrajectory(const Transforms& transforms) {
     auto temp_it = transforms.transforms.find(temp_pair);
 
     // Compositions in chain on the trajectory transforms.
-    while (temp_it != transforms.transforms.end() && !(*temp_it).second.is_loop_closure) {
+    while (temp_it != transforms.transforms.end() && !(*temp_it).second.is_separator) {
         graph_utils::poseCompose(temp_pose, (*temp_it).second.pose, total_pose);             
         temp_pose = total_pose;
         current_pose_id++;

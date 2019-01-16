@@ -188,7 +188,7 @@ NonlinearFactorGraph createBetweenChordalFactorGraph(NonlinearFactorGraph graph)
 TEST(DistributedMapper, testDistributedMapperBetweenChordal) {
 
   // Read centralized graph
-  std::string dataFile("../../../data/blocks_world/2robots/fullGraph.g2o");
+  std::string dataFile("../../../test_data/distributed_mapper/blocks_world/2robots/fullGraph.g2o");
   pair<NonlinearFactorGraph, Values> graphAndValues = loadGraphWithPrior(dataFile);
   NonlinearFactorGraph graph = (graphAndValues.first);
   Values initial = (graphAndValues.second);
@@ -217,7 +217,7 @@ TEST(DistributedMapper, testDistributedMapperBetweenAndPriorChordal) {
   // 2) NFG with betweenChordalFactor + linearize + optimize + retract
 
   // Read centralized graph
-  std::string dataFile("../../../data/blocks_world/2robots/fullGraph.g2o");
+  std::string dataFile("../../../test_data/distributed_mapper/blocks_world/2robots/fullGraph.g2o");
   pair<NonlinearFactorGraph, Values> graphAndValues = loadGraphWithPrior(dataFile);
   NonlinearFactorGraph graph = (graphAndValues.first);
   Values initial = (graphAndValues.second);
@@ -248,7 +248,7 @@ TEST(DistributedMapper, testDistributedMapperOptimizeChordalFactor) {
   // 2) 1 GN iteration on NFG with betweenChordalFactor: this does not work with tight tolerance since the retract is different
 
   // Read centralized graph
-  std::string dataFile("../../../data/blocks_world/2robots/fullGraph.g2o");
+  std::string dataFile("../../../test_data/distributed_mapper/blocks_world/2robots/fullGraph.g2o");
   pair<NonlinearFactorGraph, Values> graphAndValues = loadGraphWithPrior(dataFile);
   NonlinearFactorGraph graph = (graphAndValues.first);
   Values initial = (graphAndValues.second);

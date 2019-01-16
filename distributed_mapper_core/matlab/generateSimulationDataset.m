@@ -6,7 +6,7 @@ close all
 clc
 
 %% Settings
-dataset_folder = horzcat(pwd, '/../sim_data/');
+dataset_folder = horzcat(pwd, '/../test_data/pairwise_consistency_maximization/simulation/');
 number_of_robots = 2; % Only 2 is supported.
 id_offset = 96; % letter a = 97 (ASCII)
 sigma_R = 0.01;
@@ -15,6 +15,7 @@ trajectory_size = 20;
 number_of_separators = 10;
 percentage_of_outliers = 0;% Not supported yet
 trajectory_offsets = {[0; 0; 0], [(rand*10)-5; (rand*10)-5; (rand*10)-5]};
+use_rotation = true;
 
 %% Setup
 addpath(genpath('./posegraph_utils'));
@@ -34,7 +35,7 @@ end
 robot_poses = {};
 for robot=1:number_of_robots
     robot_offset = bitshift(uint64(robot+id_offset), 56); % GTSAM format
-    [poses, measurements, edges_id] = generateTrajectory(robot_offset, trajectory_size, trajectory_offsets{robot}, information_matrix);
+    [poses, measurements, edges_id] = generateTrajectory(robot_offset, trajectory_size, trajectory_offsets{robot}, information_matrix, use_rotation);
     poses_to_write = poses;
     for i=1:size(poses_to_write,2)
         poses_to_write(i).t = poses_to_write(i).t - trajectory_offsets{robot};

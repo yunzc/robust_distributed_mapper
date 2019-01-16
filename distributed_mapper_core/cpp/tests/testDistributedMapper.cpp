@@ -32,7 +32,8 @@ static const Matrix zero33= Matrix::Zero(3,3);
 vector<Values>
 distributedEstimation(size_t nrRobots, string dataPath, string traceFile, Values centralized, size_t maxIter = 5000,
                       bool useFlaggedInit = true, double rotationEstimateChangeThreshold = 1e-7,
-                      double poseEstimateChangeThreshold = 1e-7, bool useBetweenNoise = false){
+                      double poseEstimateChangeThreshold = 1e-7, bool useBetweenNoise = false,
+                      bool contains_odometry = false){
 
     ////////////////////////////////////////////////////////////////////////////////
     // Read Graph
@@ -80,7 +81,7 @@ distributedEstimation(size_t nrRobots, string dataPath, string traceFile, Values
     double gamma = 1.0f;
     vector< Values > estimates = distributedOptimizer(distMappers, maxIter, DistributedMapper::incUpdate,
                                                       gamma, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
-                                                      useFlaggedInit, false, false, rotationTrace, poseTrace,
+                                                      useFlaggedInit, false, false, contains_odometry, rotationTrace, poseTrace,
                                                       subgraphRotationTrace, subgraphPoseTrace, rotationVectorValuesTrace);
 
 
@@ -171,14 +172,14 @@ distributedEstimation(size_t nrRobots, string dataPath, string traceFile, Values
 TEST(DistributedMapper, testdistributedEstimation_2robots) {
 
     // Read centralized graph
-    string dataFile("../../../data/blocks_world/2robots/fullGraph.g2o");
+    string dataFile("../../../test_data/distributed_mapper/blocks_world/2robots/fullGraph.g2o");
     pair<NonlinearFactorGraph, Values> graphAndValues = loadGraphWithPrior(dataFile, priorModel);
     NonlinearFactorGraph graph = (graphAndValues.first);
     Values centralized = centralizedEstimation(graph, model, priorModel);
 
     size_t nrRobots = 2;
-    string dataPath = "../../../data/blocks_world/2robots/";
-    string traceFile = "/tmp/testdistributedEstimation_2robots";
+    string dataPath = "../../../test_data/distributed_mapper/blocks_world/2robots/";
+    string traceFile = "../../../log/testdistributedEstimation_2robots";
     vector<Values> distributed = distributedEstimation(nrRobots, dataPath, traceFile, centralized, 1000, true, 1e-3, 1e-3);
 
     // Compare centralized and distributed pose estimates
@@ -189,15 +190,15 @@ TEST(DistributedMapper, testdistributedEstimation_2robots) {
 TEST(DistributedMapper, testdistributedEstimation_4robots) {
 
   // Read centralized graph
-  string dataFile("../../../data/blocks_world/4robots/fullGraph.g2o");
+  string dataFile("../../../test_data/distributed_mapper/blocks_world/4robots/fullGraph.g2o");
   pair<NonlinearFactorGraph, Values> graphAndValues = loadGraphWithPrior(dataFile, priorModel);
   NonlinearFactorGraph graph = (graphAndValues.first);
   Values centralized = centralizedEstimation(graph, model, priorModel);
 
   // Distributed Mapper
   size_t nrRobots = 4;
-  string dataPath = "../../../data/blocks_world/4robots/";
-  string traceFile = "/tmp/testdistributedEstimation_4robots";
+  string dataPath = "../../../test_data/distributed_mapper/blocks_world/4robots/";
+  string traceFile = "../../../log/testdistributedEstimation_4robots";
   vector<Values> distributed = distributedEstimation(nrRobots, dataPath, traceFile, centralized, 1000, true, 1e-3, 1e-3);
 
   // TEST
@@ -208,15 +209,15 @@ TEST(DistributedMapper, testdistributedEstimation_4robots) {
 TEST(DistributedMapper, testdistributedEstimation_9robots) {
 
   // Read centralized graph
-  string dataFile("../../../data/blocks_world/9robots/fullGraph.g2o");
+  string dataFile("../../../test_data/distributed_mapper/blocks_world/9robots/fullGraph.g2o");
   pair<NonlinearFactorGraph, Values> graphAndValues = loadGraphWithPrior(dataFile, priorModel);
   NonlinearFactorGraph graph = (graphAndValues.first);
   Values centralized = centralizedEstimation(graph, model, priorModel);
 
   // Distributed Mapper
   size_t nrRobots = 9;
-  string dataPath = "../../../data/blocks_world/9robots/";
-  string traceFile = "/tmp/testdistributedEstimation_9robots";
+  string dataPath = "../../../test_data/distributed_mapper/blocks_world/9robots/";
+  string traceFile = "../../../log/testdistributedEstimation_9robots";
   vector<Values> distributed = distributedEstimation(nrRobots, dataPath, traceFile, centralized, 1000, true, 1e-3, 1e-3);
 
   // TEST
@@ -227,15 +228,15 @@ TEST(DistributedMapper, testdistributedEstimation_9robots) {
 TEST(DistributedMapper, testdistributedEstimation_16robots) {
 
   // Read centralized graph
-  string dataFile("../../../data/blocks_world/16robots/fullGraph.g2o");
+  string dataFile("../../../test_data/distributed_mapper/blocks_world/16robots/fullGraph.g2o");
   pair<NonlinearFactorGraph, Values> graphAndValues = loadGraphWithPrior(dataFile, priorModel);
   NonlinearFactorGraph graph = (graphAndValues.first);
   Values centralized = centralizedEstimation(graph, model, priorModel);
 
   // Distributed Mapper
   size_t nrRobots = 16;
-  string dataPath = "../../../data/blocks_world/16robots/";
-  string traceFile = "/tmp/testdistributedEstimation_16robots";
+  string dataPath = "../../../test_data/distributed_mapper/blocks_world/16robots/";
+  string traceFile = "../../../log/testdistributedEstimation_16robots";
   vector<Values> distributed = distributedEstimation(nrRobots, dataPath, traceFile, centralized, 1000);
 
   // TEST
@@ -247,15 +248,15 @@ TEST(DistributedMapper, testdistributedEstimation_16robots) {
 TEST(DistributedMapper, testdistributedEstimation_25robots) {
 
   // Read centralized graph
-  string dataFile("../../../data/blocks_world/25robots/fullGraph.g2o");
+  string dataFile("../../../test_data/distributed_mapper/blocks_world/25robots/fullGraph.g2o");
   pair<NonlinearFactorGraph, Values> graphAndValues = loadGraphWithPrior(dataFile, priorModel);
   NonlinearFactorGraph graph = (graphAndValues.first);
   Values centralized = centralizedEstimation(graph, model, priorModel);
 
   // Distributed Mapper
   size_t nrRobots = 25;
-  string dataPath = "../../../data/blocks_world/25robots/";
-  string traceFile = "/tmp/testdistributedEstimation_25robots";
+  string dataPath = "../../../test_data/distributed_mapper/blocks_world/25robots/";
+  string traceFile = "../../../log/testdistributedEstimation_25robots";
   vector<Values> distributed = distributedEstimation(nrRobots, dataPath, traceFile, centralized);
 
   // TEST
@@ -267,15 +268,15 @@ TEST(DistributedMapper, testdistributedEstimation_25robots) {
 TEST(DistributedMapper, testdistributedEstimation_36robots) {
 
   // Read centralized graph
-  string dataFile("../../../data/blocks_world/36robots/fullGraph.g2o");
+  string dataFile("../../../test_data/distributed_mapper/blocks_world/36robots/fullGraph.g2o");
   pair<NonlinearFactorGraph, Values> graphAndValues = loadGraphWithPrior(dataFile, priorModel);
   NonlinearFactorGraph graph = (graphAndValues.first);
   Values centralized = centralizedEstimation(graph, model, priorModel);
 
   // Distributed Mapper
   size_t nrRobots = 36;
-  string dataPath = "../../../data/blocks_world/36robots/";
-  string traceFile = "/tmp/testdistributedEstimation_36robots";
+  string dataPath = "../../../test_data/distributed_mapper/blocks_world/36robots/";
+  string traceFile = "../../../log/testdistributedEstimation_36robots";
   vector<Values> distributed = distributedEstimation(nrRobots, dataPath, traceFile, centralized);
 
   // TEST
@@ -287,15 +288,15 @@ TEST(DistributedMapper, testdistributedEstimation_36robots) {
 TEST(DistributedMapper, testdistributedEstimation_49robots) {
 
   // Read centralized graph
-  string dataFile("../../../data/blocks_world/49robots/fullGraph.g2o");
+  string dataFile("../../../test_data/distributed_mapper/blocks_world/49robots/fullGraph.g2o");
   pair<NonlinearFactorGraph, Values> graphAndValues = loadGraphWithPrior(dataFile, priorModel);
   NonlinearFactorGraph graph = (graphAndValues.first);
   Values centralized = centralizedEstimation(graph, model, priorModel);
 
   // Distributed Mapper
   size_t nrRobots = 49;
-  string dataPath = "../../../data/blocks_world/49robots/";
-  string traceFile = "/tmp/testdistributedEstimation_49robots";
+  string dataPath = "../../../test_data/distributed_mapper/blocks_world/49robots/";
+  string traceFile = "../../../log/testdistributedEstimation_49robots";
   vector<Values> distributed = distributedEstimation(nrRobots, dataPath, traceFile, centralized);
 
   // TEST

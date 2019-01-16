@@ -30,7 +30,7 @@ struct PoseWithCovariance {
 struct Transform {
     gtsam::Key i, j;
     graph_utils::PoseWithCovariance pose;
-    bool is_loop_closure;
+    bool is_separator;
 };
 
 /** \struct Transforms
@@ -75,12 +75,12 @@ typedef std::pair<gtsam::Vector6, gtsam::Matrix> ConsistencyErrorData;
  * This value should not be used if covariance data is provided by the front end.
  */
 const gtsam::Matrix FIXED_COVARIANCE =
-        (Eigen::MatrixXd(6,6)  <<   0.0001,   0,      0,      0,      0,      0,
-                                    0,      0.0001,   0,      0,      0,      0,
-                                    0,      0,      0.0001,   0,      0,      0,
-                                    0,      0,      0,      0.01,    0,      0,
-                                    0,      0,      0,      0,      0.01,    0,
-                                    0,      0,      0,      0,      0,      0.01).finished();
+        (Eigen::MatrixXd(6,6)  <<   0.0001, 0,      0,      0,     0,     0,
+                                    0,      0.0001, 0,      0,     0,     0,
+                                    0,      0,      0.0001, 0,     0,     0,
+                                    0,      0,      0,      0.01,  0,     0,
+                                    0,      0,      0,      0,     0.01,  0,
+                                    0,      0,      0,      0,     0,     0.01).finished();
 
 }
 #endif

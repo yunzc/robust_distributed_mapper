@@ -7,8 +7,8 @@
 
 namespace global_map {
 
-const std::string GlobalMap::CONSISTENCY_MATRIX_FILE_NAME = std::string("results/consistency_matrix.clq.mtx");
-const std::string GlobalMap::CONSISTENCY_LOOP_CLOSURES_FILE_NAME = std::string("results/consistent_loop_closures.txt");
+const std::string GlobalMap::CONSISTENCY_MATRIX_FILE_NAME = std::string("../log/consistency_matrix.clq.mtx");
+const std::string GlobalMap::CONSISTENCY_LOOP_CLOSURES_FILE_NAME = std::string("../log/consistent_loop_closures.txt");
 
 GlobalMap::GlobalMap(const robot_local_map::RobotLocalMap& robot1_local_map,
                 const robot_local_map::RobotLocalMap& robot2_local_map,

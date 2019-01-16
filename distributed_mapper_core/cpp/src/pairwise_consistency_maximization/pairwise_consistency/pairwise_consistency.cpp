@@ -54,7 +54,7 @@ Eigen::MatrixXi PairwiseConsistency::computeConsistentMeasurementsMatrix() {
                         bXlk = composeOnTrajectory(l, k, 1); 
                     }
                     // Compute the consistency pose (should be near Identity if consistent)
-                    std::pair<gtsam::Vector6, gtsam::Matrix> consistency_error = computeConsistencyError(aXij, bXlk, abZik, abZjl);
+                    graph_utils::ConsistencyErrorData consistency_error = computeConsistencyError(aXij, bXlk, abZik, abZjl);
                     // Compute the Mahalanobis distance
                     double distance = computeSquaredMahalanobisDistance(consistency_error);
                     // Apply threshold on the chi-squared distribution
