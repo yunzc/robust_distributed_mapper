@@ -31,6 +31,17 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/pairwise_consistency_maximization/third_parties/fast_max-clique_finder/src/
 )
 
+# Distributed PCM library
+add_library(distributed_pcm
+        src/pairwise_consistency_maximization/distributed_pcm/distributed_pcm.cpp
+)
+target_link_libraries(distributed_pcm
+        global_map_solver
+        graph_utils
+        pairwise_consistency
+        fast_max-clique_finder
+)
+
 # Paiwise Consistency computation library
 add_library(pairwise_consistency
     src/pairwise_consistency_maximization/pairwise_consistency/pairwise_consistency.cpp
@@ -87,12 +98,14 @@ target_link_libraries(distributed-mapper ${Boost_LIBRARIES}
         gtsam
         graph_utils
         robot_local_map
-        global_map_solver)
+        global_map_solver
+        distributed_pcm)
 target_link_libraries(distributed-mapper-static ${Boost_LIBRARIES}
         gtsam
         graph_utils
         robot_local_map
-        global_map_solver)
+        global_map_solver
+        distributed_pcm)
 export(PACKAGE DistributedMapper)
 install(TARGETS distributed-mapper DESTINATION lib)
 install(TARGETS distributed-mapper-static DESTINATION lib)
@@ -100,7 +113,7 @@ install(TARGETS distributed-mapper-static DESTINATION lib)
 ###########################################################################
 # Add executable
 add_executable (runDistributedMapper examples/runDistributedMapper.cpp)
-target_link_libraries (runDistributedMapper distributed-mapper ${Boost_LIBRARIES} gtsam global_map_solver)
+target_link_libraries (runDistributedMapper distributed-mapper ${Boost_LIBRARIES} gtsam global_map_solver distributed_pcm)
 install(TARGETS runDistributedMapper DESTINATION bin)
 
 ###########################################################################

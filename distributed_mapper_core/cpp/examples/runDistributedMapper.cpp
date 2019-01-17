@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
   string traceFile("/tmp/runG2o"); // data directory
   bool useXY = false;
   bool useOP = false;
-  bool debug = true;
+  bool debug = false;
 
   ////////////////////////////////////////////////////////////////////////////////
   // Config (specify noise covariances and maximum number iterations)
