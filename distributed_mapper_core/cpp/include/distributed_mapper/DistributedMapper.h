@@ -162,11 +162,25 @@ class DistributedMapper{
     /** @brief neighbors returns the neighboring values  */
     gtsam::Values neighbors() {return neighbors_;}
 
+    /** @brief allows to remove a factor from the graph.
+     *  @param index is the factor index in the graph
+     */
+    void removeFactor(const int& index){
+        graph_.remove(index);
+    }
+
     /** @brief allows to erase a factor from the graph.
      *  @param index is the factor index in the graph
      */
     void eraseFactor(const int& index){
-        graph_.erase(graph_.begin() + index);
+        graph_.erase(graph_.begin()+index);
+    }
+
+    /** @brief allows to erase a separator ID.
+     *  @param id is the id to be removed
+     */
+    void setSeparatorIds(const std::vector<size_t>& ids){
+        separatorEdgeIds_ = ids;
     }
 
     /** @brief allows to erase a separator ID.

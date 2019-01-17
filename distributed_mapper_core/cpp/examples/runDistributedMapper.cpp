@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
   string traceFile("/tmp/runG2o"); // data directory
   bool useXY = false;
   bool useOP = false;
-  bool debug = false;
+  bool debug = true;
 
   ////////////////////////////////////////////////////////////////////////////////
   // Config (specify noise covariances and maximum number iterations)
@@ -265,8 +265,10 @@ int main(int argc, char* argv[])
       try{
         // try optimizing
         vector< Values > estimates =  distributedOptimizer(distMappers, maxIter, updateType, gamma,
-                                                           rotationEstimateChangeThreshold, poseEstimateChangeThreshold, useFlaggedInit, useLandmarks,
-                                                           debug, true, rotationTrace, poseTrace, subgraphRotationTrace, subgraphPoseTrace, rotationVectorValuesTrace);
+                                                           rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
+                                                           useFlaggedInit, useLandmarks, debug, true, graphAndValuesVec,
+                                                           rotationTrace, poseTrace, subgraphRotationTrace,
+                                                           subgraphPoseTrace, rotationVectorValuesTrace);
 
         if(debug)
           cout << "Done" << endl;

@@ -15,4 +15,4 @@ data/example_49robots/fullGraph.g2o
 .vscode
 *.idea/
 *cmake-build-debug/
-distributed_mapper_core/sim_data/example_2robots/*optimized*
+distributed_mapper_core/*_data/*/*/*/*optimized*

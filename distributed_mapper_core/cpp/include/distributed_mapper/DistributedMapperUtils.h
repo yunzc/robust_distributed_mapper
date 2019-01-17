@@ -534,6 +534,7 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
                      bool useLandmarks = false,
                      bool debug = false,
                      bool contains_odometry = true,
+                     boost::optional<std::vector<gtsam::GraphAndValues>&> graphAndValuesVec = boost::none,
                      boost::optional<std::vector<gtsam::Values>&> rotationTrace = boost::none,
                      boost::optional<std::vector<gtsam::Values>&> poseTrace  = boost::none,
                      boost::optional<std::vector<gtsam::Values>&> subgraphRotationTrace = boost::none,
@@ -626,19 +627,32 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
       std::vector<int> maxClique = globalMap.pairwiseConsistencyMaximization();
 
       // Retrieve indexes of rejected measurements
-      for (auto distMapper : distMappers) {
-          auto separatorsIds = distMapper->seperatorEdge();
+      for (int robot = 0; robot < distMappers.size(); robot++) {//distMapper : distMappers
+          auto separatorsIds = distMappers[robot]->seperatorEdge();
+          int numberSeparators = separatorsIds.size();
           std::vector<int> rejectedSeparatorIds;
           for (int i = 0; i < separatorsIds.size(); i++) {
               if (std::find(maxClique.begin(), maxClique.end(), i) == maxClique.end()) {
                   rejectedSeparatorIds.emplace_back(i);
+                  numberSeparators--;
               }
           }
           // Remove measurements not in the max clique
+          // TODO: Fix "off by one" bug in innerEdges_ and graph_
+          int numberSeparatorIdsRemoved = 0;
           for (auto index : rejectedSeparatorIds) {
-              distMapper->eraseFactor(separatorsIds[index]);
-              distMapper->eraseSeparatorId(separatorsIds[index]);
+              auto id = separatorsIds[index] - numberSeparatorIdsRemoved;
+              numberSeparatorIdsRemoved++;
+              auto pose = boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(
+                      distMappers[robot]->currentGraph().at(id))->measured();
+              distMappers[robot]->eraseFactor(id);
+              graphAndValuesVec.get().at(robot).first->erase(graphAndValuesVec.get().at(robot).first->begin()+id);
           }
+          std::vector<size_t> newSeparatorIds;
+          for (size_t i = separatorsIds[0]; i < separatorsIds[0]+numberSeparators; i++) {
+              newSeparatorIds.emplace_back(i);
+          }
+          distMappers[robot]->setSeparatorIds(newSeparatorIds);
       }
   }
 
