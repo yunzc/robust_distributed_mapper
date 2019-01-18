@@ -87,6 +87,7 @@ target_link_libraries(distributed_pcm
 
 # Distributed Mapper
 add_library (distributed_mapper
+        include/distributed_mapper/runDistributedMapper.h
         src/distributed_mapper/DistributedMapper.cpp
         src/distributed_mapper/MultiRobotUtils.cpp
         include/distributed_mapper/DistributedMapperUtils.h)
@@ -96,19 +97,10 @@ target_link_libraries(distributed_mapper
         gtsam
         distributed_pcm)
 
-
-# Distributed mapper utils library
-#add_library(distributed_mapper_utils
-#        )
-#target_link_libraries(distributed_mapper_utils
-#        distributed_mapper
-#        )
-
 ###########################################################################
 # Add example executable
-add_executable (runDistributedMapper
-        examples/runDistributedMapper.cpp)
-target_link_libraries (runDistributedMapper
+add_executable (robust_distributed_optimization_example examples/robust_distributed_optimization_example.cpp)
+target_link_libraries (robust_distributed_optimization_example
         distributed_mapper)
 
 ###########################################################################

@@ -6,7 +6,7 @@
 
 namespace global_map {
 
-const std::string GlobalMap::LOG_DIRECTORY = std::string("../log/");
+const std::string GlobalMap::LOG_DIRECTORY = std::string("../../log/");
 const std::string GlobalMap::CONSISTENCY_MATRIX_FILE_NAME = std::string(GlobalMap::LOG_DIRECTORY+"consistency_matrix.clq.mtx");
 const std::string GlobalMap::CONSISTENCY_LOOP_CLOSURES_FILE_NAME = std::string(GlobalMap::LOG_DIRECTORY+"consistent_loop_closures.txt");
 
