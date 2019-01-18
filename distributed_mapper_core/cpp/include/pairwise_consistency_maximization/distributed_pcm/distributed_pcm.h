@@ -1,6 +1,4 @@
-//
-// Created by lajoiepy on 17/01/19.
-//
+// Copyright (C) 2019 by Pierre-Yves Lajoie <lajoie.py@gmail.com>
 
 #ifndef DISTRIBUTED_MAPPER_DISTRIBUTED_PCM_H
 #define DISTRIBUTED_MAPPER_DISTRIBUTED_PCM_H

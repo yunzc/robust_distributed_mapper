@@ -16,3 +16,4 @@ data/example_49robots/fullGraph.g2o
 *.idea/
 *cmake-build-debug/
 distributed_mapper_core/*_data/*/*/*/*optimized*
+distributed_mapper_core/log/test*

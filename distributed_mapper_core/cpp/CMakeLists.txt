@@ -31,31 +31,29 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/pairwise_consistency_maximization/third_parties/fast_max-clique_finder/src/
 )
 
-# Distributed PCM library
-add_library(distributed_pcm
-        src/pairwise_consistency_maximization/distributed_pcm/distributed_pcm.cpp
-)
-target_link_libraries(distributed_pcm
-        global_map_solver
-        graph_utils
-        pairwise_consistency
-        fast_max-clique_finder
-)
-
-# Paiwise Consistency computation library
-add_library(pairwise_consistency
-    src/pairwise_consistency_maximization/pairwise_consistency/pairwise_consistency.cpp
-)
-target_link_libraries(pairwise_consistency
-   graph_utils
-)
-
 # Graph utils library
 add_library(graph_utils
-    src/pairwise_consistency_maximization/graph_utils/graph_utils_functions.cpp
+        src/pairwise_consistency_maximization/graph_utils/graph_utils_functions.cpp
 )
 target_link_libraries(graph_utils
         gtsam
+)
+
+# Robot local map library
+add_library(robot_local_map
+        src/pairwise_consistency_maximization/robot_local_map/robot_measurements.cpp
+        src/pairwise_consistency_maximization/robot_local_map/robot_local_map.cpp
+        )
+target_link_libraries(robot_local_map
+        graph_utils
+        )
+
+# Paiwise Consistency computation library
+add_library(pairwise_consistency
+   src/pairwise_consistency_maximization/pairwise_consistency/pairwise_consistency.cpp
+)
+target_link_libraries(pairwise_consistency
+       robot_local_map
 )
 
 # Maximum Clique Solver
@@ -69,18 +67,9 @@ add_library(fast_max-clique_finder
 )
 target_compile_options(fast_max-clique_finder PRIVATE -w)
 
-# Robot local map library
-add_library(robot_local_map
-    src/pairwise_consistency_maximization/robot_local_map/robot_measurements.cpp
-    src/pairwise_consistency_maximization/robot_local_map/robot_local_map.cpp
-)
-target_link_libraries(robot_local_map
-   graph_utils
-)
-
 # Global map solver library
 add_library(global_map_solver
-        src/pairwise_consistency_maximization/global_map/global_map.cpp
+   src/pairwise_consistency_maximization/global_map/global_map.cpp
 )
 target_link_libraries(global_map_solver
    graph_utils
@@ -88,33 +77,39 @@ target_link_libraries(global_map_solver
    fast_max-clique_finder
 )
 
-###########################################################################
-# Distributed Mapper  
-file(GLOB srcs "src/distributed_mapper/*.cpp" "src/distributed_mapper/*.h")
-include_directories(src/distributed_mapper)
-add_library (distributed-mapper SHARED ${srcs} ${GTSAM_LIBRARIES})
-add_library (distributed-mapper-static STATIC ${srcs} ${GTSAM_LIBRARIES})
-target_link_libraries(distributed-mapper ${Boost_LIBRARIES}
-        gtsam
-        graph_utils
-        robot_local_map
+# Distributed PCM library
+add_library(distributed_pcm
+        src/pairwise_consistency_maximization/distributed_pcm/distributed_pcm.cpp
+)
+target_link_libraries(distributed_pcm
         global_map_solver
-        distributed_pcm)
-target_link_libraries(distributed-mapper-static ${Boost_LIBRARIES}
+)
+
+# Distributed Mapper
+add_library (distributed_mapper
+        src/distributed_mapper/DistributedMapper.cpp
+        src/distributed_mapper/MultiRobotUtils.cpp
+        include/distributed_mapper/DistributedMapperUtils.h)
+
+target_link_libraries(distributed_mapper
+        ${Boost_LIBRARIES}
         gtsam
-        graph_utils
-        robot_local_map
-        global_map_solver
         distributed_pcm)
-export(PACKAGE DistributedMapper)
-install(TARGETS distributed-mapper DESTINATION lib)
-install(TARGETS distributed-mapper-static DESTINATION lib)
+
+
+# Distributed mapper utils library
+#add_library(distributed_mapper_utils
+#        )
+#target_link_libraries(distributed_mapper_utils
+#        distributed_mapper
+#        )
 
 ###########################################################################
-# Add executable
-add_executable (runDistributedMapper examples/runDistributedMapper.cpp)
-target_link_libraries (runDistributedMapper distributed-mapper ${Boost_LIBRARIES} gtsam global_map_solver distributed_pcm)
-install(TARGETS runDistributedMapper DESTINATION bin)
+# Add example executable
+add_executable (runDistributedMapper
+        examples/runDistributedMapper.cpp)
+target_link_libraries (runDistributedMapper
+        distributed_mapper)
 
 ###########################################################################
 # Tests
@@ -122,9 +117,9 @@ add_subdirectory(tests)
 
 ###########################################################################
 # Install
-file(GLOB headers "src/distributed_mapper/*.h")
-install(FILES ${headers} DESTINATION include/distributed_mapper/)
-configure_file (${PROJECT_SOURCE_DIR}/DistributedMapperConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/DistributedMapperConfig.cmake @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/DistributedMapperConfig.cmake DESTINATION share/distributed_mapper)
+#file(GLOB headers "src/distributed_mapper/*.h")
+#install(FILES ${headers} DESTINATION include/distributed_mapper/)
+#configure_file (${PROJECT_SOURCE_DIR}/DistributedMapperConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/DistributedMapperConfig.cmake @ONLY)
+#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/DistributedMapperConfig.cmake DESTINATION share/distributed_mapper)
 
 

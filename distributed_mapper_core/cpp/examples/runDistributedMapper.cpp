@@ -3,7 +3,7 @@
  * @brief script for running g2o files
  */
 
-#include <distributed_mapper/DistributedMapperUtils.h>
+#include "distributed_mapper/DistributedMapperUtils.h"
 #include <distributed_mapper/MultiRobotUtils.h>
 #include <distributed_mapper/BetweenChordalFactor.h>
 
@@ -264,11 +264,11 @@ int main(int argc, char* argv[])
   if(!disconnectedGraph){
       try{
         // try optimizing
-        vector< Values > estimates =  distributedOptimizer(distMappers, maxIter, updateType, gamma,
-                                                           rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
-                                                           useFlaggedInit, useLandmarks, debug, true, graphAndValuesVec,
-                                                           rotationTrace, poseTrace, subgraphRotationTrace,
-                                                           subgraphPoseTrace, rotationVectorValuesTrace);
+        vector< Values > estimates = distributedOptimizer(distMappers, maxIter, updateType, gamma,
+                rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
+                useFlaggedInit, useLandmarks, debug, true, graphAndValuesVec,
+                rotationTrace, poseTrace, subgraphRotationTrace,
+                subgraphPoseTrace, rotationVectorValuesTrace, boost::none, boost::none, boost::none, boost::none);
 
         if(debug)
           cout << "Done" << endl;

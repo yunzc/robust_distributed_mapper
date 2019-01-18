@@ -12,6 +12,7 @@
 #include <boost/random/variate_generator.hpp>
 #include <gtsam/base/Testable.h>
 #include <CppUnitLite/TestHarness.h>
+#include "distributed_pcm/distributed_pcm.h"
 
 using namespace std;
 using namespace gtsam;
@@ -81,7 +82,7 @@ distributedEstimation(size_t nrRobots, string dataPath, string traceFile, Values
     double gamma = 1.0f;
     vector< Values > estimates = distributedOptimizer(distMappers, maxIter, DistributedMapper::incUpdate,
                                                       gamma, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
-                                                      useFlaggedInit, false, false, contains_odometry, rotationTrace, poseTrace,
+                                                      useFlaggedInit, false, false, contains_odometry, boost::none, rotationTrace, poseTrace,
                                                       subgraphRotationTrace, subgraphPoseTrace, rotationVectorValuesTrace);
 
 

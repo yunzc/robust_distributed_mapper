@@ -1,6 +1,4 @@
-//
-// Created by lajoiepy on 17/01/19.
-//
+// Copyright (C) 2019 by Pierre-Yves Lajoie <lajoie.py@gmail.com>
 
 #include "pairwise_consistency_maximization/distributed_pcm/distributed_pcm.h"
 
