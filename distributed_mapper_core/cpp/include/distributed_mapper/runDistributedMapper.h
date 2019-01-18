@@ -13,7 +13,7 @@
 #include <boost/random/variate_generator.hpp>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
-
+#include <utility>
 
 using namespace std;
 using namespace gtsam;
@@ -101,7 +101,7 @@ namespace distributed_mapper {
     /**
      * @brief function to run the whole pipeline
      */
-    int runDistributedMapper(const size_t& nrRobots, const string& logDir, const string& dataDir, const string& traceFile, const bool& useXY, const bool& useOP,
+    std::pair<double, double> runDistributedMapper(const size_t& nrRobots, const string& logDir, const string& dataDir, const string& traceFile, const bool& useXY, const bool& useOP,
                              const bool& debug, const noiseModel::Diagonal::shared_ptr& priorModel, const noiseModel::Isotropic::shared_ptr& model,
                              const size_t& maxIter, const double& rotationEstimateChangeThreshold, const double& poseEstimateChangeThreshold,
                              const double& gamma, const bool& useFlaggedInit, const distributed_mapper::DistributedMapper::UpdateType& updateType,
@@ -268,7 +268,8 @@ namespace distributed_mapper {
                 Values centralized = distributed_mapper::multirobot_util::centralizedEstimation(fullGraphWithPrior,
                                                                                                 model, priorModel,
                                                                                                 useBetweenNoise);
-                std::cout << "Centralized Two Stage Error: " << chordalGraph.error(centralized) << std::endl;
+                double centralized_error = chordalGraph.error(centralized);
+                std::cout << "Centralized Two Stage Error: " << centralized_error << std::endl;
 
                 ////////////////////////////////////////////////////////////////////////////////
                 // Centralized Two Stage + Gauss Newton
@@ -281,8 +282,10 @@ namespace distributed_mapper {
                 ////////////////////////////////////////////////////////////////////////////////
                 // Distributed Error
                 ////////////////////////////////////////////////////////////////////////////////
-                std::cout << "Distributed Error: " << chordalGraph.error(distributed) << std::endl;
+                double distributed_error = chordalGraph.error(distributed);
+                std::cout << "Distributed Error: " << distributed_error << std::endl;
 
+                return std::make_pair(centralized_error, distributed_error);
             }
             catch (...) {
                 // Optimization failed (maybe due to disconnected graph)
@@ -294,7 +297,5 @@ namespace distributed_mapper {
             cout << "Graph is disconnected: " << endl;
             copyInitial(nrRobots, dataDir);
         }
-
-
     }
 }

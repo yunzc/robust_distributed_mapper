@@ -79,9 +79,11 @@ int main(int argc, char *argv[]) {
              << e.what() << ", application will now exit" << endl;
         return 2;
     }
-    return distributed_mapper::runDistributedMapper(nrRobots, logDir, dataDir, traceFile, useXY, useOP,
-            debug, priorModel, model,
+    std::pair<Values, Values> results = distributed_mapper::runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
+            useXY, useOP, debug, priorModel, model,
             maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
             gamma, useFlaggedInit, updateType, useBetweenNoise,
             useChrLessFullGraph, useLandmarks);
+
+    return 0;
 }
