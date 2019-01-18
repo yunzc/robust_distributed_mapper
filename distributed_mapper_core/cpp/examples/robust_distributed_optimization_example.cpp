@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
              << e.what() << ", application will now exit" << endl;
         return 2;
     }
-    std::pair<Values, Values> results = distributed_mapper::runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
+    std::tuple<double, double, int> results = distributed_mapper::runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
             useXY, useOP, debug, priorModel, model,
             maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
             gamma, useFlaggedInit, updateType, useBetweenNoise,

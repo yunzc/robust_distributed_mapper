@@ -38,14 +38,15 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersNoRotation_2robots)
     bool useLandmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
 
     // Call distributed optimization
-    std::pair<double, double> results = runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
+    std::tuple<double, double, int> results = runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
             useXY, useOP, debug, priorModel, model,
             maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
             gamma, useFlaggedInit, updateType, useBetweenNoise,
             useChrLessFullGraph, useLandmarks);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
-    EXPECT(assert_equal(results.first, results.second, tolerance));
+    EXPECT(assert_equal(std::get<0>(results), std::get<0>(results), tolerance));;
+    EXPECT(std::get<2>(results) == 7);
 }
 
 

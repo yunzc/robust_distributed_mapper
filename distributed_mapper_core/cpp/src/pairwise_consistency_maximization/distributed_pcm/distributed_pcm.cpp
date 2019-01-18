@@ -4,7 +4,7 @@
 
 namespace distributed_pcm {
 
-    void DistributedPCM::solve(std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
+    int DistributedPCM::solve(std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
                std::vector<gtsam::GraphAndValues>& graph_and_values_vector){
 
         std::vector<graph_utils::LoopClosures> separatorsByRobot;
@@ -75,7 +75,7 @@ namespace distributed_pcm {
         auto interrobotMeasurements = robot_local_map::RobotMeasurements(separatorsTransforms, separatorsByRobot[0]);
 
         auto globalMap = global_map::GlobalMap(robot1LocalMap, robot2LocalMap, interrobotMeasurements);
-        std::vector<int> maxClique = globalMap.pairwiseConsistencyMaximization();
+        std::vector<int> max_clique = globalMap.pairwiseConsistencyMaximization();
 
         // Retrieve indexes of rejected measurements
         for (int robot = 0; robot < dist_mappers.size(); robot++) {//distMapper : dist_mappers
@@ -84,14 +84,14 @@ namespace distributed_pcm {
             std::cout << "Robot " << robot << " : Number of separators : "  << numberSeparators << std::endl;
             std::vector<int> rejectedSeparatorIds;
             for (int i = 0; i < separatorsIds.size(); i++) {
-                if (std::find(maxClique.begin(), maxClique.end(), i) == maxClique.end()) {
+                if (std::find(max_clique.begin(), max_clique.end(), i) == max_clique.end()) {
                     rejectedSeparatorIds.emplace_back(i);
                     numberSeparators--;
                 }
             }
             // Remove measurements not in the max clique
             // TODO: Fix "off by one" bug in innerEdges_ and graph_
-            std::cout << "Robot " << robot << " : Size of the maximal consistency clique : "  << maxClique.size() << std::endl;
+            std::cout << "Robot " << robot << " : Size of the maximal consistency clique : "  << max_clique.size() << std::endl;
             int numberSeparatorIdsRemoved = 0;
             for (auto index : rejectedSeparatorIds) {
                 auto id = separatorsIds[index] - numberSeparatorIdsRemoved;
@@ -107,7 +107,7 @@ namespace distributed_pcm {
             }
             dist_mappers[robot]->setSeparatorIds(newSeparatorIds);
         }
-
+        return max_clique.size();
     }
 
 }

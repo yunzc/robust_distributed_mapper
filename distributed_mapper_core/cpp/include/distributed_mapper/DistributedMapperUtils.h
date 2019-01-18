@@ -523,6 +523,7 @@ void optimizePose(std::vector< boost::shared_ptr<DistributedMapper> > distMapper
 std::vector< gtsam::Values >
 distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMappers,
                      size_t maxIter,
+                     int& max_clique_size,
                      DistributedMapper::UpdateType updateType = DistributedMapper::incUpdate,
                      double gamma = 1.0f,
                      double rotationEstimateChangeThreshold = 1e-5,
@@ -553,7 +554,7 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
 
   // TODO: Support N robots instead of 2.
   if (distMappers.size() == 2 && contains_odometry) {
-      distributed_pcm::DistributedPCM::solve(distMappers, graphAndValuesVec.get());
+      max_clique_size = distributed_pcm::DistributedPCM::solve(distMappers, graphAndValuesVec.get());
   }
 
   if(debug)

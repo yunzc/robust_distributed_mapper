@@ -26,8 +26,9 @@ namespace distributed_pcm {
          *
          * @param dist_mappers is the different distributed mappers in the system (one by robot)
          * @param graph_and_values is the collection of factors of all graph used for evaluation
+         * @returns size of the maximum clique of pairwise consistent measurements
          */
-        static void solve(std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
+        static int solve(std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
                 std::vector<gtsam::GraphAndValues>& graph_and_values_vector);
 
     };

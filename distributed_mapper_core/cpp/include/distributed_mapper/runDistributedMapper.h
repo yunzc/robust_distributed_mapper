@@ -101,7 +101,7 @@ namespace distributed_mapper {
     /**
      * @brief function to run the whole pipeline
      */
-    std::pair<double, double> runDistributedMapper(const size_t& nrRobots, const string& logDir, const string& dataDir, const string& traceFile, const bool& useXY, const bool& useOP,
+    std::tuple<double, double, int> runDistributedMapper(const size_t& nrRobots, const string& logDir, const string& dataDir, const string& traceFile, const bool& useXY, const bool& useOP,
                              const bool& debug, const noiseModel::Diagonal::shared_ptr& priorModel, const noiseModel::Isotropic::shared_ptr& model,
                              const size_t& maxIter, const double& rotationEstimateChangeThreshold, const double& poseEstimateChangeThreshold,
                              const double& gamma, const bool& useFlaggedInit, const distributed_mapper::DistributedMapper::UpdateType& updateType,
@@ -199,14 +199,13 @@ namespace distributed_mapper {
         if (!disconnectedGraph) {
             try {
                 // try optimizing
-                vector <Values> estimates = distributedOptimizer(distMappers, maxIter, updateType, gamma,
-                                                                 rotationEstimateChangeThreshold,
+                int max_clique_size = 0;
+                vector <Values> estimates = distributedOptimizer(distMappers, maxIter, max_clique_size, updateType,
+                                                                 gamma, rotationEstimateChangeThreshold,
                                                                  poseEstimateChangeThreshold,
-                                                                 useFlaggedInit, useLandmarks, debug, true,
-                                                                 graphAndValuesVec,
+                                                                 useFlaggedInit, useLandmarks, debug, true, graphAndValuesVec,
                                                                  rotationTrace, poseTrace, subgraphRotationTrace,
-                                                                 subgraphPoseTrace, rotationVectorValuesTrace,
-                                                                 boost::none, boost::none, boost::none, boost::none);
+                                                                 subgraphPoseTrace, rotationVectorValuesTrace);
 
                 if (debug)
                     cout << "Done" << endl;
@@ -285,7 +284,7 @@ namespace distributed_mapper {
                 double distributed_error = chordalGraph.error(distributed);
                 std::cout << "Distributed Error: " << distributed_error << std::endl;
 
-                return std::make_pair(centralized_error, distributed_error);
+                return std::make_tuple(centralized_error, distributed_error, max_clique_size);
             }
             catch (...) {
                 // Optimization failed (maybe due to disconnected graph)
