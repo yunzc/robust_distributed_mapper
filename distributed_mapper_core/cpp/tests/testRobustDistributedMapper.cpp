@@ -45,8 +45,43 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersNoRotation_2robots)
             useChrLessFullGraph, useLandmarks);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
-    EXPECT(assert_equal(std::get<0>(results), std::get<0>(results), tolerance));;
+    EXPECT(assert_equal(std::get<0>(results), 0.0, tolerance));
+    EXPECT(assert_equal(std::get<0>(results), std::get<0>(results), tolerance));
     EXPECT(std::get<2>(results) == 7);
+}
+
+TEST(DistributedMapper, testdistributedEstimationWithoutOutliersWithRotation_2robots) {
+    // Parameters
+    size_t nrRobots = 2; // number of robots
+    string logDir("/tmp/"); // log directory
+    string dataDir("../../../test_data/pairwise_consistency_maximization/clean/simulation/example_2robots/"); // data directory
+    string traceFile("/tmp/runG2o"); // data directory
+    bool useXY = false;
+    bool useOP = false;
+    bool debug = false;
+    noiseModel::Diagonal::shared_ptr priorModel = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
+    noiseModel::Isotropic::shared_ptr model = noiseModel::Isotropic::Variance(12, 1);
+    size_t maxIter = 1000; // Maximum number of iterations of optimizer
+    double rotationEstimateChangeThreshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
+    double poseEstimateChangeThreshold = 1e-1; // Difference between pose estimate provides an early stopping condition
+    double gamma = 1.0f; // Gamma value for over relaxation methods
+    bool useFlaggedInit = true; // to use flagged initialization or not
+    distributed_mapper::DistributedMapper::UpdateType updateType = distributed_mapper::DistributedMapper::incUpdate; // updateType differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
+    bool useBetweenNoise = false; // use between factor noise or not
+    bool useChrLessFullGraph = false; // whether full graph has character indexes or not
+    bool useLandmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
+
+    // Call distributed optimization
+    std::tuple<double, double, int> results = runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
+                                                                   useXY, useOP, debug, priorModel, model,
+                                                                   maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
+                                                                   gamma, useFlaggedInit, updateType, useBetweenNoise,
+                                                                   useChrLessFullGraph, useLandmarks);
+    // Compare centralized and distributed pose estimates
+    double tolerance = 1e-1;
+    EXPECT(assert_equal(std::get<0>(results), 0.0, tolerance));
+    EXPECT(assert_equal(std::get<0>(results), std::get<0>(results), tolerance));
+    EXPECT(std::get<2>(results) == 10);
 }
 
 TEST(DistributedMapper, testdistributedEstimationWithOutliersWithRotation_2robots) {
@@ -78,14 +113,16 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersWithRotation_2robot
                                                                    useChrLessFullGraph, useLandmarks);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
-    EXPECT(assert_equal(std::get<0>(results), std::get<0>(results), tolerance));;
+    EXPECT(assert_equal(std::get<0>(results), 0.0, tolerance));
+    EXPECT(assert_equal(std::get<0>(results), std::get<0>(results), tolerance));
     EXPECT(std::get<2>(results) == 7);
 }
-
 
 /****************************************************************************** */
 int main() {
     TestResult tr;
-    return TestRegistry::runAllTests(tr);
+    int result = TestRegistry::runAllTests(tr);
+    int failure_count = tr.getFailureCount();
+    return result;
 }
 //******************************************************************************

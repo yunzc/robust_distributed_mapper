@@ -6,7 +6,7 @@ close all
 clc
 
 %% Settings
-dataset_folder = horzcat(pwd, '/../test_data/pairwise_consistency_maximization/simulation/');
+dataset_folder = horzcat(pwd, '/../test_data/pairwise_consistency_maximization/clean/simulation/');
 number_of_robots = 2; % Only 2 is supported.
 id_offset = 96; % letter a = 97 (ASCII)
 sigma_R = 0.01;

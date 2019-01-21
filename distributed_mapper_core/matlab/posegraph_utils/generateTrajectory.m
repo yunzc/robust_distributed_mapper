@@ -6,13 +6,15 @@ measurements.between(1).R = eye(3);
 measurements.between(1).t = [0; 0; 0];
 measurements.between(1).Info = information_matrix;
 edges_id = uint64([]);
+t_speed = 1;
+R_speed = 10;
 for i=1:trajectory_size
     if use_rotation
-        offset.R = rotx(rand*360)*roty(rand*360)*rotz(rand*360);
+        offset.R = rotx(rand*2*R_speed-R_speed)*roty(rand*2*R_speed-R_speed)*rotz(rand*2*R_speed-R_speed);
     else
         offset.R = eye(3);
     end
-    offset.t = [rand; rand; rand];
+    offset.t = [2*t_speed*rand-t_speed; 2*t_speed*rand-t_speed; 2*t_speed*rand-t_speed];
     measurements.between(i).R = offset.R;
     measurements.between(i).t = offset.t;
     measurements.between(i).Info = information_matrix;
