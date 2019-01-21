@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>Robust Distributed Mapper: distributed_mapper Namespace Reference</title>
+<title>Robust Distributed Pose Graph Optimization: distributed_mapper Namespace Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Robust Distributed Mapper
+   <div id="projectname">Robust Distributed Pose Graph Optimization
    </div>
    <div id="projectbrief">This project presents a distributed pose graph optimization approach robust to outlier measurments among the inter-robot loop closures.</div>
   </td>
@@ -118,11 +118,20 @@ Functions</h2></td></tr>
 <tr class="memitem:a86bc027e8518715a9d7f41fafa0a4e17"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedistributed__mapper.html#a86bc027e8518715a9d7f41fafa0a4e17">optimizePose</a> (std::vector&lt; boost::shared_ptr&lt; <a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html">DistributedMapper</a> &gt; &gt; distMappers, size_t maxIter, size_t nrRobots, std::string robotNames, std::vector&lt; size_t &gt; ordering, bool debug, double poseEstimateChangeThreshold, bool useLandmarks=false, boost::optional&lt; std::vector&lt; gtsam::Values &gt; &amp; &gt; poseTrace=boost::none, boost::optional&lt; std::vector&lt; gtsam::Values &gt; &amp; &gt; subgraphPoseTrace=boost::none, boost::optional&lt; gtsam::Values &amp; &gt; poseCentralized=boost::none, boost::optional&lt; gtsam::NonlinearFactorGraph &amp; &gt; poseGraph=boost::none)</td></tr>
 <tr class="memdesc:a86bc027e8518715a9d7f41fafa0a4e17"><td class="mdescLeft">&#160;</td><td class="mdescRight">optimizePose optimizes the pose in a distributed sense  <a href="#a86bc027e8518715a9d7f41fafa0a4e17">More...</a><br /></td></tr>
 <tr class="separator:a86bc027e8518715a9d7f41fafa0a4e17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abba4f85c0e61e773965a1c2acad625b6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; gtsam::Values &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedistributed__mapper.html#abba4f85c0e61e773965a1c2acad625b6">distributedOptimizer</a> (std::vector&lt; boost::shared_ptr&lt; <a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html">DistributedMapper</a> &gt; &gt; distMappers, size_t maxIter, <a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html#ad5a6da807473db2cf1b63b9980d2ac9a">DistributedMapper::UpdateType</a> updateType=<a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html#ad5a6da807473db2cf1b63b9980d2ac9aab2b826a210311dc5e21f745d93276783">DistributedMapper::incUpdate</a>, double gamma=1.0f, double rotationEstimateChangeThreshold=1e-5, double poseEstimateChangeThreshold=1e-6, bool useFlaggedInit=false, bool useLandmarks=false, bool debug=false, bool contains_odometry=true, boost::optional&lt; std::vector&lt; gtsam::Values &gt; &amp; &gt; rotationTrace=boost::none, boost::optional&lt; std::vector&lt; gtsam::Values &gt; &amp; &gt; poseTrace=boost::none, boost::optional&lt; std::vector&lt; gtsam::Values &gt; &amp; &gt; subgraphRotationTrace=boost::none, boost::optional&lt; std::vector&lt; gtsam::Values &gt; &amp; &gt; subgraphPoseTrace=boost::none, boost::optional&lt; std::vector&lt; gtsam::VectorValues &gt; &amp; &gt; rotationVectorValuesTrace=boost::none, boost::optional&lt; gtsam::VectorValues &amp; &gt; rotationCentralized=boost::none, boost::optional&lt; gtsam::Values &amp; &gt; poseCentralized=boost::none, boost::optional&lt; gtsam::NonlinearFactorGraph &amp; &gt; graphWithoutPrior=boost::none, boost::optional&lt; gtsam::GaussianFactorGraph &amp; &gt; centralizedRotationGraph=boost::none)</td></tr>
-<tr class="memdesc:abba4f85c0e61e773965a1c2acad625b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">distributedOptimization performs distributed estimation using Jacobi algorithm  <a href="#abba4f85c0e61e773965a1c2acad625b6">More...</a><br /></td></tr>
-<tr class="separator:abba4f85c0e61e773965a1c2acad625b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a919ba598264ab85685e226166fc90e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; gtsam::Values &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedistributed__mapper.html#a8a919ba598264ab85685e226166fc90e">distributedOptimizer</a> (std::vector&lt; boost::shared_ptr&lt; <a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html">DistributedMapper</a> &gt; &gt; distMappers, size_t maxIter, int &amp;max_clique_size, <a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html#ad5a6da807473db2cf1b63b9980d2ac9a">DistributedMapper::UpdateType</a> updateType=<a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html#ad5a6da807473db2cf1b63b9980d2ac9aab2b826a210311dc5e21f745d93276783">DistributedMapper::incUpdate</a>, double gamma=1.0f, double rotationEstimateChangeThreshold=1e-5, double poseEstimateChangeThreshold=1e-6, bool useFlaggedInit=false, bool useLandmarks=false, bool debug=false, bool contains_odometry=true, const double &amp;confidence_probability=0.90, boost::optional&lt; std::vector&lt; gtsam::GraphAndValues &gt; &amp; &gt; graphAndValuesVec=boost::none, boost::optional&lt; std::vector&lt; gtsam::Values &gt; &amp; &gt; rotationTrace=boost::none, boost::optional&lt; std::vector&lt; gtsam::Values &gt; &amp; &gt; poseTrace=boost::none, boost::optional&lt; std::vector&lt; gtsam::Values &gt; &amp; &gt; subgraphRotationTrace=boost::none, boost::optional&lt; std::vector&lt; gtsam::Values &gt; &amp; &gt; subgraphPoseTrace=boost::none, boost::optional&lt; std::vector&lt; gtsam::VectorValues &gt; &amp; &gt; rotationVectorValuesTrace=boost::none, boost::optional&lt; gtsam::VectorValues &amp; &gt; rotationCentralized=boost::none, boost::optional&lt; gtsam::Values &amp; &gt; poseCentralized=boost::none, boost::optional&lt; gtsam::NonlinearFactorGraph &amp; &gt; graphWithoutPrior=boost::none, boost::optional&lt; gtsam::GaussianFactorGraph &amp; &gt; centralizedRotationGraph=boost::none)</td></tr>
+<tr class="memdesc:a8a919ba598264ab85685e226166fc90e"><td class="mdescLeft">&#160;</td><td class="mdescRight">distributedOptimization performs distributed estimation using Jacobi algorithm  <a href="#a8a919ba598264ab85685e226166fc90e">More...</a><br /></td></tr>
+<tr class="separator:a8a919ba598264ab85685e226166fc90e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc50e7209219c0bfe7e2befe211bd50b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedistributed__mapper.html#adc50e7209219c0bfe7e2befe211bd50b">logResults</a> (size_t nrRobots, std::string traceFile, gtsam::Values centralized, std::vector&lt; boost::shared_ptr&lt; <a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html">DistributedMapper</a> &gt; &gt; distMappers)</td></tr>
 <tr class="separator:adc50e7209219c0bfe7e2befe211bd50b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae5c0afc175cfd891490bf5d313a83de"><td class="memItemLeft" align="right" valign="top">GraphAndValues&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedistributed__mapper.html#aae5c0afc175cfd891490bf5d313a83de">readFullGraph</a> (size_t nrRobots, vector&lt; GraphAndValues &gt; graphAndValuesVec)</td></tr>
+<tr class="memdesc:aae5c0afc175cfd891490bf5d313a83de"><td class="mdescLeft">&#160;</td><td class="mdescRight">readFullGraph reads the full graph if it is present in the directory, otherwise creates it  <a href="#aae5c0afc175cfd891490bf5d313a83de">More...</a><br /></td></tr>
+<tr class="separator:aae5c0afc175cfd891490bf5d313a83de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e5850ebf3464e4ba53541ff0e98ee83"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedistributed__mapper.html#a5e5850ebf3464e4ba53541ff0e98ee83">copyInitial</a> (size_t nrRobots, std::string dataDir)</td></tr>
+<tr class="memdesc:a5e5850ebf3464e4ba53541ff0e98ee83"><td class="mdescLeft">&#160;</td><td class="mdescRight">copyInitial copies the initial graph to optimized graph as a fall back option  <a href="#a5e5850ebf3464e4ba53541ff0e98ee83">More...</a><br /></td></tr>
+<tr class="separator:a5e5850ebf3464e4ba53541ff0e98ee83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66eae91df1ac438dabf6040a3549b780"><td class="memItemLeft" align="right" valign="top">std::tuple&lt; double, double, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedistributed__mapper.html#a66eae91df1ac438dabf6040a3549b780">runDistributedMapper</a> (const size_t &amp;nrRobots, const string &amp;logDir, const string &amp;dataDir, const string &amp;traceFile, const bool &amp;useXY, const bool &amp;useOP, const bool &amp;debug, const noiseModel::Diagonal::shared_ptr &amp;<a class="el" href="test_distributed_mapper_8cpp.html#ad6480d6f7c97d5e57d57b006db7565ef">priorModel</a>, const noiseModel::Isotropic::shared_ptr &amp;<a class="el" href="test_distributed_mapper_8cpp.html#ac733dc172a5d2bf4f46c93bd4d0cee4b">model</a>, const size_t &amp;maxIter, const double &amp;rotationEstimateChangeThreshold, const double &amp;poseEstimateChangeThreshold, const double &amp;gamma, const bool &amp;useFlaggedInit, const <a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html#ad5a6da807473db2cf1b63b9980d2ac9a">distributed_mapper::DistributedMapper::UpdateType</a> &amp;updateType, const bool &amp;useBetweenNoise, const bool &amp;useChrLessFullGraph, const bool &amp;useLandmarks, const double &amp;confidence_probability)</td></tr>
+<tr class="memdesc:a66eae91df1ac438dabf6040a3549b780"><td class="mdescLeft">&#160;</td><td class="mdescRight">function to run the whole pipeline  <a href="#a66eae91df1ac438dabf6040a3549b780">More...</a><br /></td></tr>
+<tr class="separator:a66eae91df1ac438dabf6040a3549b780"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -145,7 +154,42 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"></div><h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="abba4f85c0e61e773965a1c2acad625b6"></a>
+<a class="anchor" id="a5e5850ebf3464e4ba53541ff0e98ee83"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void distributed_mapper::copyInitial </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>nrRobots</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>dataDir</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>copyInitial copies the initial graph to optimized graph as a fall back option </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nrRobots</td><td>is the number of robots </td></tr>
+    <tr><td class="paramname">dataDir</td><td>is the directory containing the initial graph </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a8a919ba598264ab85685e226166fc90e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -160,6 +204,12 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>maxIter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>max_clique_size</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -208,6 +258,18 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>contains_odometry</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>confidence_probability</em> = <code>0.90</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boost::optional&lt; std::vector&lt; gtsam::GraphAndValues &gt; &amp; &gt;&#160;</td>
+          <td class="paramname"><em>graphAndValuesVec</em> = <code>boost::none</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -610,6 +672,171 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aae5c0afc175cfd891490bf5d313a83de"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GraphAndValues distributed_mapper::readFullGraph </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>nrRobots</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; GraphAndValues &gt;&#160;</td>
+          <td class="paramname"><em>graphAndValuesVec</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>readFullGraph reads the full graph if it is present in the directory, otherwise creates it </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nrRobots</td><td>is the number of robots </td></tr>
+    <tr><td class="paramname">graphAndValuesVec</td><td>contains the graphs and initials of each robot </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a66eae91df1ac438dabf6040a3549b780"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::tuple&lt;double, double, int&gt; distributed_mapper::runDistributedMapper </td>
+          <td>(</td>
+          <td class="paramtype">const size_t &amp;&#160;</td>
+          <td class="paramname"><em>nrRobots</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;&#160;</td>
+          <td class="paramname"><em>logDir</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;&#160;</td>
+          <td class="paramname"><em>dataDir</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;&#160;</td>
+          <td class="paramname"><em>traceFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>useXY</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>useOP</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>debug</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const noiseModel::Diagonal::shared_ptr &amp;&#160;</td>
+          <td class="paramname"><em>priorModel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const noiseModel::Isotropic::shared_ptr &amp;&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const size_t &amp;&#160;</td>
+          <td class="paramname"><em>maxIter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>rotationEstimateChangeThreshold</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>poseEstimateChangeThreshold</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>gamma</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>useFlaggedInit</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html#ad5a6da807473db2cf1b63b9980d2ac9a">distributed_mapper::DistributedMapper::UpdateType</a> &amp;&#160;</td>
+          <td class="paramname"><em>updateType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>useBetweenNoise</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>useChrLessFullGraph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>useLandmarks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>confidence_probability</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>function to run the whole pipeline </p>
 
 </div>
 </div>

@@ -1,6 +1,7 @@
 var searchData=
 [
   ['getaveragevertexdegree',['GetAverageVertexDegree',['../class_f_m_c_1_1_c_graph_i_o.html#ae92e427b92805766397d3b311182b168',1,'FMC::CGraphIO']]],
+  ['getchisquaredthreshold',['getChiSquaredThreshold',['../classpairwise__consistency_1_1_pairwise_consistency.html#adbd31bccab9341a2a5980c18a3047716',1,'pairwise_consistency::PairwiseConsistency']]],
   ['getconvertedestimate',['getConvertedEstimate',['../classdistributed__mapper_1_1_distributed_mapper.html#ae334159895d5abe6b19f735e502ed58c',1,'distributed_mapper::DistributedMapper']]],
   ['getdegree',['getDegree',['../namespace_f_m_c.html#aa7d80a52a09b80fb9e44366ec4c55fa1',1,'FMC']]],
   ['getedgecount',['GetEdgeCount',['../class_f_m_c_1_1_c_graph_i_o.html#a92c7d670e4d44b010507eac56ebc144a',1,'FMC::CGraphIO']]],
@@ -20,5 +21,5 @@ var searchData=
   ['gettransformsrobot2',['getTransformsRobot2',['../classpairwise__consistency_1_1_pairwise_consistency.html#adf68cfa797c2c687480abe3b61561a68',1,'pairwise_consistency::PairwiseConsistency']]],
   ['getvertexcount',['GetVertexCount',['../class_f_m_c_1_1_c_graph_i_o.html#ae78143c82f98205cccd1b84de891b8c4',1,'FMC::CGraphIO']]],
   ['getverticesptr',['GetVerticesPtr',['../class_f_m_c_1_1_c_graph_i_o.html#a6c82c4cd4de1f422f9b45e9f5ec81a4a',1,'FMC::CGraphIO']]],
-  ['globalmap',['GlobalMap',['../classglobal__map_1_1_global_map.html#a9b070ae916643e5976c73723eabad596',1,'global_map::GlobalMap']]]
+  ['globalmap',['GlobalMap',['../classglobal__map_1_1_global_map.html#ae7c090ead8a5350f899a3266acafc3fc',1,'global_map::GlobalMap']]]
 ];

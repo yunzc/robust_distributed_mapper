@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>Robust Distributed Mapper: distributed_mapper::DistributedMapper Class Reference</title>
+<title>Robust Distributed Pose Graph Optimization: distributed_mapper::DistributedMapper Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Robust Distributed Mapper
+   <div id="projectname">Robust Distributed Pose Graph Optimization
    </div>
    <div id="projectbrief">This project presents a distributed pose graph optimization approach robust to outlier measurments among the inter-robot loop closures.</div>
   </td>
@@ -171,6 +171,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6722012a37ab52b05bc26557b4c80764"><td class="memItemLeft" align="right" valign="top">gtsam::Values&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html#a6722012a37ab52b05bc26557b4c80764">neighbors</a> ()</td></tr>
 <tr class="memdesc:a6722012a37ab52b05bc26557b4c80764"><td class="mdescLeft">&#160;</td><td class="mdescRight">neighbors returns the neighboring values  <a href="#a6722012a37ab52b05bc26557b4c80764">More...</a><br /></td></tr>
 <tr class="separator:a6722012a37ab52b05bc26557b4c80764"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20e40432ed41ee2e5b38eaf2958fb851"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html#a20e40432ed41ee2e5b38eaf2958fb851">removeFactor</a> (const int &amp;index)</td></tr>
+<tr class="memdesc:a20e40432ed41ee2e5b38eaf2958fb851"><td class="mdescLeft">&#160;</td><td class="mdescRight">allows to remove a factor from the graph.  <a href="#a20e40432ed41ee2e5b38eaf2958fb851">More...</a><br /></td></tr>
+<tr class="separator:a20e40432ed41ee2e5b38eaf2958fb851"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfdaa3dde07fb69834a39dc01dabeff8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html#abfdaa3dde07fb69834a39dc01dabeff8">eraseFactor</a> (const int &amp;index)</td></tr>
+<tr class="memdesc:abfdaa3dde07fb69834a39dc01dabeff8"><td class="mdescLeft">&#160;</td><td class="mdescRight">allows to erase a factor from the graph.  <a href="#abfdaa3dde07fb69834a39dc01dabeff8">More...</a><br /></td></tr>
+<tr class="separator:abfdaa3dde07fb69834a39dc01dabeff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83ed13413c8929709769e5da683c9124"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html#a83ed13413c8929709769e5da683c9124">setSeparatorIds</a> (const std::vector&lt; size_t &gt; &amp;ids)</td></tr>
+<tr class="memdesc:a83ed13413c8929709769e5da683c9124"><td class="mdescLeft">&#160;</td><td class="mdescRight">allows to erase a separator ID.  <a href="#a83ed13413c8929709769e5da683c9124">More...</a><br /></td></tr>
+<tr class="separator:a83ed13413c8929709769e5da683c9124"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e539856b596c21bc8c8906da6e25f61"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html#a5e539856b596c21bc8c8906da6e25f61">eraseSeparatorId</a> (const int &amp;id)</td></tr>
+<tr class="memdesc:a5e539856b596c21bc8c8906da6e25f61"><td class="mdescLeft">&#160;</td><td class="mdescRight">allows to erase a separator ID.  <a href="#a5e539856b596c21bc8c8906da6e25f61">More...</a><br /></td></tr>
+<tr class="separator:a5e539856b596c21bc8c8906da6e25f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4fb228e732774584120e0b150686f84"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdistributed__mapper_1_1_distributed_mapper.html#ae4fb228e732774584120e0b150686f84">insertValue</a> (gtsam::Key key, gtsam::Pose3 pose)</td></tr>
 <tr class="memdesc:ae4fb228e732774584120e0b150686f84"><td class="mdescLeft">&#160;</td><td class="mdescRight">insertValue updates inneer nodes with the new value  <a href="#ae4fb228e732774584120e0b150686f84">More...</a><br /></td></tr>
 <tr class="separator:ae4fb228e732774584120e0b150686f84"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -652,6 +664,70 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="abfdaa3dde07fb69834a39dc01dabeff8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void distributed_mapper::DistributedMapper::eraseFactor </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>allows to erase a factor from the graph. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>is the factor index in the graph </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a5e539856b596c21bc8c8906da6e25f61"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void distributed_mapper::DistributedMapper::eraseSeparatorId </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>allows to erase a separator ID. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>is the id to be removed </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="af2b3497b2e5d9f66801b4f235a77b529"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1077,6 +1153,38 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a20e40432ed41ee2e5b38eaf2958fb851"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void distributed_mapper::DistributedMapper::removeFactor </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>allows to remove a factor from the graph. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>is the factor index in the graph </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="ac817f97fc81cba94688d8473369ce86f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1232,6 +1340,38 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>setGamma sets the gamma value for over relaxation methods Distributed Jacobi: updateType_ = postUpdate, gamma = 1 Gauss Seidel: updateType_ = incUpdate, gamma = 1 Jacobi Overrelax: updateType_ = postUpdate, gamma != 1 Succ Overrelax: updateType_ = incUpdate, gamma != 1 </p>
+
+</div>
+</div>
+<a class="anchor" id="a83ed13413c8929709769e5da683c9124"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void distributed_mapper::DistributedMapper::setSeparatorIds </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; size_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>ids</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>allows to erase a separator ID. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>is the id to be removed </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -2319,8 +2459,8 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>cpp/include/distributed_mapper/<a class="el" href="_distributed_mapper_8h_source.html">DistributedMapper.h</a></li>
-<li>cpp/src/distributed_mapper/<a class="el" href="_distributed_mapper_8cpp.html">DistributedMapper.cpp</a></li>
+<li>/home/lajoiepy/Documents/master/mit/decentralized_slam/datasets_testbench/distributed-mapper/distributed_mapper_core/cpp/include/distributed_mapper/<a class="el" href="_distributed_mapper_8h_source.html">DistributedMapper.h</a></li>
+<li>/home/lajoiepy/Documents/master/mit/decentralized_slam/datasets_testbench/distributed-mapper/distributed_mapper_core/cpp/src/distributed_mapper/<a class="el" href="_distributed_mapper_8cpp.html">DistributedMapper.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

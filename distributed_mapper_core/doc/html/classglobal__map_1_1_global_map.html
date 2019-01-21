@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>Robust Distributed Mapper: global_map::GlobalMap Class Reference</title>
+<title>Robust Distributed Pose Graph Optimization: global_map::GlobalMap Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Robust Distributed Mapper
+   <div id="projectname">Robust Distributed Pose Graph Optimization
    </div>
    <div id="projectbrief">This project presents a distributed pose graph optimization approach robust to outlier measurments among the inter-robot loop closures.</div>
   </td>
@@ -116,19 +116,22 @@ Collaboration diagram for global_map::GlobalMap:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9b070ae916643e5976c73723eabad596"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglobal__map_1_1_global_map.html#a9b070ae916643e5976c73723eabad596">GlobalMap</a> (const <a class="el" href="classrobot__local__map_1_1_robot_local_map.html">robot_local_map::RobotLocalMap</a> &amp;robot1_local_map, const <a class="el" href="classrobot__local__map_1_1_robot_local_map.html">robot_local_map::RobotLocalMap</a> &amp;robot2_local_map, const <a class="el" href="classrobot__local__map_1_1_robot_measurements.html">robot_local_map::RobotMeasurements</a> &amp;interrobot_measurements)</td></tr>
-<tr class="memdesc:a9b070ae916643e5976c73723eabad596"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a9b070ae916643e5976c73723eabad596">More...</a><br /></td></tr>
-<tr class="separator:a9b070ae916643e5976c73723eabad596"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7c090ead8a5350f899a3266acafc3fc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglobal__map_1_1_global_map.html#ae7c090ead8a5350f899a3266acafc3fc">GlobalMap</a> (const <a class="el" href="classrobot__local__map_1_1_robot_local_map.html">robot_local_map::RobotLocalMap</a> &amp;robot1_local_map, const <a class="el" href="classrobot__local__map_1_1_robot_local_map.html">robot_local_map::RobotLocalMap</a> &amp;robot2_local_map, const <a class="el" href="classrobot__local__map_1_1_robot_measurements.html">robot_local_map::RobotMeasurements</a> &amp;interrobot_measurements, const double &amp;confidence_probability)</td></tr>
+<tr class="memdesc:ae7c090ead8a5350f899a3266acafc3fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#ae7c090ead8a5350f899a3266acafc3fc">More...</a><br /></td></tr>
+<tr class="separator:ae7c090ead8a5350f899a3266acafc3fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9bc07245306d69d7f019a45e51d13d6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglobal__map_1_1_global_map.html#af9bc07245306d69d7f019a45e51d13d6">pairwiseConsistencyMaximization</a> ()</td></tr>
 <tr class="memdesc:af9bc07245306d69d7f019a45e51d13d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function that solves the global maps according to the current constraints.  <a href="#af9bc07245306d69d7f019a45e51d13d6">More...</a><br /></td></tr>
 <tr class="separator:af9bc07245306d69d7f019a45e51d13d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a05d9e6149b37cd99dbf85c1fcf978401"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglobal__map_1_1_global_map.html#a05d9e6149b37cd99dbf85c1fcf978401">CONSISTENCY_MATRIX_FILE_NAME</a> = std::string(&quot;../log/consistency_matrix.clq.mtx&quot;)</td></tr>
+<tr class="memitem:aa87b056e64548d690795d40cf0075357"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglobal__map_1_1_global_map.html#aa87b056e64548d690795d40cf0075357">LOG_DIRECTORY</a> = std::string(&quot;../../log/&quot;)</td></tr>
+<tr class="memdesc:aa87b056e64548d690795d40cf0075357"><td class="mdescLeft">&#160;</td><td class="mdescRight">Directory name for log files.  <a href="#aa87b056e64548d690795d40cf0075357">More...</a><br /></td></tr>
+<tr class="separator:aa87b056e64548d690795d40cf0075357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05d9e6149b37cd99dbf85c1fcf978401"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglobal__map_1_1_global_map.html#a05d9e6149b37cd99dbf85c1fcf978401">CONSISTENCY_MATRIX_FILE_NAME</a> = std::string(<a class="el" href="classglobal__map_1_1_global_map.html#aa87b056e64548d690795d40cf0075357">GlobalMap::LOG_DIRECTORY</a>+&quot;consistency_matrix.clq.mtx&quot;)</td></tr>
 <tr class="memdesc:a05d9e6149b37cd99dbf85c1fcf978401"><td class="mdescLeft">&#160;</td><td class="mdescRight">File name in which the consistency matrix will be saved.  <a href="#a05d9e6149b37cd99dbf85c1fcf978401">More...</a><br /></td></tr>
 <tr class="separator:a05d9e6149b37cd99dbf85c1fcf978401"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc238aecd6475cf802a34bdb7888ced0"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglobal__map_1_1_global_map.html#abc238aecd6475cf802a34bdb7888ced0">CONSISTENCY_LOOP_CLOSURES_FILE_NAME</a> = std::string(&quot;../log/consistent_loop_closures.txt&quot;)</td></tr>
+<tr class="memitem:abc238aecd6475cf802a34bdb7888ced0"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglobal__map_1_1_global_map.html#abc238aecd6475cf802a34bdb7888ced0">CONSISTENCY_LOOP_CLOSURES_FILE_NAME</a> = std::string(<a class="el" href="classglobal__map_1_1_global_map.html#aa87b056e64548d690795d40cf0075357">GlobalMap::LOG_DIRECTORY</a>+&quot;consistent_loop_closures.txt&quot;)</td></tr>
 <tr class="memdesc:abc238aecd6475cf802a34bdb7888ced0"><td class="mdescLeft">&#160;</td><td class="mdescRight">File name in which the consistent loop closures will be saved.  <a href="#abc238aecd6475cf802a34bdb7888ced0">More...</a><br /></td></tr>
 <tr class="separator:abc238aecd6475cf802a34bdb7888ced0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -141,7 +144,7 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class storing the global map from multiple robots local maps to compute PCM. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a9b070ae916643e5976c73723eabad596"></a>
+<a class="anchor" id="ae7c090ead8a5350f899a3266acafc3fc"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -161,7 +164,13 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classrobot__local__map_1_1_robot_measurements.html">robot_local_map::RobotMeasurements</a> &amp;&#160;</td>
-          <td class="paramname"><em>interrobot_measurements</em>&#160;</td>
+          <td class="paramname"><em>interrobot_measurements</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>confidence_probability</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -211,7 +220,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string global_map::GlobalMap::CONSISTENCY_LOOP_CLOSURES_FILE_NAME = std::string(&quot;../log/consistent_loop_closures.txt&quot;)</td>
+          <td class="memname">const std::string global_map::GlobalMap::CONSISTENCY_LOOP_CLOSURES_FILE_NAME = std::string(<a class="el" href="classglobal__map_1_1_global_map.html#aa87b056e64548d690795d40cf0075357">GlobalMap::LOG_DIRECTORY</a>+&quot;consistent_loop_closures.txt&quot;)</td>
         </tr>
       </table>
   </td>
@@ -233,7 +242,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string global_map::GlobalMap::CONSISTENCY_MATRIX_FILE_NAME = std::string(&quot;../log/consistency_matrix.clq.mtx&quot;)</td>
+          <td class="memname">const std::string global_map::GlobalMap::CONSISTENCY_MATRIX_FILE_NAME = std::string(<a class="el" href="classglobal__map_1_1_global_map.html#aa87b056e64548d690795d40cf0075357">GlobalMap::LOG_DIRECTORY</a>+&quot;consistency_matrix.clq.mtx&quot;)</td>
         </tr>
       </table>
   </td>
@@ -244,6 +253,28 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>File name in which the consistency matrix will be saved. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa87b056e64548d690795d40cf0075357"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string global_map::GlobalMap::LOG_DIRECTORY = std::string(&quot;../../log/&quot;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Directory name for log files. </p>
 
 </div>
 </div>
@@ -270,8 +301,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>cpp/include/pairwise_consistency_maximization/global_map/<a class="el" href="global__map_8h_source.html">global_map.h</a></li>
-<li>cpp/src/pairwise_consistency_maximization/global_map/<a class="el" href="global__map_8cpp.html">global_map.cpp</a></li>
+<li>/home/lajoiepy/Documents/master/mit/decentralized_slam/datasets_testbench/distributed-mapper/distributed_mapper_core/cpp/include/pairwise_consistency_maximization/global_map/<a class="el" href="global__map_8h_source.html">global_map.h</a></li>
+<li>/home/lajoiepy/Documents/master/mit/decentralized_slam/datasets_testbench/distributed-mapper/distributed_mapper_core/cpp/src/pairwise_consistency_maximization/global_map/<a class="el" href="global__map_8cpp.html">global_map.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

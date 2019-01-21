@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>Robust Distributed Mapper: pairwise_consistency::PairwiseConsistency Class Reference</title>
+<title>Robust Distributed Pose Graph Optimization: pairwise_consistency::PairwiseConsistency Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Robust Distributed Mapper
+   <div id="projectname">Robust Distributed Pose Graph Optimization
    </div>
    <div id="projectbrief">This project presents a distributed pose graph optimization approach robust to outlier measurments among the inter-robot loop closures.</div>
   </td>
@@ -115,9 +115,9 @@ Collaboration diagram for pairwise_consistency::PairwiseConsistency:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1fed86a67991cd2c850ebde447d0e7c5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpairwise__consistency_1_1_pairwise_consistency.html#a1fed86a67991cd2c850ebde447d0e7c5">PairwiseConsistency</a> (const <a class="el" href="structgraph__utils_1_1_transforms.html">graph_utils::Transforms</a> &amp;transforms_robot1, const <a class="el" href="structgraph__utils_1_1_transforms.html">graph_utils::Transforms</a> &amp;transforms_robot2, const <a class="el" href="structgraph__utils_1_1_transforms.html">graph_utils::Transforms</a> &amp;transforms_interrobot, const <a class="el" href="namespacegraph__utils.html#a001157d8fee373f75f964349764215db">graph_utils::LoopClosures</a> &amp;loop_closures, const <a class="el" href="structgraph__utils_1_1_trajectory.html">graph_utils::Trajectory</a> &amp;trajectory_robot1, const <a class="el" href="structgraph__utils_1_1_trajectory.html">graph_utils::Trajectory</a> &amp;trajectory_robot2, uint8_t nb_degree_freedom)</td></tr>
-<tr class="memdesc:a1fed86a67991cd2c850ebde447d0e7c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a1fed86a67991cd2c850ebde447d0e7c5">More...</a><br /></td></tr>
-<tr class="separator:a1fed86a67991cd2c850ebde447d0e7c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f381214809a6971b3c8f82fa44cbab7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpairwise__consistency_1_1_pairwise_consistency.html#a2f381214809a6971b3c8f82fa44cbab7">PairwiseConsistency</a> (const <a class="el" href="structgraph__utils_1_1_transforms.html">graph_utils::Transforms</a> &amp;transforms_robot1, const <a class="el" href="structgraph__utils_1_1_transforms.html">graph_utils::Transforms</a> &amp;transforms_robot2, const <a class="el" href="structgraph__utils_1_1_transforms.html">graph_utils::Transforms</a> &amp;transforms_interrobot, const <a class="el" href="namespacegraph__utils.html#a001157d8fee373f75f964349764215db">graph_utils::LoopClosures</a> &amp;loop_closures, const <a class="el" href="structgraph__utils_1_1_trajectory.html">graph_utils::Trajectory</a> &amp;trajectory_robot1, const <a class="el" href="structgraph__utils_1_1_trajectory.html">graph_utils::Trajectory</a> &amp;trajectory_robot2, const uint8_t &amp;nb_degree_freedom, const double &amp;confidence_probability)</td></tr>
+<tr class="memdesc:a2f381214809a6971b3c8f82fa44cbab7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a2f381214809a6971b3c8f82fa44cbab7">More...</a><br /></td></tr>
+<tr class="separator:a2f381214809a6971b3c8f82fa44cbab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a188821b4aef50f75e63d0e868585ef0f"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXi&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpairwise__consistency_1_1_pairwise_consistency.html#a188821b4aef50f75e63d0e868585ef0f">computeConsistentMeasurementsMatrix</a> ()</td></tr>
 <tr class="memdesc:a188821b4aef50f75e63d0e868585ef0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computation of the consistency matrix.  <a href="#a188821b4aef50f75e63d0e868585ef0f">More...</a><br /></td></tr>
 <tr class="separator:a188821b4aef50f75e63d0e868585ef0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -145,6 +145,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:adc5398c5d3e866cb8620547b30866753"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structgraph__utils_1_1_pose_with_covariance.html">graph_utils::PoseWithCovariance</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpairwise__consistency_1_1_pairwise_consistency.html#adc5398c5d3e866cb8620547b30866753">composeOnTrajectory</a> (const size_t &amp;id1, const size_t &amp;id2, const size_t &amp;robot_id)</td></tr>
 <tr class="memdesc:adc5398c5d3e866cb8620547b30866753"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function returns the pose with covariance obtained from the composition of the two specified poses on the desired robot trajectory.  <a href="#adc5398c5d3e866cb8620547b30866753">More...</a><br /></td></tr>
 <tr class="separator:adc5398c5d3e866cb8620547b30866753"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbd31bccab9341a2a5980c18a3047716"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpairwise__consistency_1_1_pairwise_consistency.html#adbd31bccab9341a2a5980c18a3047716">getChiSquaredThreshold</a> ()</td></tr>
+<tr class="memdesc:adbd31bccab9341a2a5980c18a3047716"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function returns the chi-squared threshold given the confidence probability.  <a href="#adbd31bccab9341a2a5980c18a3047716">More...</a><br /></td></tr>
+<tr class="separator:adbd31bccab9341a2a5980c18a3047716"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -166,11 +169,14 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a939f0096ef4028834a6d52b6cfce2b99"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpairwise__consistency_1_1_pairwise_consistency.html#a939f0096ef4028834a6d52b6cfce2b99">nb_degree_freedom_</a></td></tr>
 <tr class="memdesc:a939f0096ef4028834a6d52b6cfce2b99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of degree of freedom of the measurements.  <a href="#a939f0096ef4028834a6d52b6cfce2b99">More...</a><br /></td></tr>
 <tr class="separator:a939f0096ef4028834a6d52b6cfce2b99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61be109aebfe1b8ccd38c3376b7aeffd"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpairwise__consistency_1_1_pairwise_consistency.html#a61be109aebfe1b8ccd38c3376b7aeffd">confidence_probability_</a></td></tr>
+<tr class="memdesc:a61be109aebfe1b8ccd38c3376b7aeffd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Probability of a larger value of X^2.  <a href="#a61be109aebfe1b8ccd38c3376b7aeffd">More...</a><br /></td></tr>
+<tr class="separator:a61be109aebfe1b8ccd38c3376b7aeffd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class for the computation of the pairwise consistency of loop closure edges. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a1fed86a67991cd2c850ebde447d0e7c5"></a>
+<a class="anchor" id="a2f381214809a6971b3c8f82fa44cbab7"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -216,8 +222,14 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>nb_degree_freedom</em>&#160;</td>
+          <td class="paramtype">const uint8_t &amp;&#160;</td>
+          <td class="paramname"><em>nb_degree_freedom</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>confidence_probability</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -409,6 +421,32 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="adbd31bccab9341a2a5980c18a3047716"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double pairwise_consistency::PairwiseConsistency::getChiSquaredThreshold </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This function returns the chi-squared threshold given the confidence probability. </p>
+<dl class="section return"><dt>Returns</dt><dd>the threshold to be used on the error to determine if two measurements are consistent </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a7eb762acb6c383a9e167a49e1c99905b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -482,6 +520,28 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a61be109aebfe1b8ccd38c3376b7aeffd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double pairwise_consistency::PairwiseConsistency::confidence_probability_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Probability of a larger value of X^2. </p>
+
+</div>
+</div>
 <a class="anchor" id="ab11973e6c8de1eea7f63122511f79636"></a>
 <div class="memitem">
 <div class="memproto">
@@ -631,8 +691,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>cpp/include/pairwise_consistency_maximization/pairwise_consistency/<a class="el" href="pairwise__consistency_8h_source.html">pairwise_consistency.h</a></li>
-<li>cpp/src/pairwise_consistency_maximization/pairwise_consistency/<a class="el" href="pairwise__consistency_8cpp.html">pairwise_consistency.cpp</a></li>
+<li>/home/lajoiepy/Documents/master/mit/decentralized_slam/datasets_testbench/distributed-mapper/distributed_mapper_core/cpp/include/pairwise_consistency_maximization/pairwise_consistency/<a class="el" href="pairwise__consistency_8h_source.html">pairwise_consistency.h</a></li>
+<li>/home/lajoiepy/Documents/master/mit/decentralized_slam/datasets_testbench/distributed-mapper/distributed_mapper_core/cpp/src/pairwise_consistency_maximization/pairwise_consistency/<a class="el" href="pairwise__consistency_8cpp.html">pairwise_consistency.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

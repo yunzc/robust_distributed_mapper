@@ -6,5 +6,6 @@ var searchData=
   ['robot_5flocal_5fmap_2eh',['robot_local_map.h',['../robot__local__map_8h.html',1,'']]],
   ['robot_5fmeasurements_2ecpp',['robot_measurements.cpp',['../robot__measurements_8cpp.html',1,'']]],
   ['robot_5fmeasurements_2eh',['robot_measurements.h',['../robot__measurements_8h.html',1,'']]],
-  ['rundistributedmapper_2ecpp',['runDistributedMapper.cpp',['../run_distributed_mapper_8cpp.html',1,'']]]
+  ['robust_5fdistributed_5foptimization_5fexample_2ecpp',['robust_distributed_optimization_example.cpp',['../robust__distributed__optimization__example_8cpp.html',1,'']]],
+  ['rundistributedmapper_2eh',['runDistributedMapper.h',['../run_distributed_mapper_8h.html',1,'']]]
 ];

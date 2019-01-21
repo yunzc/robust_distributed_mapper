@@ -18,7 +18,7 @@ var searchData=
   ['converttochordalnoise',['convertToChordalNoise',['../namespacedistributed__mapper_1_1multirobot__util.html#ae7c0eb98373c4b2b00161cb4f0da34fa',1,'distributed_mapper::multirobot_util']]],
   ['converttodiagonalnoise',['convertToDiagonalNoise',['../namespacedistributed__mapper_1_1multirobot__util.html#a7c86b0b0b1a839462e95e15e455159c2',1,'distributed_mapper::multirobot_util']]],
   ['converttovector',['convertToVector',['../classgtsam_1_1_between_chordal_factor.html#af6fb61d29627c3b2b18df919232bfd37',1,'gtsam::BetweenChordalFactor']]],
-  ['copyinitial',['copyInitial',['../run_distributed_mapper_8cpp.html#a2c3a859f3c42848480fbc5ba10eeaba1',1,'runDistributedMapper.cpp']]],
+  ['copyinitial',['copyInitial',['../namespacedistributed__mapper.html#a5e5850ebf3464e4ba53541ff0e98ee83',1,'distributed_mapper']]],
   ['createbetweenchordalfactorgraph',['createBetweenChordalFactorGraph',['../test_between_chordal_factor_8cpp.html#a14f04fdfc1f9ff1b795cf8a355784cce',1,'testBetweenChordalFactor.cpp']]],
   ['createlinearorientationgraph',['createLinearOrientationGraph',['../classdistributed__mapper_1_1_distributed_mapper.html#ae6a41ce1144b9d4de782f6806efae5da',1,'distributed_mapper::DistributedMapper']]],
   ['createsubgraphinnerandsepedges',['createSubgraphInnerAndSepEdges',['../classdistributed__mapper_1_1_distributed_mapper.html#ad1b6a5d536cddb5e28df9905d7dfaed5',1,'distributed_mapper::DistributedMapper']]],

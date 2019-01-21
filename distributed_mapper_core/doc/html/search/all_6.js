@@ -2,6 +2,7 @@ var searchData=
 [
   ['gamma_5f',['gamma_',['../classdistributed__mapper_1_1_distributed_mapper.html#acccd4a960d4e1652548639c8466a5375',1,'distributed_mapper::DistributedMapper']]],
   ['getaveragevertexdegree',['GetAverageVertexDegree',['../class_f_m_c_1_1_c_graph_i_o.html#ae92e427b92805766397d3b311182b168',1,'FMC::CGraphIO']]],
+  ['getchisquaredthreshold',['getChiSquaredThreshold',['../classpairwise__consistency_1_1_pairwise_consistency.html#adbd31bccab9341a2a5980c18a3047716',1,'pairwise_consistency::PairwiseConsistency']]],
   ['getconvertedestimate',['getConvertedEstimate',['../classdistributed__mapper_1_1_distributed_mapper.html#ae334159895d5abe6b19f735e502ed58c',1,'distributed_mapper::DistributedMapper']]],
   ['getdegree',['getDegree',['../namespace_f_m_c.html#aa7d80a52a09b80fb9e44366ec4c55fa1',1,'FMC']]],
   ['getedgecount',['GetEdgeCount',['../class_f_m_c_1_1_c_graph_i_o.html#a92c7d670e4d44b010507eac56ebc144a',1,'FMC::CGraphIO']]],
@@ -24,8 +25,8 @@ var searchData=
   ['global_5fmap',['global_map',['../namespaceglobal__map.html',1,'']]],
   ['global_5fmap_2ecpp',['global_map.cpp',['../global__map_8cpp.html',1,'']]],
   ['global_5fmap_2eh',['global_map.h',['../global__map_8h.html',1,'']]],
-  ['globalmap',['GlobalMap',['../classglobal__map_1_1_global_map.html#a9b070ae916643e5976c73723eabad596',1,'global_map::GlobalMap']]],
   ['globalmap',['GlobalMap',['../classglobal__map_1_1_global_map.html',1,'global_map']]],
+  ['globalmap',['GlobalMap',['../classglobal__map_1_1_global_map.html#ae7c090ead8a5350f899a3266acafc3fc',1,'global_map::GlobalMap']]],
   ['graph_5f',['graph_',['../classdistributed__mapper_1_1_distributed_mapper.html#aa19162f46695119e8c6b2b4f2e4421ca',1,'distributed_mapper::DistributedMapper']]],
   ['graph_5ftypes_2eh',['graph_types.h',['../graph__types_8h.html',1,'']]],
   ['graph_5futils',['graph_utils',['../namespacegraph__utils.html',1,'']]],
