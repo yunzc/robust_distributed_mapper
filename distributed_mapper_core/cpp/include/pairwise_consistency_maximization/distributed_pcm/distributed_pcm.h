@@ -29,7 +29,8 @@ namespace distributed_pcm {
          * @returns size of the maximum clique of pairwise consistent measurements
          */
         static int solve(std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
-                std::vector<gtsam::GraphAndValues>& graph_and_values_vector);
+                std::vector<gtsam::GraphAndValues>& graph_and_values_vector,
+                const double& confidence_probability);
 
     };
 }

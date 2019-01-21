@@ -83,7 +83,8 @@ distributedEstimation(size_t nrRobots, string dataPath, string traceFile, Values
     int max_clique_size = 0;
     vector< Values > estimates = distributedOptimizer(distMappers, maxIter, max_clique_size, DistributedMapper::incUpdate,
                                                       gamma, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
-                                                      useFlaggedInit, false, false, contains_odometry, boost::none, rotationTrace, poseTrace,
+                                                      useFlaggedInit, false, false, contains_odometry, 0.90, boost::none,
+                                                      rotationTrace, poseTrace,
                                                       subgraphRotationTrace, subgraphPoseTrace, rotationVectorValuesTrace);
 
 

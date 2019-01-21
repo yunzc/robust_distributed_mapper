@@ -105,7 +105,7 @@ namespace distributed_mapper {
                              const bool& debug, const noiseModel::Diagonal::shared_ptr& priorModel, const noiseModel::Isotropic::shared_ptr& model,
                              const size_t& maxIter, const double& rotationEstimateChangeThreshold, const double& poseEstimateChangeThreshold,
                              const double& gamma, const bool& useFlaggedInit, const distributed_mapper::DistributedMapper::UpdateType& updateType,
-                             const bool& useBetweenNoise,  const bool& useChrLessFullGraph, const bool& useLandmarks) {
+                             const bool& useBetweenNoise,  const bool& useChrLessFullGraph, const bool& useLandmarks, const double& confidence_probability) {
 
         vector <GraphAndValues> graphAndValuesVec; // vector of all graphs and initials
 
@@ -203,7 +203,8 @@ namespace distributed_mapper {
                 vector <Values> estimates = distributedOptimizer(distMappers, maxIter, max_clique_size, updateType,
                                                                  gamma, rotationEstimateChangeThreshold,
                                                                  poseEstimateChangeThreshold,
-                                                                 useFlaggedInit, useLandmarks, debug, true, graphAndValuesVec,
+                                                                 useFlaggedInit, useLandmarks, debug, true,
+                                                                 confidence_probability, graphAndValuesVec,
                                                                  rotationTrace, poseTrace, subgraphRotationTrace,
                                                                  subgraphPoseTrace, rotationVectorValuesTrace);
 

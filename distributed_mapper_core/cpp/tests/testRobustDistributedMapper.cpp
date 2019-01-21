@@ -42,7 +42,7 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersNoRotation_2robots)
             useXY, useOP, debug, priorModel, model,
             maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
             gamma, useFlaggedInit, updateType, useBetweenNoise,
-            useChrLessFullGraph, useLandmarks);
+            useChrLessFullGraph, useLandmarks, 0.99);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
     EXPECT(assert_equal(std::get<0>(results), 0.0, tolerance));
@@ -76,7 +76,7 @@ TEST(DistributedMapper, testdistributedEstimationWithoutOutliersWithRotation_2ro
                                                                    useXY, useOP, debug, priorModel, model,
                                                                    maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
                                                                    gamma, useFlaggedInit, updateType, useBetweenNoise,
-                                                                   useChrLessFullGraph, useLandmarks);
+                                                                   useChrLessFullGraph, useLandmarks, 0.90);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
     EXPECT(assert_equal(std::get<0>(results), 0.0, tolerance));
@@ -110,7 +110,7 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersWithRotation_2robot
                                                                    useXY, useOP, debug, priorModel, model,
                                                                    maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
                                                                    gamma, useFlaggedInit, updateType, useBetweenNoise,
-                                                                   useChrLessFullGraph, useLandmarks);
+                                                                   useChrLessFullGraph, useLandmarks, 0.90);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
     EXPECT(assert_equal(std::get<0>(results), 0.0, tolerance));

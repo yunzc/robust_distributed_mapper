@@ -36,11 +36,12 @@ namespace pairwise_consistency {
                             const graph_utils::LoopClosures& loop_closures,
                             const graph_utils::Trajectory& trajectory_robot1,
                             const graph_utils::Trajectory& trajectory_robot2,
-                            uint8_t nb_degree_freedom):
+                            const uint8_t& nb_degree_freedom,
+                            const double& confidence_probability):
                             loop_closures_(loop_closures), transforms_robot1_(transforms_robot1), 
                             transforms_robot2_(transforms_robot2), transforms_interrobot_(transforms_interrobot),
                             trajectory_robot1_(trajectory_robot1), trajectory_robot2_(trajectory_robot2),
-                            nb_degree_freedom_(nb_degree_freedom){};
+                            nb_degree_freedom_(nb_degree_freedom), confidence_probability_(confidence_probability){};
 
         /**
          * \brief Computation of the consistency matrix
@@ -116,6 +117,13 @@ namespace pairwise_consistency {
          */
         graph_utils::PoseWithCovariance composeOnTrajectory(const size_t& id1, const size_t& id2, const size_t& robot_id);
 
+        /**
+         * \brief This function returns the chi-squared threshold given the confidence probability
+         *
+         * @return the threshold to be used on the error to determine if two measurements are consistent
+         */
+        double getChiSquaredThreshold();
+
         graph_utils::LoopClosures loop_closures_;///< loop_closures to consider
 
         graph_utils::Transforms transforms_robot1_, transforms_robot2_, transforms_interrobot_;///< Measurements for each robot
@@ -123,6 +131,8 @@ namespace pairwise_consistency {
         graph_utils::Trajectory trajectory_robot1_, trajectory_robot2_;///< Trajectory of the robots
 
         uint8_t nb_degree_freedom_;///< Number of degree of freedom of the measurements.
+
+        double confidence_probability_;///< Probability of a larger value of X^2.
     };          
 
 }

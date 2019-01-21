@@ -4,18 +4,34 @@
 
 namespace pairwise_consistency {
 
-Eigen::MatrixXi PairwiseConsistency::computeConsistentMeasurementsMatrix() {
-    // Determination of the chi squared threshold (numbers from chi-squared table)
-    // Using 90% probability // TODO: Should be a parameter
+double PairwiseConsistency::getChiSquaredThreshold(){
     double threshold;
-    if (nb_degree_freedom_ == 3){
-        threshold = 0.58;
-    } else if (nb_degree_freedom_ == 6) {
-        threshold = 2.20;
+    if (nb_degree_freedom_ == 6) {
+        switch ((int)(confidence_probability_*100)){
+            case 99:
+                threshold = 0.872;
+                break;
+            case 95:
+                threshold = 1.635;
+                break;
+            case 90:
+                threshold = 2.20;
+                break;
+            default:
+                std::cerr << std::endl << "Confidence probability of " << confidence_probability_ << " is not supported" << std::endl;
+                std::abort();
+        }
     } else {
         std::cerr << std::endl << nb_degree_freedom_ << " dof is not supported" << std::endl;
         std::abort();
     }
+    return threshold;
+}
+
+Eigen::MatrixXi PairwiseConsistency::computeConsistentMeasurementsMatrix() {
+
+    // Determination of the chi squared threshold (numbers from chi-squared table)
+    double threshold = getChiSquaredThreshold();
 
     // Preallocate consistency matrix
     Eigen::MatrixXi consistency_matrix(loop_closures_.size(), loop_closures_.size());

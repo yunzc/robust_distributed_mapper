@@ -39,8 +39,9 @@ namespace global_map {
          * @param interrobot_measurements Inter-robot measurements.
          */
         GlobalMap(const robot_local_map::RobotLocalMap& robot1_local_map,
-                        const robot_local_map::RobotLocalMap& robot2_local_map,
-                        const robot_local_map::RobotMeasurements& interrobot_measurements);
+                  const robot_local_map::RobotLocalMap& robot2_local_map,
+                  const robot_local_map::RobotMeasurements& interrobot_measurements,
+                  const double& confidence_probability);
 
         /**
          * \brief Function that solves the global maps according to the current constraints

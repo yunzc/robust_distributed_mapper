@@ -5,7 +5,8 @@
 namespace distributed_pcm {
 
     int DistributedPCM::solve(std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
-               std::vector<gtsam::GraphAndValues>& graph_and_values_vector){
+                                std::vector<gtsam::GraphAndValues>& graph_and_values_vector,
+                                const double& confidence_probability){
 
         std::vector<graph_utils::LoopClosures> separatorsByRobot;
         std::vector<graph_utils::Transforms> transformsByRobot;
@@ -74,7 +75,7 @@ namespace distributed_pcm {
         auto robot2LocalMap = robot_local_map::RobotLocalMap(transformsByRobot[1], separatorsByRobot[1]);
         auto interrobotMeasurements = robot_local_map::RobotMeasurements(separatorsTransforms, separatorsByRobot[0]);
 
-        auto globalMap = global_map::GlobalMap(robot1LocalMap, robot2LocalMap, interrobotMeasurements);
+        auto globalMap = global_map::GlobalMap(robot1LocalMap, robot2LocalMap, interrobotMeasurements, confidence_probability);
         std::vector<int> max_clique = globalMap.pairwiseConsistencyMaximization();
 
         // Retrieve indexes of rejected measurements

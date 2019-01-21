@@ -532,6 +532,7 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
                      bool useLandmarks = false,
                      bool debug = false,
                      bool contains_odometry = true,
+                     const double& confidence_probability = 0.90,
                      boost::optional<std::vector<gtsam::GraphAndValues>&> graphAndValuesVec = boost::none,
                      boost::optional<std::vector<gtsam::Values>&> rotationTrace = boost::none,
                      boost::optional<std::vector<gtsam::Values>&> poseTrace  = boost::none,
@@ -554,7 +555,7 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
 
   // TODO: Support N robots instead of 2.
   if (distMappers.size() == 2 && contains_odometry) {
-      max_clique_size = distributed_pcm::DistributedPCM::solve(distMappers, graphAndValuesVec.get());
+      max_clique_size = distributed_pcm::DistributedPCM::solve(distMappers, graphAndValuesVec.get(), confidence_probability);
   }
 
   if(debug)
