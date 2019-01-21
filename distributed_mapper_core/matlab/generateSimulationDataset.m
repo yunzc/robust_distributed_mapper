@@ -6,7 +6,7 @@ close all
 clc
 
 %% Settings
-dataset_folder = horzcat(pwd, '/../test_data/pairwise_consistency_maximization/clean/simulation/');
+dataset_folder = horzcat(pwd, '/../test_data/pairwise_consistency_maximization/spoiled/simulation_no_rotation/');
 number_of_robots = 2; % Only 2 is supported.
 id_offset = 96; % letter a = 97 (ASCII)
 sigma_R = 0.01;
@@ -15,7 +15,9 @@ trajectory_size = 20;
 number_of_separators = 10;
 percentage_of_outliers = 0;% Not supported yet
 trajectory_offsets = {[0; 0; 0], [(rand*10)-5; (rand*10)-5; (rand*10)-5]};
-use_rotation = true;
+use_rotation = false;
+add_outliers = true;
+number_of_outlying_separators = 10;
 
 %% Setup
 addpath(genpath('./posegraph_utils'));
@@ -44,10 +46,16 @@ for robot=1:number_of_robots
     robot_poses{end+1} = poses;
 end
 
-%% Add separators
+%% Add separators.
 robot1_offset = bitshift(uint64(1+id_offset), 56); % GTSAM format
 robot2_offset = bitshift(uint64(2+id_offset), 56); % GTSAM format
 [measurements, edges_id] = generateSeparators(robot_poses, robot1_offset, robot2_offset, number_of_separators, trajectory_size, sigma_R, sigma_t, information_matrix);
+for robot=1:number_of_robots
+    writeG2oDataset3D(file_names{robot}, measurements, edges_id, [], 0, 1);
+end
+
+%% Add outliers.
+[measurements, edges_id] = generateOutliers(robot1_offset, robot2_offset, number_of_outlying_separators, trajectory_size, information_matrix, use_rotation);
 for robot=1:number_of_robots
     writeG2oDataset3D(file_names{robot}, measurements, edges_id, [], 0, 1);
 end

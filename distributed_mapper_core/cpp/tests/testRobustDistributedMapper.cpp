@@ -47,7 +47,7 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersNoRotation_2robots)
     double tolerance = 1e-1;
     EXPECT(assert_equal(std::get<0>(results), 0.0, tolerance));
     EXPECT(assert_equal(std::get<0>(results), std::get<0>(results), tolerance));
-    EXPECT(std::get<2>(results) == 7);
+    EXPECT(std::get<2>(results) == 10);
 }
 
 TEST(DistributedMapper, testdistributedEstimationWithoutOutliersWithRotation_2robots) {
@@ -115,14 +115,12 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersWithRotation_2robot
     double tolerance = 1e-1;
     EXPECT(assert_equal(std::get<0>(results), 0.0, tolerance));
     EXPECT(assert_equal(std::get<0>(results), std::get<0>(results), tolerance));
-    EXPECT(std::get<2>(results) == 7);
+    EXPECT(std::get<2>(results) == 10);
 }
 
 /****************************************************************************** */
 int main() {
     TestResult tr;
-    int result = TestRegistry::runAllTests(tr);
-    int failure_count = tr.getFailureCount();
-    return result;
+    return TestRegistry::runAllTests(tr);
 }
 //******************************************************************************
