@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
     bool useLandmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
     double confidence_probability = 0.99; // confidence probability for the pairwise consistency computation.
     bool useCovariance = false; // use covariance in dataset file.
+    bool usePCM = true; // Use pairwise consistency maximization.
 
     try {
         // Parse program options
@@ -59,7 +60,8 @@ int main(int argc, char *argv[]) {
                 ("maxIter, m", po::value<size_t>(&maxIter), "maximum number of iterations (default: 100000)")
                 ("confidence, c", po::value<double>(&confidence_probability), "confidence probability for the pairwise consistency computation (default: 0.99)")
                 ("useCovariance, i", po::value<bool>(&useCovariance), "use covariance in dataset file (default: false)")
-                ("debug, d", po::value<bool>(&debug), "debug (default: false)");
+                ("debug, d", po::value<bool>(&debug), "debug (default: false)")
+                ("usePCM", po::value<bool>(&usePCM), "use pairwise consistency maximization (default: true)");
 
         po::variables_map vm;
         try {
@@ -87,7 +89,7 @@ int main(int argc, char *argv[]) {
             useXY, useOP, debug, priorModel, model,
             maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
             gamma, useFlaggedInit, updateType, useBetweenNoise,
-            useChrLessFullGraph, useLandmarks, confidence_probability, useCovariance);
+            useChrLessFullGraph, useLandmarks, confidence_probability, useCovariance, usePCM);
 
     return 0;
 }

@@ -23,8 +23,8 @@ addpath(genpath('./posegraph_utils'));
 example_folder = horzcat(dataset_folder, 'example_', num2str(number_of_robots), 'robots/');
 mkdir(example_folder);
 information_matrix = eye(6);
-information_matrix(1:3, 1:3) = information_matrix(1:3, 1:3)*(1/(sigma_R^2));
-information_matrix(4:6, 4:6) = information_matrix(4:6, 4:6)*(1/(sigma_t^2));
+information_matrix(1:3, 1:3) = information_matrix(1:3, 1:3)*(1/(sigma_t^2));
+information_matrix(4:6, 4:6) = information_matrix(4:6, 4:6)*(1/(sigma_R^2));
 
 %% Generate file names
 file_names = {};
