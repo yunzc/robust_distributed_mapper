@@ -120,7 +120,7 @@ graph_utils::ConsistencyErrorData PairwiseConsistency::computeConsistencyError(
     return std::make_pair(consistency_error, result.covariance_matrix);
 }
 
-double PairwiseConsistency::computeSquaredMahalanobisDistance(const std::pair<gtsam::Vector6, gtsam::Matrix>& consistency_error) {
+double PairwiseConsistency::computeSquaredMahalanobisDistance(const graph_utils::ConsistencyErrorData& consistency_error) {
     double distance = std::sqrt(  consistency_error.first.transpose() * consistency_error.second * consistency_error.first  );
     return distance;
 }

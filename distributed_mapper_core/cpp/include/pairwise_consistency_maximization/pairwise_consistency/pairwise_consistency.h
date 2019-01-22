@@ -104,7 +104,7 @@ namespace pairwise_consistency {
          * @param transform pose measurement describing the difference between two poses.
          * @returns Mahalanobis Distance
          */
-        double computeSquaredMahalanobisDistance(const std::pair<gtsam::Vector6, gtsam::Matrix>& consistency_error);
+        double computeSquaredMahalanobisDistance(const graph_utils::ConsistencyErrorData& consistency_error);
 
         /**
          * \brief This function returns the pose with covariance obtained
