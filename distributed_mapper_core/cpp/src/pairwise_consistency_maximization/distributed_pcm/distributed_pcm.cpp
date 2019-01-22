@@ -6,21 +6,12 @@ namespace distributed_pcm {
 
     int DistributedPCM::solve(std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
                                 std::vector<gtsam::GraphAndValues>& graph_and_values_vector,
-                                const double& confidence_probability){
+                                const double& confidence_probability, const bool& use_covariance){
 
         std::vector<graph_utils::LoopClosures> separatorsByRobot;
         std::vector<graph_utils::Transforms> transformsByRobot;
         graph_utils::Transforms separatorsTransforms;
         for (auto distMapper : dist_mappers) {
-            // What information do I have access?
-
-            // auto separatorEdge = (*separatorEdges[0]); // gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>
-            // auto measurement = separatorEdge.measured(); // measurements between the nodes : gtsam::LieGroup<gtsam::Pose3, 6>
-            // auto rotation = separatorEdge.measured().R(); // rotation part : gtsam::LieGroup<gtsam::Rot3, 3>
-            // auto translation = separatorEdge.measured().t(); // transaltion part : Eigen::Matrix<double, 3, 1, 0, 3, 1>
-            // auto node1 = separatorEdge.key1(); // Key : uint64_t
-            // auto node2 = separatorEdge.key2(); // Key : uint64_t
-
             // Store separators key pairs
             graph_utils::LoopClosures separators;
             for (auto id : distMapper->seperatorEdge()) {
@@ -29,8 +20,6 @@ namespace distributed_pcm {
                 separators.emplace_back(std::make_pair(separatorEdge->key1(), separatorEdge->key2()));
             }
             separatorsByRobot.emplace_back(separators);
-            // Place all measurement edges in a map and store the keys of separators
-            // std::cout << "currentGraph size: " << distMapper->currentGraph().size() << '\n';
 
             graph_utils::Transforms transforms;
             bool idInitialized = false;
@@ -41,11 +30,15 @@ namespace distributed_pcm {
                     transform.i = edgePtr->key1();
                     transform.j = edgePtr->key2();
                     transform.pose.pose = edgePtr->measured();
-                    // TODO: Read covariance from file or add option
-                    transform.pose.covariance_matrix = graph_utils::FIXED_COVARIANCE;
+                    if (use_covariance) {
+                        transform.pose.covariance_matrix =
+                                boost::dynamic_pointer_cast< gtsam::noiseModel::Gaussian >(edgePtr->noiseModel())->covariance();
+                    } else {
+                        transform.pose.covariance_matrix = graph_utils::FIXED_COVARIANCE;
+                    }
                     transform.is_separator = std::find(separators.begin(), separators.end(),
                                                        std::make_pair(edgePtr->key1(), edgePtr->key2())) !=
-                                             separators.end();
+                                                       separators.end();
                     if (!transform.is_separator) {
                         if (!idInitialized) {
                             transforms.start_id = transform.i;

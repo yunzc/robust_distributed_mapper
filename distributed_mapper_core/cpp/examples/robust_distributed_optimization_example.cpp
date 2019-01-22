@@ -30,7 +30,8 @@ int main(int argc, char *argv[]) {
     bool useBetweenNoise = false; // use between factor noise or not
     bool useChrLessFullGraph = false; // whether full graph has character indexes or not
     bool useLandmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
-    double confidence_probability = 0.90; // confidence probability for the pairwise consistency computation.
+    double confidence_probability = 0.99; // confidence probability for the pairwise consistency computation.
+    bool useCovariance = false; // use covariance in dataset file.
 
     try {
         // Parse program options
@@ -56,7 +57,8 @@ int main(int argc, char *argv[]) {
                 ("pthresh, p", po::value<double>(&poseEstimateChangeThreshold),
                  "Specify difference between pose estimate provides an early stopping condition (default: 1e-2)")
                 ("maxIter, m", po::value<size_t>(&maxIter), "maximum number of iterations (default: 100000)")
-                ("confidence, c", po::value<double>(&confidence_probability), "confidence probability for the pairwise consistency computation (default: 0.90)")
+                ("confidence, c", po::value<double>(&confidence_probability), "confidence probability for the pairwise consistency computation (default: 0.99)")
+                ("useCovariance, i", po::value<bool>(&useCovariance), "use covariance in dataset file (default: false)")
                 ("debug, d", po::value<bool>(&debug), "debug (default: false)");
 
         po::variables_map vm;
@@ -85,7 +87,7 @@ int main(int argc, char *argv[]) {
             useXY, useOP, debug, priorModel, model,
             maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
             gamma, useFlaggedInit, updateType, useBetweenNoise,
-            useChrLessFullGraph, useLandmarks, confidence_probability);
+            useChrLessFullGraph, useLandmarks, confidence_probability, useCovariance);
 
     return 0;
 }

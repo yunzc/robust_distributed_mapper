@@ -36,13 +36,15 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersNoRotation_2robots)
     bool useBetweenNoise = false; // use between factor noise or not
     bool useChrLessFullGraph = false; // whether full graph has character indexes or not
     bool useLandmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
+    double confidence_probability = 0.99; // Confidence probability for the pairwise consistency computation
+    bool useCovariance = false; // use covariance in dataset file.
 
     // Call distributed optimization
     std::tuple<double, double, int> results = runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
             useXY, useOP, debug, priorModel, model,
             maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
             gamma, useFlaggedInit, updateType, useBetweenNoise,
-            useChrLessFullGraph, useLandmarks, 0.99);
+            useChrLessFullGraph, useLandmarks, confidence_probability, useCovariance);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
     EXPECT(assert_equal(0.0, std::get<0>(results), tolerance));
@@ -70,13 +72,15 @@ TEST(DistributedMapper, testdistributedEstimationWithoutOutliersWithRotation_2ro
     bool useBetweenNoise = false; // use between factor noise or not
     bool useChrLessFullGraph = false; // whether full graph has character indexes or not
     bool useLandmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
+    double confidence_probability = 0.99; // Confidence probability for the pairwise consistency computation
+    bool useCovariance = false; // use covariance in dataset file.
 
     // Call distributed optimization
     std::tuple<double, double, int> results = runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
                                                                    useXY, useOP, debug, priorModel, model,
                                                                    maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
                                                                    gamma, useFlaggedInit, updateType, useBetweenNoise,
-                                                                   useChrLessFullGraph, useLandmarks, 0.99);
+                                                                   useChrLessFullGraph, useLandmarks, confidence_probability, useCovariance);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
     EXPECT(assert_equal(0.0, std::get<0>(results), tolerance));
@@ -104,13 +108,14 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersWithRotation_2robot
     bool useBetweenNoise = false; // use between factor noise or not
     bool useChrLessFullGraph = false; // whether full graph has character indexes or not
     bool useLandmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
-
+    double confidence_probability = 0.99; // Confidence probability for the pairwise consistency computation
+    bool useCovariance = false; // use covariance in dataset file.
     // Call distributed optimization
     std::tuple<double, double, int> results = runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
                                                                    useXY, useOP, debug, priorModel, model,
                                                                    maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
                                                                    gamma, useFlaggedInit, updateType, useBetweenNoise,
-                                                                   useChrLessFullGraph, useLandmarks, 0.99);
+                                                                   useChrLessFullGraph, useLandmarks, confidence_probability, useCovariance);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
     EXPECT(assert_equal(0.0, std::get<0>(results), tolerance));

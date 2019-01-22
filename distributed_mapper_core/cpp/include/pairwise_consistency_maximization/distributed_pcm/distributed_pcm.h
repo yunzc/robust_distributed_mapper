@@ -30,7 +30,7 @@ namespace distributed_pcm {
          */
         static int solve(std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
                 std::vector<gtsam::GraphAndValues>& graph_and_values_vector,
-                const double& confidence_probability);
+                const double& confidence_probability, const bool& use_covariance);
 
     };
 }
