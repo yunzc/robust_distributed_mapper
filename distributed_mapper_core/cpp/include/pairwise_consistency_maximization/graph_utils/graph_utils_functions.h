@@ -25,26 +25,32 @@ uint8_t parseG2ofile(const std::string &file_name, size_t &num_poses,
 
 /** \brief This function compose (+) geometric poses with covariance.
  *
- * Uses the mrpt library : https://www.mrpt.org/
  * @param[in] a,b Geometric poses with covariance information
- * @param[out] out a + b
+ * @param[out] out is a + b
  */
-void poseCompose(const graph_utils::PoseWithCovariance  &a,
+void poseCompose(const graph_utils::PoseWithCovariance &a,
                  const graph_utils::PoseWithCovariance &b,
                  graph_utils::PoseWithCovariance &out);
 
 /** \brief This function invert a geometric pose with covariance.
  *
- * Uses the mrpt library : https://www.mrpt.org/
  * @param[in] a Geometric poses with covariance information
- * @param[out] out I - a
+ * @param[out] out is I - a
  */
 void poseInverse(const graph_utils::PoseWithCovariance &a,
                  graph_utils::PoseWithCovariance &out);
 
+/** \brief This function between (-) geometric poses with covariance.
+ *
+ * @param[in] a,b Geometric poses with covariance information
+ * @param[out] out is a - b
+ */
+void poseBetween(const graph_utils::PoseWithCovariance &a,
+                 const graph_utils::PoseWithCovariance &b,
+                 graph_utils::PoseWithCovariance &out);
+
 /** \brief This function precompute the trajectory by composing the successive poses.
  *
- * Uses the mrpt library : https://www.mrpt.org/
  * @param[in] transforms Odometry measurements
  * returns the trajectory
  */

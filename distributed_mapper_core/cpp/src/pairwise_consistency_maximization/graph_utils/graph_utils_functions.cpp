@@ -25,16 +25,25 @@ void poseInverse(const graph_utils::PoseWithCovariance &a,
   out.covariance_matrix = Ha * a.covariance_matrix * Ha.transpose();
 }
 
+void poseBetween(const graph_utils::PoseWithCovariance &a,
+                 const graph_utils::PoseWithCovariance &b,
+                 graph_utils::PoseWithCovariance &out){
+    gtsam::Matrix Ha, Hb;
+    out.pose = a.pose.between(b.pose, Ha, Hb);
+    out.covariance_matrix = Ha * a.covariance_matrix * Ha.transpose() +
+                            Hb * b.covariance_matrix * Hb.transpose();
+}
+
 Trajectory buildTrajectory(const Transforms& transforms) {
     // Initialization
     Trajectory trajectory;
     trajectory.start_id = transforms.start_id;
     trajectory.end_id = transforms.end_id;
     size_t current_pose_id = trajectory.start_id;
-    graph_utils::PoseWithCovariance temp_pose, total_pose;
+    PoseWithCovariance temp_pose, total_pose;
 
     // Add first pose at the origin
-    graph_utils::TrajectoryPose current_pose;
+    TrajectoryPose current_pose;
     // TODO: Read covariance from file or add option
     current_pose.pose.covariance_matrix = graph_utils::FIXED_COVARIANCE;
     current_pose.id = current_pose_id;
@@ -47,7 +56,7 @@ Trajectory buildTrajectory(const Transforms& transforms) {
 
     // Compositions in chain on the trajectory transforms.
     while (temp_it != transforms.transforms.end() && !(*temp_it).second.is_separator) {
-        graph_utils::poseCompose(temp_pose, (*temp_it).second.pose, total_pose);             
+        poseCompose(temp_pose, (*temp_it).second.pose, total_pose);
         temp_pose = total_pose;
         current_pose_id++;
         current_pose.id = current_pose_id;

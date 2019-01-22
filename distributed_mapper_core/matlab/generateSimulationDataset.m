@@ -6,16 +6,15 @@ close all
 clc
 
 %% Settings
-dataset_folder = horzcat(pwd, '/../test_data/pairwise_consistency_maximization/spoiled/simulation_no_rotation/');
+dataset_folder = horzcat(pwd, '/../test_data/pairwise_consistency_maximization/spoiled/simulation/');
 number_of_robots = 2; % Only 2 is supported.
 id_offset = 96; % letter a = 97 (ASCII)
 sigma_R = 0.01;
 sigma_t = 0.1;
 trajectory_size = 20;
 number_of_separators = 10;
-percentage_of_outliers = 0;% Not supported yet
-trajectory_offsets = {[0; 0; 0], [(rand*10)-5; (rand*10)-5; (rand*10)-5]};
-use_rotation = false;
+trajectory_offsets = {[0; 0; 0; 0; 0; 0], [(rand*10)-5; (rand*10)-5; (rand*10)-5; 360*rand; 360*rand; 360*rand]};
+use_rotation = true;
 add_outliers = true;
 number_of_outlying_separators = 10;
 
@@ -40,7 +39,7 @@ for robot=1:number_of_robots
     [poses, measurements, edges_id] = generateTrajectory(robot_offset, trajectory_size, trajectory_offsets{robot}, information_matrix, use_rotation);
     poses_to_write = poses;
     for i=1:size(poses_to_write,2)
-        poses_to_write(i).t = poses_to_write(i).t - trajectory_offsets{robot};
+        poses_to_write(i).t = poses_to_write(i).t - trajectory_offsets{robot}(1:3);
     end
     writeG2oDataset3D(file_names{robot}, measurements, edges_id, poses_to_write, robot_offset)
     robot_poses{end+1} = poses;

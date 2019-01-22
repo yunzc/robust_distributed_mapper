@@ -32,7 +32,6 @@ namespace distributed_pcm {
             // Place all measurement edges in a map and store the keys of separators
             // std::cout << "currentGraph size: " << distMapper->currentGraph().size() << '\n';
 
-            // TODO: Read covariance from file or add option
             graph_utils::Transforms transforms;
             bool idInitialized = false;
             for (auto factorPtr : distMapper->currentGraph()) {
@@ -42,6 +41,7 @@ namespace distributed_pcm {
                     transform.i = edgePtr->key1();
                     transform.j = edgePtr->key2();
                     transform.pose.pose = edgePtr->measured();
+                    // TODO: Read covariance from file or add option
                     transform.pose.covariance_matrix = graph_utils::FIXED_COVARIANCE;
                     transform.is_separator = std::find(separators.begin(), separators.end(),
                                                        std::make_pair(edgePtr->key1(), edgePtr->key2())) !=

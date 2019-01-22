@@ -110,18 +110,14 @@ graph_utils::ConsistencyErrorData PairwiseConsistency::computeConsistencyError(
      *                  abZjl
      *
      */
-    graph_utils::PoseWithCovariance out1, out2, inv_abZik, out3;
+    graph_utils::PoseWithCovariance out1, out2, result;
     graph_utils::poseCompose(aXij, abZjl, out1);
     graph_utils::poseCompose(out1, bXlk, out2);
+    graph_utils::poseBetween(abZik, out2, result);
 
-    gtsam::Vector6 consistency_error = gtsam::Pose3::Logmap( out2.pose.between(abZik.pose) );
+    gtsam::Vector6 consistency_error = gtsam::Pose3::Logmap( result.pose );
 
-    graph_utils::poseInverse(abZik, inv_abZik);
-    graph_utils::poseCompose(out2, inv_abZik, out3);
-
-    gtsam::Matrix consistency_covariance = out3.covariance_matrix;
-
-    return std::make_pair(consistency_error, consistency_covariance);
+    return std::make_pair(consistency_error, result.covariance_matrix);
 }
 
 double PairwiseConsistency::computeSquaredMahalanobisDistance(const std::pair<gtsam::Vector6, gtsam::Matrix>& consistency_error) {
@@ -142,10 +138,8 @@ graph_utils::PoseWithCovariance PairwiseConsistency::composeOnTrajectory(const s
     graph_utils::TrajectoryPose pose1 = (*trajectory.trajectory_poses.find(id1)).second;
     graph_utils::TrajectoryPose pose2 = (*trajectory.trajectory_poses.find(id2)).second;
     // Computation of the transformation
-    graph_utils::PoseWithCovariance inv_pose1;
-    graph_utils::poseInverse(pose1.pose, inv_pose1);
     graph_utils::PoseWithCovariance result;
-    graph_utils::poseCompose(pose2.pose, inv_pose1, result);
+    graph_utils::poseBetween(pose1.pose, pose2.pose, result);
     return result;
 }
 

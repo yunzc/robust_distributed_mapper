@@ -45,7 +45,7 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersNoRotation_2robots)
             useChrLessFullGraph, useLandmarks, 0.99);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
-    EXPECT(assert_equal(std::get<0>(results), 0.0, tolerance));
+    EXPECT(assert_equal(0.0, std::get<0>(results), tolerance));
     EXPECT(assert_equal(std::get<0>(results), std::get<0>(results), tolerance));
     EXPECT(std::get<2>(results) == 10);
 }
@@ -76,11 +76,11 @@ TEST(DistributedMapper, testdistributedEstimationWithoutOutliersWithRotation_2ro
                                                                    useXY, useOP, debug, priorModel, model,
                                                                    maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
                                                                    gamma, useFlaggedInit, updateType, useBetweenNoise,
-                                                                   useChrLessFullGraph, useLandmarks, 0.90);
+                                                                   useChrLessFullGraph, useLandmarks, 0.99);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
-    EXPECT(assert_equal(std::get<0>(results), 0.0, tolerance));
-    EXPECT(assert_equal(std::get<0>(results), std::get<0>(results), tolerance));
+    EXPECT(assert_equal(0.0, std::get<0>(results), tolerance));
+    EXPECT(assert_equal(std::get<0>(results), std::get<1>(results), tolerance));
     EXPECT(std::get<2>(results) == 10);
 }
 
@@ -110,11 +110,11 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersWithRotation_2robot
                                                                    useXY, useOP, debug, priorModel, model,
                                                                    maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
                                                                    gamma, useFlaggedInit, updateType, useBetweenNoise,
-                                                                   useChrLessFullGraph, useLandmarks, 0.90);
+                                                                   useChrLessFullGraph, useLandmarks, 0.99);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
-    EXPECT(assert_equal(std::get<0>(results), 0.0, tolerance));
-    EXPECT(assert_equal(std::get<0>(results), std::get<0>(results), tolerance));
+    EXPECT(assert_equal(0.0, std::get<0>(results), tolerance));
+    EXPECT(assert_equal(std::get<0>(results), std::get<1>(results), tolerance));
     EXPECT(std::get<2>(results) == 10);
 }
 
