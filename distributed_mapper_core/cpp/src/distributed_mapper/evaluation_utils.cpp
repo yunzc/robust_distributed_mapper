@@ -10,7 +10,7 @@ static const Vector zero9 = Vector::Zero(9);
 static const Matrix zero33 = Matrix::Zero(3, 3);
 static const Key keyAnchor = symbol('Z', 9999999);
 
-namespace multirobot_util{
+namespace evaluation_utils{
   //*****************************************************************************
   Vector rowMajorVector(Matrix3 R) {
     return (Vector(9) << R(0, 0), R(0, 1), R(0, 2),/*  */ R(1, 0), R(1, 1), R(1, 2), /*  */ R(2, 0), R(2, 1), R(2,
@@ -148,7 +148,7 @@ namespace multirobot_util{
 
         if (useBetweenNoise) {
           // Convert noise model to chordal factor noise
-          SharedNoiseModel chordalNoise = multirobot_util::convertToChordalNoise(factor->get_noiseModel());
+          SharedNoiseModel chordalNoise = evaluation_utils::convertToChordalNoise(factor->get_noiseModel());
           cenFG.add(BetweenChordalFactor<Pose3>(key1, key2, measured, chordalNoise));
         } else {
           cenFG.add(BetweenChordalFactor<Pose3>(key1, key2, measured, betweenNoise));
@@ -177,7 +177,7 @@ namespace multirobot_util{
 
       // if using between noise, use the factor noise model converted to a conservative diagonal estimate
       if (useBetweenNoise) {
-        model = multirobot_util::convertToDiagonalNoise(pose3Between->get_noiseModel());
+        model = evaluation_utils::convertToDiagonalNoise(pose3Between->get_noiseModel());
       }
 
       const FastVector<Key> &keys = factor->keys();
@@ -228,7 +228,7 @@ namespace multirobot_util{
 
         if (useBetweenNoise) {
           // Convert noise model to chordal factor noise
-          SharedNoiseModel chordalNoise = multirobot_util::convertToChordalNoise(factor->get_noiseModel());
+          SharedNoiseModel chordalNoise = evaluation_utils::convertToChordalNoise(factor->get_noiseModel());
           cenFG.add(BetweenChordalFactor<Pose3>(key1, key2, measured, chordalNoise));
         } else {
           cenFG.add(BetweenChordalFactor<Pose3>(key1, key2, measured, betweenNoise));
@@ -286,7 +286,7 @@ namespace multirobot_util{
           // Convert noise model to chordal factor noise
           Rot3 rotation = cenRot.at<Rot3>(key1);
           SharedNoiseModel
-              chordalNoise = multirobot_util::convertToChordalNoise(factor->get_noiseModel(), rotation.matrix());
+              chordalNoise = evaluation_utils::convertToChordalNoise(factor->get_noiseModel(), rotation.matrix());
           cenFG.add(BetweenChordalFactor<Pose3>(key1, key2, measured, chordalNoise));
         } else {
           cenFG.add(BetweenChordalFactor<Pose3>(key1, key2, measured, betweenNoise));

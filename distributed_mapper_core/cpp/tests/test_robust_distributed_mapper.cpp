@@ -13,7 +13,7 @@
 using namespace std;
 using namespace gtsam;
 using namespace distributed_mapper;
-using namespace multirobot_util;
+using namespace evaluation_utils;
 
 /******************************************************************************/
 TEST(DistributedMapper, testdistributedEstimationWithOutliersNoRotation_2robots) {

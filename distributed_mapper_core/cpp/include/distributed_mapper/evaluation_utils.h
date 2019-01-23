@@ -64,7 +64,7 @@ namespace distributed_mapper{
   /**
  * Multi-Robot utility functions
  */
-  namespace multirobot_util{
+  namespace evaluation_utils{
 
 
     /**

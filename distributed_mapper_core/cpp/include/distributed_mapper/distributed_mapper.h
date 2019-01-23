@@ -203,7 +203,7 @@ class DistributedMapper{
       else{
         initial_.insert(key, pose);
       }
-      linearizedRotation_ = multirobot_util::rowMajorVectorValues(initial_);
+      linearizedRotation_ = evaluation_utils::rowMajorVectorValues(initial_);
     }
 
     /**removePrior
@@ -250,7 +250,7 @@ class DistributedMapper{
         neighbors_.insert(key, pose);
         neighborsLinearizedPoses_.insert(key, gtsam::zero(6));
         gtsam::Matrix3 R = pose.rotation().matrix();
-        gtsam::Vector r = multirobot_util::rowMajorVector(R);
+        gtsam::Vector r = evaluation_utils::rowMajorVector(R);
         neighborsLinearizedRotations_.insert(key, r);
       }
     }
@@ -293,7 +293,7 @@ class DistributedMapper{
 
     /** @brief retractPose3Global performs global retraction using linearizedPoses and initial */
     void retractPose3Global(){
-      initial_ = multirobot_util::retractPose3Global(initial_, linearizedPoses_);
+      initial_ = evaluation_utils::retractPose3Global(initial_, linearizedPoses_);
     }
 
     /** @brief linearizedRotationAt returns the current rotation estimate at sym */
@@ -306,8 +306,8 @@ class DistributedMapper{
     /** @brief convertLinearizedRotationToPoses iterates over linearized rotations and convert them to poses with zero translation  */
     void convertLinearizedRotationToPoses(){
       gtsam::Values rotValue = gtsam::InitializePose3::normalizeRelaxedRotations(linearizedRotation_);
-      initial_ = multirobot_util::pose3WithZeroTranslation(rotValue);
-      linearizedPoses_ = multirobot_util::initializeVectorValues(initial_); // Init linearized poses
+      initial_ = evaluation_utils::pose3WithZeroTranslation(rotValue);
+      linearizedPoses_ = evaluation_utils::initializeVectorValues(initial_); // Init linearized poses
       distGFG_ = *(chordalGraph_.linearize(initial_));
 
       // Initial error

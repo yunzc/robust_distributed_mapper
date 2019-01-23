@@ -59,7 +59,7 @@ KiMiKjMje computeJacobianAndError(boost::shared_ptr<BetweenFactor<Pose3> > pose3
 
   Matrix3 Ri_Rij = Ri*Rij;
   Matrix3 error_R = Ri_Rij - Rj;
-  Vector error_r = multirobot_util::rowMajorVector(error_R.transpose()); // stack by columns
+  Vector error_r = evaluation_utils::rowMajorVector(error_R.transpose()); // stack by columns
   Vector3 error_t = tj - ti - Ri * tij;
 
   // fill in residual error vector
@@ -146,7 +146,7 @@ Values centralizedRotationEstimation(NonlinearFactorGraph graph){
   GaussianFactorGraph centralizedLinearGraph = InitializePose3::buildLinearOrientationGraph(pose3Graph);
   VectorValues rotEstCentralized = centralizedLinearGraph.optimize();
   Values cenRot = InitializePose3::normalizeRelaxedRotations(rotEstCentralized);
-  Values cenPoses = multirobot_util::pose3WithZeroTranslation(cenRot);
+  Values cenPoses = evaluation_utils::pose3WithZeroTranslation(cenRot);
   return cenPoses;
 }
 
@@ -161,7 +161,7 @@ Values optimizeUsinglinearChordalFactor(NonlinearFactorGraph graph, Values centr
     }
 
   VectorValues cenPose_VectorValues = cenGFG.optimize();
-  Values cenPoses = multirobot_util::retractPose3Global(centralizedRotation, cenPose_VectorValues);
+  Values cenPoses = evaluation_utils::retractPose3Global(centralizedRotation, cenPose_VectorValues);
   return cenPoses;
 }
 
@@ -204,7 +204,7 @@ TEST(DistributedMapper, testDistributedMapperBetweenChordal) {
   GaussianFactorGraph betweenChordalGaussianFactorGraph = *(betweenChordalFactorGraph.linearize(centralizedRotation));
   betweenChordalGaussianFactorGraph.add(JacobianFactor(0, eye(6), zero(6), gtsam::noiseModel::Isotropic::Variance(6, 1e-12)));
   VectorValues betweenChordalVectorValues = betweenChordalGaussianFactorGraph.optimize();
-  Values betweenChordalFactorEstimate = multirobot_util::retractPose3Global(centralizedRotation, betweenChordalVectorValues);
+  Values betweenChordalFactorEstimate = evaluation_utils::retractPose3Global(centralizedRotation, betweenChordalVectorValues);
 
   // Compare
   COMPARE_ESTIMATES(linearChordalFactorEstimate, betweenChordalFactorEstimate, 1e-4);
@@ -235,7 +235,7 @@ TEST(DistributedMapper, testDistributedMapperBetweenAndPriorChordal) {
   // Linearize and Optimize
   GaussianFactorGraph betweenChordalGaussianFactorGraph = *(betweenChordalFactorGraph.linearize(centralizedRotation));
   VectorValues betweenChordalVectorValues = betweenChordalGaussianFactorGraph.optimize();
-  Values betweenChordalFactorEstimate = multirobot_util::retractPose3Global(centralizedRotation, betweenChordalVectorValues);
+  Values betweenChordalFactorEstimate = evaluation_utils::retractPose3Global(centralizedRotation, betweenChordalVectorValues);
 
   // Compare
   COMPARE_ESTIMATES(linearChordalFactorEstimate, betweenChordalFactorEstimate, 1e-4);

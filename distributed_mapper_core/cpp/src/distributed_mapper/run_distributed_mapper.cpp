@@ -159,13 +159,13 @@ std::tuple<double, double, int> runDistributedMapper(const size_t& nrRobots, con
       if (debug)
         cout << "Done Aggregating" << endl;
 
-      GraphAndValues fullGraphAndValues = multirobot_util::readFullGraph(nrRobots, graphAndValuesVec);
+      GraphAndValues fullGraphAndValues = evaluation_utils::readFullGraph(nrRobots, graphAndValuesVec);
 
       // Write optimized full graph
       string distOptimized = dataDir + "fullGraph_optimized.g2o";
       writeG2o(*(fullGraphAndValues.first), distributed, distOptimized);
 
-      auto errors = multirobot_util::evaluateEstimates(nrRobots,
+      auto errors = evaluation_utils::evaluateEstimates(nrRobots,
           fullGraphAndValues,
           priorModel,
           model,

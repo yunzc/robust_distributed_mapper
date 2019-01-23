@@ -372,7 +372,7 @@ void optimizePose(std::vector< boost::shared_ptr<DistributedMapper> > distMapper
         // Convert to poses for logging
         gtsam::VectorValues linearizedPoses = distMappers[robot]->linearizedPoses();
         gtsam::Values currentEstimate = distMappers[robot]->currentEstimate();
-        gtsam::Values retractedEstimate = multirobot_util::retractPose3Global(currentEstimate, linearizedPoses);
+        gtsam::Values retractedEstimate = evaluation_utils::retractPose3Global(currentEstimate, linearizedPoses);
         gtsam::Values distributed_robot_i = distMappers[robot]->getConvertedEstimate(retractedEstimate);
         for(const gtsam::Values::ConstKeyValuePair& key_value: distributed_robot_i){
           gtsam::Key key = key_value.key;
@@ -577,7 +577,7 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
       linRotEstimateNeighbor.insert( key,  distMappers[robot]->neighborsLinearizedRotationsAt(key) );
       // make a pose out of it
       gtsam::Values rotEstimateNeighbor = gtsam::InitializePose3::normalizeRelaxedRotations(linRotEstimateNeighbor);
-      gtsam::Values poseEstimateNeighbor = multirobot_util::pose3WithZeroTranslation(rotEstimateNeighbor);
+      gtsam::Values poseEstimateNeighbor = evaluation_utils::pose3WithZeroTranslation(rotEstimateNeighbor);
       // store it
       distMappers[robot]->updateNeighbor(key, poseEstimateNeighbor.at<gtsam::Pose3>(key));
     }
@@ -586,7 +586,7 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
   if(debug){
     std::cout << "Converted rotation to poses"  << std::endl;
     for(size_t robot = 0; robot < nrRobots; robot++){
-      multirobot_util::printKeys(distMappers[robot]->currentEstimate());
+      evaluation_utils::printKeys(distMappers[robot]->currentEstimate());
     }
   }
 
