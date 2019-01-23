@@ -3,7 +3,7 @@
  */
 #pragma once
 #include "distributed_mapper/distributed_mapper_utils.h"
-#include <distributed_mapper/multi_robot_utils.h>
+#include <distributed_mapper/evaluation_utils.h>
 #include <distributed_mapper/between_chordal_factor.h>
 
 #include <boost/lexical_cast.hpp>
@@ -37,7 +37,7 @@ namespace distributed_mapper {
 
 
     /**
-     * @brief function to run the whole pipeline
+     * @brief function to run the distributed mapping
      */
     std::tuple<double, double, int> runDistributedMapper(const size_t& nrRobots, const string& logDir, const string& dataDir, const string& traceFile, const bool& useXY, const bool& useOP,
                              const bool& debug, const noiseModel::Diagonal::shared_ptr& priorModel, const noiseModel::Isotropic::shared_ptr& model,

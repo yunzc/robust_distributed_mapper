@@ -1,6 +1,6 @@
 #pragma once
 
-#include <distributed_mapper/multi_robot_utils.h>
+#include <distributed_mapper/evaluation_utils.h>
 #include <distributed_mapper/between_chordal_factor.h>
 #include <gtsam/nonlinear/NonlinearFactorGraph.h>
 #include <gtsam/nonlinear/NonlinearFactor.h>

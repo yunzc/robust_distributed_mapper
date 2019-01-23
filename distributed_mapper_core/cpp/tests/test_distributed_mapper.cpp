@@ -6,7 +6,7 @@
 
 #include <distributed_mapper/distributed_mapper.h>
 #include <distributed_mapper/distributed_mapper_utils.h>
-#include <distributed_mapper/multi_robot_utils.h>
+#include <distributed_mapper/evaluation_utils.h>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/variate_generator.hpp>

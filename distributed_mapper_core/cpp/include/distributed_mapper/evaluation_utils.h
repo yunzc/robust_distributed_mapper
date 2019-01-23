@@ -163,6 +163,26 @@ namespace distributed_mapper{
     void
     writeValuesAsTUM(gtsam::Values values, std::string filename);
 
+    /**
+     * @brief readFullGraph reads the full graph if it is present in the directory, otherwise creates it
+     * @param nrRobots is the number of robots
+     * @param graphAndValuesVec contains the graphs and initials of each robot
+     */
+    gtsam::GraphAndValues readFullGraph(size_t nrRobots, // number of robots
+                                 std::vector <gtsam::GraphAndValues> graphAndValuesVec  // vector of all graphs and initials for each robot
+    );
+
+    /**
+     *  @brief function to evaluate the resulting estimates of the optimization
+     *  @returns a tuple containing the distributed cost, the centralized cost and the maximal clique size.
+     */
+    std::pair<double, double> evaluateEstimates(const size_t& nrRobots,
+                                                const gtsam::GraphAndValues& fullGraphAndValues,
+                                                const gtsam::noiseModel::Diagonal::shared_ptr& priorModel,
+                                                const gtsam::noiseModel::Isotropic::shared_ptr& model,
+                                                const bool& useBetweenNoise,
+                                                const gtsam::Values& distributedEstimates);
+
   }
 
 }
