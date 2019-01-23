@@ -92,6 +92,7 @@ add_library (distributed_mapper
         src/distributed_mapper/multi_robot_utils.cpp
         include/distributed_mapper/distributed_mapper_utils.h
         src/distributed_mapper/distributed_mapper_utils.cpp
+        src/distributed_mapper/run_distributed_mapper.cpp
         )
 
 target_link_libraries(distributed_mapper
