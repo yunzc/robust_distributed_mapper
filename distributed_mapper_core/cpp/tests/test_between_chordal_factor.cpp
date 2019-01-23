@@ -1,11 +1,11 @@
 /**
- * @file testBetweenChordalFactor.cpp
+ * @file test_between_chordal_factor.cpp
  * @author Siddharth Choudhary
  * @brief unit tests for between chordal factor
  */
 
-#include <distributed_mapper/DistributedMapper.h>
-#include <distributed_mapper/BetweenChordalFactor.h>
+#include <distributed_mapper/distributed_mapper.h>
+#include <distributed_mapper/between_chordal_factor.h>
 #include <gtsam/base/Testable.h>
 #include <CppUnitLite/TestHarness.h>
 

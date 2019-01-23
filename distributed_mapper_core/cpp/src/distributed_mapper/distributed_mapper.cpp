@@ -1,4 +1,4 @@
-#include "distributed_mapper/DistributedMapper.h"
+#include "distributed_mapper/distributed_mapper.h"
 
 
 using namespace std;

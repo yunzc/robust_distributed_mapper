@@ -1,12 +1,12 @@
 /**
- * @file testDistributedMapper.cpp
+ * @file test_distributed_mapper.cpp
  * @author Siddharth Choudhary
  * @brief unit tests for test multi robot case simulated by loading the datasets
  */
 
-#include <distributed_mapper/DistributedMapper.h>
-#include <distributed_mapper/DistributedMapperUtils.h>
-#include <distributed_mapper/MultiRobotUtils.h>
+#include <distributed_mapper/distributed_mapper.h>
+#include <distributed_mapper/distributed_mapper_utils.h>
+#include <distributed_mapper/multi_robot_utils.h>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/variate_generator.hpp>

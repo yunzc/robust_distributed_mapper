@@ -1,5 +1,5 @@
 
-#include "distributed_mapper/runDistributedMapper.h"
+#include "distributed_mapper/run_distributed_mapper.h"
 
 using namespace std;
 using namespace gtsam;

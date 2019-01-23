@@ -1,7 +1,7 @@
 #pragma once
 
-#include <distributed_mapper/MultiRobotUtils.h>
-#include <distributed_mapper/BetweenChordalFactor.h>
+#include <distributed_mapper/multi_robot_utils.h>
+#include <distributed_mapper/between_chordal_factor.h>
 #include <gtsam/nonlinear/NonlinearFactorGraph.h>
 #include <gtsam/nonlinear/NonlinearFactor.h>
 #include <gtsam/nonlinear/GaussNewtonOptimizer.h>

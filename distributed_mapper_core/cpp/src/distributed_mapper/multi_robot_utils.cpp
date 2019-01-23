@@ -1,4 +1,4 @@
-#include "distributed_mapper/MultiRobotUtils.h"
+#include "distributed_mapper/multi_robot_utils.h"
 
 using namespace std;
 using namespace gtsam;

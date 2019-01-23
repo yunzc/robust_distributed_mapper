@@ -87,10 +87,10 @@ target_link_libraries(distributed_pcm
 
 # Distributed Mapper
 add_library (distributed_mapper
-        include/distributed_mapper/runDistributedMapper.h
-        src/distributed_mapper/DistributedMapper.cpp
-        src/distributed_mapper/MultiRobotUtils.cpp
-        include/distributed_mapper/DistributedMapperUtils.h)
+        include/distributed_mapper/run_distributed_mapper.h
+        src/distributed_mapper/distributed_mapper.cpp
+        src/distributed_mapper/multi_robot_utils.cpp
+        include/distributed_mapper/distributed_mapper_utils.h)
 
 target_link_libraries(distributed_mapper
         ${Boost_LIBRARIES}
@@ -106,12 +106,3 @@ target_link_libraries (robust_distributed_optimization_example
 ###########################################################################
 # Tests
 add_subdirectory(tests)
-
-###########################################################################
-# Install
-#file(GLOB headers "src/distributed_mapper/*.h")
-#install(FILES ${headers} DESTINATION include/distributed_mapper/)
-#configure_file (${PROJECT_SOURCE_DIR}/DistributedMapperConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/DistributedMapperConfig.cmake @ONLY)
-#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/DistributedMapperConfig.cmake DESTINATION share/distributed_mapper)
-
-

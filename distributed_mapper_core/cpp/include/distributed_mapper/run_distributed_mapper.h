@@ -1,10 +1,10 @@
 /**
- * @file runDistributedMapper.h
+ * @file run_distributed_mapper.h
  */
 #pragma once
-#include "distributed_mapper/DistributedMapperUtils.h"
-#include <distributed_mapper/MultiRobotUtils.h>
-#include <distributed_mapper/BetweenChordalFactor.h>
+#include "distributed_mapper/distributed_mapper_utils.h"
+#include <distributed_mapper/multi_robot_utils.h>
+#include <distributed_mapper/between_chordal_factor.h>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>

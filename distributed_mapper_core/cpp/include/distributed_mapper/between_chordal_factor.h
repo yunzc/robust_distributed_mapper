@@ -10,7 +10,7 @@
  * -------------------------------------------------------------------------- */
 
 /**
- *  @file  BetweenChordalFactor.h
+ *  @file  between_chordal_factor.h
  *  @author Siddharth Choudhary
  **/
 #pragma once
