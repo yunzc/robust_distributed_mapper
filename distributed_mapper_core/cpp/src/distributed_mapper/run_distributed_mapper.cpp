@@ -8,26 +8,6 @@ using namespace gtsam;
 namespace distributed_mapper {
 
 /**
- * @brief copyInitial copies the initial graph to optimized graph as a fall back option
- * @param nrRobots is the number of robots
- * @param dataDir is the directory containing the initial graph
- */
-void copyInitial(size_t nrRobots, std::string dataDir) {
-  cout << "Copying initial to optimized" << endl;
-  for (size_t robot = 0; robot < nrRobots; robot++) {
-    string dataFile_i = dataDir + boost::lexical_cast<string>(robot) + ".g2o";
-    GraphAndValues graphAndValuesG2o = readG2o(dataFile_i, true);
-    NonlinearFactorGraph graph = *(graphAndValuesG2o.first);
-    Values initial = *(graphAndValuesG2o.second);
-
-    // Write optimized full graph
-    string distOptimized_i = dataDir + boost::lexical_cast<string>(robot) + "_optimized.g2o";
-    writeG2o(graph, initial, distOptimized_i);
-  }
-}
-
-
-/**
  * @brief function to run the whole pipeline
  */
 std::tuple<double, double, int> runDistributedMapper(const size_t& nrRobots, const string& logDir, const string& dataDir, const string& traceFile, const bool& useXY, const bool& useOP,
@@ -177,12 +157,12 @@ std::tuple<double, double, int> runDistributedMapper(const size_t& nrRobots, con
     catch (...) {
       // Optimization failed (maybe due to disconnected graph)
       // Copy initial to optimized g2o files in that case
-      copyInitial(nrRobots, dataDir);
+      evaluation_utils::copyInitial(nrRobots, dataDir);
     }
   } else {
     // Graph is disconnected
     cout << "Graph is disconnected: " << endl;
-    copyInitial(nrRobots, dataDir);
+    evaluation_utils::copyInitial(nrRobots, dataDir);
   }
 }
 }

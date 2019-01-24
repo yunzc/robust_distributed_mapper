@@ -39,7 +39,7 @@ class DistributedMapper{
     /**
      * @brief DistributedMapper constructor
      */
-    DistributedMapper(char robotName, bool useChrLessFullGraph = false, bool useFlaggedInit = false){
+    DistributedMapper(const char& robotName, const bool& useChrLessFullGraph = false, const bool& useFlaggedInit = false){
       // Config
       verbosity_ = SILENT;
       robotName_ = robotName;
@@ -66,12 +66,12 @@ class DistributedMapper{
 
 
     /** Set the flag whether to use landmarks or not */
-    void setUseLandmarksFlag(bool useLandmarks){
+    void setUseLandmarksFlag(const bool& useLandmarks){
       useLandmarks_ = useLandmarks;
     }
 
     /** Set the flag whether to use between noise or not */
-    void setUseBetweenNoiseFlag(bool useBetweenNoise){
+    void setUseBetweenNoiseFlag(const bool& useBetweenNoise){
       useBetweenNoise_ = useBetweenNoise;
     }
 
@@ -80,7 +80,7 @@ class DistributedMapper{
     enum UpdateType{postUpdate, incUpdate};
 
     /** @brief setUpdateType sets the update type */
-    void setUpdateType(UpdateType updateType){updateType_ = updateType;}
+    void setUpdateType(const UpdateType& updateType){updateType_ = updateType;}
 
     /** @brief setGamma sets the gamma value for over relaxation methods
      *  Distributed Jacobi: updateType_ = postUpdate, gamma = 1
@@ -88,7 +88,7 @@ class DistributedMapper{
      *  Jacobi Overrelax: updateType_ = postUpdate, gamma != 1
      *  Succ Overrelax: updateType_ = incUpdate, gamma != 1
      */
-    void setGamma(double gamma){gamma_ = gamma;}
+    void setGamma(const double& gamma){gamma_ = gamma;}
 
     /**
     * @brief createSubgraphInnerAndSepEdges splits the input subgraph into inner edge factors and seperator edge ids
@@ -102,14 +102,14 @@ class DistributedMapper{
      * @brief loadSubgraphsAndCreateSubgraphEdges loads the subgraph graphAndValues and creates inner and separator edges
      * @param graphAndValues contains the current subgraph and separator edges
      */
-    void loadSubgraphAndCreateSubgraphEdge(gtsam::GraphAndValues graphAndValues);
+    void loadSubgraphAndCreateSubgraphEdge(const gtsam::GraphAndValues& graphAndValues);
 
     /** @brief createLinearOrientationGraph creates orientation graph for distributed rotation estimation */
     void createLinearOrientationGraph();
 
     /** @brief addPriorToSubgraph adds prior to a subgraph "id" at particular symbol "sym"  */
     void
-    addPrior(gtsam::Symbol sym,  gtsam::Pose3 priorPose, const gtsam::SharedNoiseModel& priorModel){
+    addPrior(const gtsam::Symbol& sym,  const gtsam::Pose3& priorPose, const gtsam::SharedNoiseModel& priorModel){
       gtsam::NonlinearFactor::shared_ptr factor(new gtsam::PriorFactor<gtsam::Pose3>(sym, priorPose, priorModel));
       graph_.push_back(factor);
       innerEdges_.add(factor);
@@ -195,7 +195,7 @@ class DistributedMapper{
      * @param sym is symbol
      * @param pose is the pose
      */
-    void insertValue(gtsam::Key key, gtsam::Pose3 pose){
+    void insertValue(const gtsam::Key& key, const gtsam::Pose3& pose){
       // Update the value if symbol already exists
       if(initial_.exists(key)){
         initial_.update(key, pose);
@@ -210,7 +210,7 @@ class DistributedMapper{
      * @brief updateGraph adds new factor to the graph
      * @param factor is the input factor
      */
-    void addFactor(gtsam::NonlinearFactor::shared_ptr& factor){
+    void addFactor(const gtsam::NonlinearFactor::shared_ptr& factor){
       graph_.push_back(factor);
       gtsam::KeyVector keys = factor->keys();
       if(gtsam::symbolChr(keys.at(0)) == gtsam::symbolChr(keys.at(1))){
@@ -241,7 +241,7 @@ class DistributedMapper{
      * @param sym is symbol
      * @param pose is the pose
      */
-    void updateNeighbor(gtsam::Key key, gtsam::Pose3 pose){
+    void updateNeighbor(const gtsam::Key& key, const gtsam::Pose3& pose){
       // Update the value if symbol already exists
       if(neighbors_.exists(key)){
         neighbors_.update(key, pose);
@@ -260,7 +260,7 @@ class DistributedMapper{
      * @param sym is symbol
      * @param vectorValue is the new vectorValue
      */
-    void updateNeighborLinearizedPoses(gtsam::Key key, gtsam::Vector vectorValue){
+    void updateNeighborLinearizedPoses(const gtsam::Key& key, const gtsam::Vector& vectorValue){
       // Update the value if symbol already exists
       if(neighborsLinearizedPoses_.exists(key)){
         neighborsLinearizedPoses_.at(key) = vectorValue;
@@ -275,7 +275,7 @@ class DistributedMapper{
      * @param sym is symbol
      * @param vectorValue is the new vectorValue
      */
-    void updateNeighborLinearizedRotations(gtsam::Key key, gtsam::Vector vectorValue){
+    void updateNeighborLinearizedRotations(const gtsam::Key& key, const gtsam::Vector& vectorValue){
       // Update the value if symbol already exists
       if(neighborsLinearizedRotations_.exists(key)){
         neighborsLinearizedRotations_.at(key) = vectorValue;
@@ -289,7 +289,7 @@ class DistributedMapper{
     gtsam::VectorValues linearizedPoses(){ return linearizedPoses_;}
 
     /** @brief linearizedPosesAt returns the current pose estimate at sym */
-    gtsam::Vector linearizedPosesAt(gtsam::Key key){ return linearizedPoses_.at(key); }
+    gtsam::Vector linearizedPosesAt(const gtsam::Key& key){ return linearizedPoses_.at(key); }
 
     /** @brief retractPose3Global performs global retraction using linearizedPoses and initial */
     void retractPose3Global(){
@@ -297,10 +297,10 @@ class DistributedMapper{
     }
 
     /** @brief linearizedRotationAt returns the current rotation estimate at sym */
-    gtsam::Vector linearizedRotationAt(gtsam::Key key){ return linearizedRotation_.at(key); }
+    gtsam::Vector linearizedRotationAt(const gtsam::Key& key){ return linearizedRotation_.at(key); }
 
     /** @brief returns *latest* linear rotation estimate for neighbors */
-    gtsam::Vector neighborsLinearizedRotationsAt(gtsam::Key key){ return neighborsLinearizedRotations_.at(key); }
+    gtsam::Vector neighborsLinearizedRotationsAt(const gtsam::Key& key){ return neighborsLinearizedRotations_.at(key); }
 
 
     /** @brief convertLinearizedRotationToPoses iterates over linearized rotations and convert them to poses with zero translation  */
@@ -317,7 +317,7 @@ class DistributedMapper{
     }
 
     /** @brief estimateAt returns the current estimate at sym */
-    gtsam::Pose3 estimateAt(gtsam::Key key){ return initial_.at<gtsam::Pose3>(key); }
+    gtsam::Pose3 estimateAt(const gtsam::Key& key){ return initial_.at<gtsam::Pose3>(key); }
 
     /** @brief returns the current estimate */
     gtsam::Values currentEstimate(){ return initial_; }
@@ -326,9 +326,9 @@ class DistributedMapper{
     char robotName(){ return robotName_; }
 
     /** @brief getConvertedEstimate converts the current estimate of the subgraph to follow global symbolChr-less indexing */
-    gtsam::Values getConvertedEstimate(gtsam::Values initial){
+    gtsam::Values getConvertedEstimate(const gtsam::Values& initial){
       gtsam::Values converted_estimate;
-      for(const gtsam::Values::KeyValuePair& key_value: initial) {
+      for(gtsam::Values::ConstKeyValuePair key_value: initial) {
         gtsam::Symbol key = key_value.key;
         if(useChrLessFullGraph_){
           int index = gtsam::symbolIndex(key);
@@ -381,7 +381,7 @@ class DistributedMapper{
 
 
     /** @brief setVerbosity sets the verbosity level */
-    void setVerbosity(Verbosity verbosity){verbosity_ = verbosity;}
+    void setVerbosity(const Verbosity& verbosity){verbosity_ = verbosity;}
 
     /** @brief trace returns the trace */
     std::pair<std::vector<double>, std::vector<double> > trace()
@@ -392,7 +392,7 @@ class DistributedMapper{
     {return std::make_pair(rotationEstimateChangeTrace_, poseEstimateChangeTrace_);}
 
     /** @brief log centralized estimate error for plotting */
-    std::pair<double, double> logCentralizedError(gtsam::Values centralized){
+    std::pair<double, double> logCentralizedError(const gtsam::Values& centralized){
       centralizedValues_.clear();
       for(const gtsam::Values::KeyValuePair& key_value: initial_) {
         gtsam::Symbol key = key_value.key;
@@ -426,7 +426,7 @@ class DistributedMapper{
     * @param robot
     * @param flag
     */
-    void updateNeighboringRobotInitialized(char robot, bool flag){
+    void updateNeighboringRobotInitialized(const char& robot, const bool& flag){
       if(neighboringRobotsInitialized_.find(robot) != neighboringRobotsInitialized_.end()){
         neighboringRobotsInitialized_.at(robot) = flag;
       }
@@ -454,7 +454,7 @@ class DistributedMapper{
      * @brief updateInitialized
      * @param flag
      */
-    void updateInitialized(bool flag){
+    void updateInitialized(const bool& flag){
       robotInitialized_ = flag;
     }
 
@@ -462,7 +462,7 @@ class DistributedMapper{
      * @brief setFlaggedInit
      * @param flag
      */
-    void setFlaggedInit(bool flag){
+    void setFlaggedInit(const bool& flag){
       useFlaggedInit_ = flag;
     }
 

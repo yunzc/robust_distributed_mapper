@@ -18,11 +18,11 @@ namespace distributed_mapper{
  * @return
  */
 std::vector<size_t>
-orderRobots(std::vector< boost::shared_ptr<DistributedMapper> > distMappers,
-            size_t nrRobots,
-            std::string robotNames,
-            bool useFlaggedInit,
-            bool useLandmarks = false);
+orderRobots(const std::vector< boost::shared_ptr<DistributedMapper> >& distMappers,
+            const size_t& nrRobots,
+            const std::string& robotNames,
+            const bool& useFlaggedInit,
+            const bool& useLandmarks = false);
 
 /**
  * @brief logRotationTrace
@@ -31,7 +31,7 @@ orderRobots(std::vector< boost::shared_ptr<DistributedMapper> > distMappers,
  * @param distributed_iter
  * @param subgraph_iter
  */
-std::pair<gtsam::Values, gtsam::VectorValues> logRotationTrace(boost::shared_ptr<DistributedMapper> distMapper_robot);
+std::pair<gtsam::Values, gtsam::VectorValues> logRotationTrace(const boost::shared_ptr<DistributedMapper>& distMapper_robot);
 
 
 /**
@@ -46,14 +46,14 @@ std::pair<gtsam::Values, gtsam::VectorValues> logRotationTrace(boost::shared_ptr
  * @param subgraphRotationTrace contains the Values for a particular subgraph being optimized
  * @param rotationVectorValuesTrace contains the linearized rotation estimate
  */
-void optimizeRotation(std::vector< boost::shared_ptr<DistributedMapper> > distMappers,
-                      size_t maxIter,
-                      size_t nrRobots,
-                      std::string robotNames,
-                      std::vector<size_t> ordering,
-                      bool debug,
-                      double rotationEstimateChangeThreshold,
-                      bool useLandmarks = false,
+void optimizeRotation(std::vector< boost::shared_ptr<DistributedMapper> >& distMappers,
+                      const size_t& maxIter,
+                      const size_t& nrRobots,
+                      const std::string& robotNames,
+                      const std::vector<size_t>& ordering,
+                      const bool& debug,
+                      const double& rotationEstimateChangeThreshold,
+                      const bool& useLandmarks = false,
                       boost::optional<std::vector<gtsam::Values>&> rotationTrace = boost::none,
                       boost::optional<std::vector<gtsam::Values>&> subgraphRotationTrace = boost::none,
                       boost::optional<std::vector<gtsam::VectorValues>&> rotationVectorValuesTrace = boost::none,
@@ -70,14 +70,14 @@ void optimizeRotation(std::vector< boost::shared_ptr<DistributedMapper> > distMa
  * @param ordering is the prioritized ordering
  * @param poseEstimateChangeThreshold provides an early stopping condition
  */
-void optimizePose(std::vector< boost::shared_ptr<DistributedMapper> > distMappers,
-                  size_t maxIter,
-                  size_t nrRobots,
-                  std::string robotNames,
-                  std::vector<size_t> ordering,
-                  bool debug,
-                  double poseEstimateChangeThreshold,
-                  bool useLandmarks = false,
+void optimizePose(std::vector< boost::shared_ptr<DistributedMapper> >& distMappers,
+                  const size_t& maxIter,
+                  const size_t& nrRobots,
+                  const std::string& robotNames,
+                  const std::vector<size_t> &ordering,
+                  const bool& debug,
+                  const double& poseEstimateChangeThreshold,
+                  const bool& useLandmarks = false,
                   boost::optional<std::vector<gtsam::Values>&> poseTrace = boost::none,
                   boost::optional<std::vector<gtsam::Values>&> subgraphPoseTrace = boost::none,
                   boost::optional<gtsam::Values&> poseCentralized = boost::none,
@@ -92,17 +92,17 @@ void optimizePose(std::vector< boost::shared_ptr<DistributedMapper> > distMapper
  * @return the estimated vector of poses for each robot
  */
 std::vector< gtsam::Values >
-distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMappers,
-                     size_t maxIter,
+distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> >& distMappers,
+                     const size_t& maxIter,
                      int& max_clique_size,
-                     DistributedMapper::UpdateType updateType = DistributedMapper::incUpdate,
-                     double gamma = 1.0f,
-                     double rotationEstimateChangeThreshold = 1e-5,
-                     double poseEstimateChangeThreshold = 1e-6,
-                     bool useFlaggedInit = false,
-                     bool useLandmarks = false,
-                     bool debug = false,
-                     bool contains_odometry = true,
+                     const  DistributedMapper::UpdateType& updateType = DistributedMapper::incUpdate,
+                     const double& gamma = 1.0f,
+                     const double& rotationEstimateChangeThreshold = 1e-5,
+                     const double& poseEstimateChangeThreshold = 1e-6,
+                     const bool& useFlaggedInit = false,
+                     const bool& useLandmarks = false,
+                     const bool& debug = false,
+                     const bool& contains_odometry = true,
                      const double& confidence_probability = 0.99,
                      const bool& use_covariance = false,
                      const bool& use_pcm = true,
@@ -121,9 +121,9 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
 ////////////////////////////////////////////////////////////////////////////////
 // Logging
 ////////////////////////////////////////////////////////////////////////////////
-void logResults(size_t nrRobots,
-                std::string traceFile,
-                gtsam::Values centralized,
-                std::vector< boost::shared_ptr<DistributedMapper> > distMappers);
+void logResults(const size_t& nrRobots,
+                const std::string& traceFile,
+                const gtsam::Values& centralized,
+                std::vector< boost::shared_ptr<DistributedMapper> >& distMappers);
 
 }

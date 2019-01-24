@@ -70,49 +70,49 @@ namespace distributed_mapper{
     /**
    * @brief printKeys prints the keys corresponding to the values
    */
-    void printKeys(gtsam::Values values);
+    void printKeys(const gtsam::Values& values);
 
     /**
    * @brief printKeys prints the keys corresponding to the factor graph
    */
-    void printKeys(gtsam::NonlinearFactorGraph graph);
+    void printKeys(const gtsam::NonlinearFactorGraph& graph);
 
 
     /**
    * @brief rowMajorVector takes a rotation matrix converts it into a vector
    */
-    gtsam::Vector rowMajorVector(gtsam::Matrix3 R);
+    gtsam::Vector rowMajorVector(const gtsam::Matrix3& R);
 
     /**
    * @brief pose3WithZeroTranslation sets to zero the translation part
    */
-    gtsam::Values pose3WithZeroTranslation(gtsam::Values rotations);
+    gtsam::Values pose3WithZeroTranslation(const gtsam::Values& rotations);
 
 
     /** @brief initializeVectorValues use the keys from the input Values and set vector to zero(6) */
-    gtsam::VectorValues initializeVectorValues(gtsam::Values rotations);
+    gtsam::VectorValues initializeVectorValues(const gtsam::Values& rotations);
 
     /**
    * @brief initializeZeroRotation iterates over rotations and puts zero vector
    */
     gtsam::VectorValues
-    initializeZeroRotation(gtsam::Values subInitials);
+    initializeZeroRotation(const gtsam::Values& subInitials);
 
     /**
    * @brief rowMajorVectorValues iterates over rotations and converts each into row-major vector
    */
     gtsam::VectorValues
-    rowMajorVectorValues(gtsam::Values subInitials);
+    rowMajorVectorValues(const gtsam::Values& subInitials);
 
     /**
    * @brief retractPose3Global adds delta to initial in global frame
    */
-    gtsam::Values retractPose3Global(gtsam::Values initial, gtsam::VectorValues delta);
+    gtsam::Values retractPose3Global(const gtsam::Values& initial, const gtsam::VectorValues& delta);
 
     /**
    * @brief buildLinearOrientationGraph generates a linear orientation graph given the nonlinear factor graph and uses the between noise
    */
-    gtsam::GaussianFactorGraph buildLinearOrientationGraph(const gtsam::NonlinearFactorGraph& g, bool useBetweenNoise = false);
+    gtsam::GaussianFactorGraph buildLinearOrientationGraph(const gtsam::NonlinearFactorGraph& g, const bool& useBetweenNoise = false);
 
 
     /**
@@ -121,27 +121,27 @@ namespace distributed_mapper{
    * @param dataPath is the data path of the directory
    */
     std::pair <std::vector<gtsam::NonlinearFactorGraph>, std::vector<gtsam::Values> >
-    loadSubgraphs(size_t numSubgraphs, std::string dataPath);
+    loadSubgraphs(const size_t& numSubgraphs, const std::string& dataPath);
 
 
     /** @brief loadGraphWithPrior loads graph in dataFile and adds prior to the first pose */
     std::pair<gtsam::NonlinearFactorGraph, gtsam::Values>
-    loadGraphWithPrior(std::string dataFile, const gtsam::SharedNoiseModel& priorModel);
+    loadGraphWithPrior(const std::string& dataFile, const gtsam::SharedNoiseModel& priorModel);
 
     /** @brief convertToChordalGraph converts gtsam factor graph to chordal graph */
     gtsam::NonlinearFactorGraph
-    convertToChordalGraph(gtsam::NonlinearFactorGraph graph, const gtsam::SharedNoiseModel &betweenNoise, bool useBetweenNoise=false);
+    convertToChordalGraph(const gtsam::NonlinearFactorGraph& graph, const gtsam::SharedNoiseModel &betweenNoise, const bool& useBetweenNoise=false);
 
     /** @brief centralizedEstimation performs two stage pose estimation in a centralized fashion */
-    gtsam::Values centralizedEstimation(gtsam::NonlinearFactorGraph graph,
+    gtsam::Values centralizedEstimation(const gtsam::NonlinearFactorGraph& graph,
                                         const gtsam::SharedNoiseModel& betweenNoise,
                                         const gtsam::SharedNoiseModel& priorNoise,
-                                        bool useBetweenNoise=false);
+                                        const bool& useBetweenNoise=false);
 
     /** @brief centralizedGNEstimation performs GN pose estimation in a centralized fashion */
-    gtsam::Values centralizedGNEstimation(gtsam::NonlinearFactorGraph graph,
+    gtsam::Values centralizedGNEstimation(const gtsam::NonlinearFactorGraph& graph,
                                           const gtsam::SharedNoiseModel& betweenNoise,
-                                          const gtsam::SharedNoiseModel& priorNoise, bool useBetweenNoise=false);
+                                          const gtsam::SharedNoiseModel& priorNoise, const bool& useBetweenNoise=false);
 
 
     /**
@@ -149,7 +149,7 @@ namespace distributed_mapper{
    * @param noise is shared noise model
    * @return converted noise
    */
-    gtsam::SharedNoiseModel convertToChordalNoise(gtsam::SharedNoiseModel noise, gtsam::Matrix Rhat = gtsam::eye(3));
+    gtsam::SharedNoiseModel convertToChordalNoise(const gtsam::SharedNoiseModel& noise, const gtsam::Matrix& Rhat = gtsam::eye(3));
 
 
     /**
@@ -157,19 +157,19 @@ namespace distributed_mapper{
    * @param noise
    * @return
    */
-    gtsam::SharedDiagonal convertToDiagonalNoise(gtsam::SharedNoiseModel noise);
+    gtsam::SharedDiagonal convertToDiagonalNoise(const gtsam::SharedNoiseModel& noise);
 
     /** @brief writeValuesAsTUM writes the optimized values in TUM format */
     void
-    writeValuesAsTUM(gtsam::Values values, std::string filename);
+    writeValuesAsTUM(const gtsam::Values& values, const std::string& filename);
 
     /**
      * @brief readFullGraph reads the full graph if it is present in the directory, otherwise creates it
      * @param nrRobots is the number of robots
      * @param graphAndValuesVec contains the graphs and initials of each robot
      */
-    gtsam::GraphAndValues readFullGraph(size_t nrRobots, // number of robots
-                                 std::vector <gtsam::GraphAndValues> graphAndValuesVec  // vector of all graphs and initials for each robot
+    gtsam::GraphAndValues readFullGraph(const size_t& nrRobots, // number of robots
+                                        const std::vector <gtsam::GraphAndValues>& graphAndValuesVec  // vector of all graphs and initials for each robot
     );
 
     /**
@@ -182,6 +182,23 @@ namespace distributed_mapper{
                                                 const gtsam::noiseModel::Isotropic::shared_ptr& model,
                                                 const bool& useBetweenNoise,
                                                 const gtsam::Values& distributedEstimates);
+
+    /**
+     * @brief readFullGraph reads the full graph if it is present in the directory, otherwise creates it
+     * @param nrRobots is the number of robots
+     * @param graphAndValuesVec contains the graphs and initials of each robot
+     */
+    gtsam::GraphAndValues readFullGraph(const size_t& nrRobots, // number of robots
+                                 const std::vector <gtsam::GraphAndValues>& graphAndValuesVec  // vector of all graphs and initials for each robot
+    );
+
+    /**
+     * @brief copyInitial copies the initial graph to optimized graph as a fall back option
+     * @param nrRobots is the number of robots
+     * @param dataDir is the directory containing the initial graph
+     */
+    void copyInitial(const size_t& nrRobots, const std::string& dataDir);
+
 
   }
 

@@ -8,11 +8,11 @@ namespace distributed_mapper{
 #define PUSH_SINGLE_SUBGRAPH 0
 
 std::vector<size_t>
-orderRobots(std::vector< boost::shared_ptr<DistributedMapper> > distMappers,
-            size_t nrRobots,
-            std::string robotNames,
-            bool useFlaggedInit,
-            bool useLandmarks){
+orderRobots(const std::vector< boost::shared_ptr<DistributedMapper> >& distMappers,
+            const size_t& nrRobots,
+            const std::string& robotNames,
+            const bool& useFlaggedInit,
+            const bool& useLandmarks){
   std::vector<size_t> ordering;
   ordering.push_back(0); // First one always has the prior
 
@@ -98,7 +98,7 @@ orderRobots(std::vector< boost::shared_ptr<DistributedMapper> > distMappers,
   return ordering;
 }
 
-std::pair<gtsam::Values, gtsam::VectorValues> logRotationTrace(boost::shared_ptr<DistributedMapper> distMapper_robot){
+std::pair<gtsam::Values, gtsam::VectorValues> logRotationTrace(const boost::shared_ptr<DistributedMapper>& distMapper_robot){
 
   gtsam::Values distributed_iter; // For logging
   gtsam::VectorValues distributed_vectorvalues_iter;
@@ -126,14 +126,14 @@ std::pair<gtsam::Values, gtsam::VectorValues> logRotationTrace(boost::shared_ptr
   return std::make_pair(distributed_iter, distributed_vectorvalues_iter);
 }
 
-void optimizeRotation(std::vector< boost::shared_ptr<DistributedMapper> > distMappers,
-                      size_t maxIter,
-                      size_t nrRobots,
-                      std::string robotNames,
-                      std::vector<size_t> ordering,
-                      bool debug,
-                      double rotationEstimateChangeThreshold,
-                      bool useLandmarks,
+void optimizeRotation(std::vector< boost::shared_ptr<DistributedMapper> >& distMappers,
+                      const size_t& maxIter,
+                      const size_t& nrRobots,
+                      const std::string& robotNames,
+                      const std::vector<size_t>& ordering,
+                      const bool& debug,
+                      const double& rotationEstimateChangeThreshold,
+                      const bool& useLandmarks,
                       boost::optional<std::vector<gtsam::Values>&> rotationTrace,
                       boost::optional<std::vector<gtsam::Values>&> subgraphRotationTrace,
                       boost::optional<std::vector<gtsam::VectorValues>&> rotationVectorValuesTrace,
@@ -304,14 +304,14 @@ void optimizeRotation(std::vector< boost::shared_ptr<DistributedMapper> > distMa
 }
 
 
-void optimizePose(std::vector< boost::shared_ptr<DistributedMapper> > distMappers,
-                  size_t maxIter,
-                  size_t nrRobots,
-                  std::string robotNames,
-                  std::vector<size_t> ordering,
-                  bool debug,
-                  double poseEstimateChangeThreshold,
-                  bool useLandmarks,
+void optimizePose(std::vector< boost::shared_ptr<DistributedMapper> >& distMappers,
+                  const size_t& maxIter,
+                  const size_t& nrRobots,
+                  const std::string& robotNames,
+                  const std::vector<size_t>& ordering,
+                  const bool& debug,
+                  const double& poseEstimateChangeThreshold,
+                  const bool& useLandmarks,
                   boost::optional<std::vector<gtsam::Values>&> poseTrace,
                   boost::optional<std::vector<gtsam::Values>&> subgraphPoseTrace,
                   boost::optional<gtsam::Values&> poseCentralized,
@@ -471,17 +471,17 @@ void optimizePose(std::vector< boost::shared_ptr<DistributedMapper> > distMapper
 
 
 std::vector< gtsam::Values >
-distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMappers,
-                     size_t maxIter,
+distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> >& distMappers,
+                     const size_t& maxIter,
                      int& max_clique_size,
-                     DistributedMapper::UpdateType updateType,
-                     double gamma,
-                     double rotationEstimateChangeThreshold,
-                     double poseEstimateChangeThreshold,
-                     bool useFlaggedInit,
-                     bool useLandmarks,
-                     bool debug,
-                     bool contains_odometry,
+                     const DistributedMapper::UpdateType& updateType,
+                     const double& gamma,
+                     const double& rotationEstimateChangeThreshold,
+                     const double& poseEstimateChangeThreshold,
+                     const bool& useFlaggedInit,
+                     const bool& useLandmarks,
+                     const bool& debug,
+                     const bool& contains_odometry,
                      const double& confidence_probability,
                      const bool& use_covariance,
                      const bool& use_pcm,
@@ -634,10 +634,10 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
 ////////////////////////////////////////////////////////////////////////////////
 // Logging
 ////////////////////////////////////////////////////////////////////////////////
-void logResults(size_t nrRobots,
-                std::string traceFile,
-                gtsam::Values centralized,
-                std::vector< boost::shared_ptr<DistributedMapper> > distMappers){
+void logResults(const size_t& nrRobots,
+                const std::string& traceFile,
+                const gtsam::Values& centralized,
+                std::vector< boost::shared_ptr<DistributedMapper> >& distMappers){
 
   for(size_t robot = 0; robot < nrRobots; robot++){
     std::pair<std::vector<double>, std::vector<double> > trace = distMappers[robot]->trace();

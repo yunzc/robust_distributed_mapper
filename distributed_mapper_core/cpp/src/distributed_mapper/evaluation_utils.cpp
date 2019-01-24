@@ -12,13 +12,13 @@ static const Key keyAnchor = symbol('Z', 9999999);
 
 namespace evaluation_utils{
   //*****************************************************************************
-  Vector rowMajorVector(Matrix3 R) {
+  Vector rowMajorVector(const Matrix3& R) {
     return (Vector(9) << R(0, 0), R(0, 1), R(0, 2),/*  */ R(1, 0), R(1, 1), R(1, 2), /*  */ R(2, 0), R(2, 1), R(2,
                                                                                                                 2)).finished();
   }
 
   //*****************************************************************************
-  void printKeys(Values values) {
+  void printKeys(const Values& values) {
     cout << "Keys: ";
     for (const Values::ConstKeyValuePair &key_value: values) {
       Key key = key_value.key;
@@ -28,7 +28,7 @@ namespace evaluation_utils{
   }
 
   //*****************************************************************************
-  void printKeys(NonlinearFactorGraph graph) {
+  void printKeys(const NonlinearFactorGraph& graph) {
     cout << "Factor Keys: ";
     for (size_t k = 0; k < graph.size(); k++) {
       KeyVector keys = graph.at(k)->keys();
@@ -41,7 +41,7 @@ namespace evaluation_utils{
   }
 
   //*****************************************************************************
-  Values pose3WithZeroTranslation(Values rotations) {
+  Values pose3WithZeroTranslation(const Values& rotations) {
     Values poses;
     for (const Values::ConstKeyValuePair &key_value: rotations) {
       Key key = key_value.key;
@@ -52,7 +52,7 @@ namespace evaluation_utils{
   }
 
   //*****************************************************************************
-  VectorValues initializeVectorValues(Values rotations) {
+  VectorValues initializeVectorValues(const Values& rotations) {
     VectorValues vectorValues;
     for (const Values::ConstKeyValuePair &key_value: rotations) {
       Key key = key_value.key;
@@ -63,7 +63,7 @@ namespace evaluation_utils{
 
   //*****************************************************************************
   VectorValues
-  initializeZeroRotation(Values subInitials) {
+  initializeZeroRotation(const Values& subInitials) {
     VectorValues subInitialsVectorValue;
     for (const Values::ConstKeyValuePair &key_value: subInitials) {
       Vector r = zero(9);
@@ -74,7 +74,7 @@ namespace evaluation_utils{
 
   //*****************************************************************************
   VectorValues
-  rowMajorVectorValues(Values subInitials) {
+  rowMajorVectorValues(const Values& subInitials) {
     VectorValues subInitialsVectorValue;
     for (const Values::ConstKeyValuePair &key_value: subInitials) {
       Pose3 pose = subInitials.at<Pose3>(key_value.key);
@@ -86,7 +86,7 @@ namespace evaluation_utils{
   }
 
   //*****************************************************************************
-  Values retractPose3Global(Values initial, VectorValues delta) {
+  Values retractPose3Global(const Values& initial, const VectorValues& delta) {
     Values estimate;
     for (const Values::ConstKeyValuePair &key_value: initial) {
       Key key = key_value.key;
@@ -100,7 +100,7 @@ namespace evaluation_utils{
 
   //*****************************************************************************
   pair<vector<NonlinearFactorGraph>, vector<Values> >
-  loadSubgraphs(size_t numSubgraphs, string dataPath) {
+  loadSubgraphs(const size_t& numSubgraphs, const string& dataPath) {
     vector<NonlinearFactorGraph> subGraphs;
     vector<Values> subInitials;
 
@@ -118,7 +118,7 @@ namespace evaluation_utils{
 
   //*****************************************************************************
   pair<NonlinearFactorGraph, Values>
-  loadGraphWithPrior(string dataFile, const SharedNoiseModel &priorModel) {
+  loadGraphWithPrior(const string& dataFile, const SharedNoiseModel &priorModel) {
 
     GraphAndValues graphAndValues = readG2o(dataFile, true);
     NonlinearFactorGraph graphCentralized = *(graphAndValues.first);
@@ -134,9 +134,9 @@ namespace evaluation_utils{
   //*****************************************************************************
 
   NonlinearFactorGraph
-  convertToChordalGraph(NonlinearFactorGraph graph,
+  convertToChordalGraph(const NonlinearFactorGraph& graph,
                         const SharedNoiseModel &betweenNoise,
-                        bool useBetweenNoise) {
+                        const bool& useBetweenNoise) {
     NonlinearFactorGraph cenFG;
     for (size_t k = 0; k < graph.size(); k++) {
       boost::shared_ptr<BetweenFactor<Pose3> > factor =
@@ -160,7 +160,7 @@ namespace evaluation_utils{
 
   /* ************************************************************************* */
   GaussianFactorGraph
-  buildLinearOrientationGraph(const NonlinearFactorGraph &g, bool useBetweenNoise) {
+  buildLinearOrientationGraph(const NonlinearFactorGraph &g, const bool& useBetweenNoise) {
 
     GaussianFactorGraph linearGraph;
     SharedDiagonal model = noiseModel::Unit::Create(9);
@@ -200,10 +200,10 @@ namespace evaluation_utils{
 
   //*****************************************************************************
   Values
-  centralizedEstimation(NonlinearFactorGraph graph,
+  centralizedEstimation(const NonlinearFactorGraph& graph,
                         const SharedNoiseModel &betweenNoise,
                         const SharedNoiseModel &priorNoise,
-                        bool useBetweenNoise) {
+                        const bool& useBetweenNoise) {
 
     // STEP 1: solve for rotations first, using chordal relaxation (centralized)
     // This is the "expected" solution
@@ -256,10 +256,10 @@ namespace evaluation_utils{
 
   //*****************************************************************************
   Values
-  centralizedGNEstimation(NonlinearFactorGraph graph,
+  centralizedGNEstimation(const NonlinearFactorGraph& graph,
                           const SharedNoiseModel &betweenNoise,
                           const SharedNoiseModel &priorNoise,
-                          bool useBetweenNoise) {
+                          const bool& useBetweenNoise) {
 
     // STEP 1: solve for rotations first, using chordal relaxation (centralized)
     // This is the "expected" solution
@@ -315,7 +315,7 @@ namespace evaluation_utils{
   }
 
   //*****************************************************************************
-  SharedNoiseModel convertToChordalNoise(SharedNoiseModel noise, Matrix Rhat) {
+  SharedNoiseModel convertToChordalNoise(const SharedNoiseModel& noise, const Matrix& Rhat) {
 
     // Converted chordal covariance
     Matrix CChordal = Matrix::Zero(12, 12);
@@ -352,7 +352,7 @@ namespace evaluation_utils{
   }
 
   //*****************************************************************************
-  SharedDiagonal convertToDiagonalNoise(SharedNoiseModel noise) {
+  SharedDiagonal convertToDiagonalNoise(const SharedNoiseModel& noise) {
 
     // Extract square root information matrix
     SharedGaussian gaussianNoise = boost::dynamic_pointer_cast<noiseModel::Gaussian>(noise);
@@ -372,7 +372,7 @@ namespace evaluation_utils{
 
   //*****************************************************************************
   void
-  writeValuesAsTUM(gtsam::Values values, std::string filename) {
+  writeValuesAsTUM(const gtsam::Values& values, const std::string& filename) {
 
     // Open filestream
     fstream fileStream(filename.c_str(), fstream::out);
@@ -400,8 +400,23 @@ namespace evaluation_utils{
     fileStream.close();
   }
 
-  GraphAndValues readFullGraph(size_t nrRobots, // number of robots
-                               vector<GraphAndValues> graphAndValuesVec  // vector of all graphs and initials for each robot
+  void copyInitial(const size_t& nrRobots, const std::string& dataDir) {
+    cout << "Copying initial to optimized" << endl;
+    for (size_t robot = 0; robot < nrRobots; robot++) {
+      string dataFile_i = dataDir + boost::lexical_cast<string>(robot) + ".g2o";
+      GraphAndValues graphAndValuesG2o = readG2o(dataFile_i, true);
+      NonlinearFactorGraph graph = *(graphAndValuesG2o.first);
+      Values initial = *(graphAndValuesG2o.second);
+
+      // Write optimized full graph
+      string distOptimized_i = dataDir + boost::lexical_cast<string>(robot) + "_optimized.g2o";
+      writeG2o(graph, initial, distOptimized_i);
+    }
+  }
+
+
+  GraphAndValues readFullGraph(const size_t& nrRobots, // number of robots
+                               const vector<GraphAndValues>& graphAndValuesVec  // vector of all graphs and initials for each robot
   ) {
     std::cout << "Creating fullGraph by combining subgraphs." << std::endl;
 

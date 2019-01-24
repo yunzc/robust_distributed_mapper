@@ -72,7 +72,7 @@ DistributedMapper::createSubgraphInnerAndSepEdges(const NonlinearFactorGraph& su
 
 //*****************************************************************************
 void
-DistributedMapper::loadSubgraphAndCreateSubgraphEdge(GraphAndValues graphAndValues){
+DistributedMapper::loadSubgraphAndCreateSubgraphEdge(const GraphAndValues& graphAndValues){
   graph_ = *(graphAndValues.first);
   initial_ = *(graphAndValues.second);    
 

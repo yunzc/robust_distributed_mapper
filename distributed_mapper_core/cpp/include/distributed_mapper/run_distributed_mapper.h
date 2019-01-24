@@ -20,23 +20,6 @@ using namespace gtsam;
 
 namespace distributed_mapper {
     /**
-     * @brief readFullGraph reads the full graph if it is present in the directory, otherwise creates it
-     * @param nrRobots is the number of robots
-     * @param graphAndValuesVec contains the graphs and initials of each robot
-     */
-    GraphAndValues readFullGraph(size_t nrRobots, // number of robots
-                                 vector <GraphAndValues> graphAndValuesVec  // vector of all graphs and initials for each robot
-                                 );
-
-    /**
-     * @brief copyInitial copies the initial graph to optimized graph as a fall back option
-     * @param nrRobots is the number of robots
-     * @param dataDir is the directory containing the initial graph
-     */
-    void copyInitial(size_t nrRobots, std::string dataDir);
-
-
-    /**
      * @brief function to run the distributed mapping
      */
     std::tuple<double, double, int> runDistributedMapper(const size_t& nrRobots, const string& logDir, const string& dataDir, const string& traceFile, const bool& useXY, const bool& useOP,

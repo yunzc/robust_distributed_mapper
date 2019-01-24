@@ -102,8 +102,8 @@ target_link_libraries(distributed_mapper
 
 ###########################################################################
 # Add example executable
-add_executable (robust_distributed_optimization_example examples/robust_distributed_optimization_example.cpp)
-target_link_libraries (robust_distributed_optimization_example
+add_executable (robust_distributed_optimization_example_2robots examples/robust_distributed_optimization_example_2robots.cpp)
+target_link_libraries (robust_distributed_optimization_example_2robots
         distributed_mapper)
 
 ###########################################################################
