@@ -5,10 +5,7 @@
 
 #include "robot_measurements.h"
 
-/** \namespace robot_local_map
- *  \brief This namespace encapsulates functions and classes to manipulate measurements of a robot local map
- */
-namespace robot_local_map {
+namespace robot_measurements {
     /** \class RobotLocalMap
      * Class that contains the local map of a single robot.
      */ 

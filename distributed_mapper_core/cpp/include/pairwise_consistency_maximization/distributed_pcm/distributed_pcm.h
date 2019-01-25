@@ -5,7 +5,7 @@
 
 #include "distributed_mapper/distributed_mapper.h"
 #include "graph_utils/graph_types.h"
-#include "robot_local_map/robot_local_map.h"
+#include "robot_measurements/robot_local_map.h"
 #include "global_map/global_map.h"
 
 /** \namespace distributed_pcm

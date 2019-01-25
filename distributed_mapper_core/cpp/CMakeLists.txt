@@ -40,11 +40,12 @@ target_link_libraries(graph_utils
 )
 
 # Robot local map library
-add_library(robot_local_map
-        src/pairwise_consistency_maximization/robot_local_map/robot_measurements.cpp
-        src/pairwise_consistency_maximization/robot_local_map/robot_local_map.cpp
+add_library(robot_measurements
+        src/pairwise_consistency_maximization/robot_measurements/robot_measurements.cpp
+        src/pairwise_consistency_maximization/robot_measurements/interrobot_measurements.cpp
+        src/pairwise_consistency_maximization/robot_measurements/robot_local_map.cpp
         )
-target_link_libraries(robot_local_map
+target_link_libraries(robot_measurements
         graph_utils
         )
 
@@ -53,7 +54,7 @@ add_library(pairwise_consistency
    src/pairwise_consistency_maximization/pairwise_consistency/pairwise_consistency.cpp
 )
 target_link_libraries(pairwise_consistency
-       robot_local_map
+       robot_measurements
 )
 
 # Maximum Clique Solver

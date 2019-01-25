@@ -10,9 +10,9 @@ const std::string GlobalMap::LOG_DIRECTORY = std::string("../../log/");
 const std::string GlobalMap::CONSISTENCY_MATRIX_FILE_NAME = std::string(GlobalMap::LOG_DIRECTORY+"consistency_matrix.clq.mtx");
 const std::string GlobalMap::CONSISTENCY_LOOP_CLOSURES_FILE_NAME = std::string(GlobalMap::LOG_DIRECTORY+"consistent_loop_closures.txt");
 
-GlobalMap::GlobalMap(const robot_local_map::RobotLocalMap& robot1_local_map,
-                const robot_local_map::RobotLocalMap& robot2_local_map,
-                const robot_local_map::RobotMeasurements& interrobot_measurements,
+GlobalMap::GlobalMap(const robot_measurements::RobotLocalMap& robot1_local_map,
+                const robot_measurements::RobotLocalMap& robot2_local_map,
+                const robot_measurements::RobotMeasurements& interrobot_measurements,
                 const double& confidence_probability):
                 pairwise_consistency_(robot1_local_map.getTransforms(), robot2_local_map.getTransforms(), 
                             interrobot_measurements.getTransforms(), interrobot_measurements.getLoopClosures(),

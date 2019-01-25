@@ -5,10 +5,10 @@
 
 #include "graph_utils/graph_types.h"
 
-/** \namespace robot_local_map
- *  \brief This namespace encapsulates classes and functions related to the local maps of the individual robots.
+/** \namespace robot_measurements
+ *  \brief This namespace encapsulates classes and functions related to the measurements of the individual robots.
  */ 
-namespace robot_local_map {
+namespace robot_measurements {
 
     /** \class RobotMeasurements
      *  \brief Class that contains the measurements of a single robot.

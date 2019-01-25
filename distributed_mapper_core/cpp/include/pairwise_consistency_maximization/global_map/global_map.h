@@ -3,7 +3,8 @@
 #ifndef GLOBAL_MAP_SOLVER_H
 #define GLOBAL_MAP_SOLVER_H
 
-#include "robot_local_map/robot_local_map.h"
+#include "robot_measurements/robot_local_map.h"
+#include "robot_measurements/interrobot_measurements.h"
 #include "pairwise_consistency/pairwise_consistency.h"
 #include <string>
 
@@ -38,9 +39,9 @@ namespace global_map {
          * @param robot2_local_map Local map of robot 2.
          * @param interrobot_measurements Inter-robot measurements.
          */
-        GlobalMap(const robot_local_map::RobotLocalMap& robot1_local_map,
-                  const robot_local_map::RobotLocalMap& robot2_local_map,
-                  const robot_local_map::RobotMeasurements& interrobot_measurements,
+        GlobalMap(const robot_measurements::RobotLocalMap& robot1_local_map,
+                  const robot_measurements::RobotLocalMap& robot2_local_map,
+                  const robot_measurements::RobotMeasurements& interrobot_measurements,
                   const double& confidence_probability);
 
         /**

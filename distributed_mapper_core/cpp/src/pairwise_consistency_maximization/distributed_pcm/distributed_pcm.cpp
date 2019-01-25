@@ -64,9 +64,9 @@ namespace distributed_pcm {
         // TODO: Communication of the factors needed for optimization
         // For now I will work with perfect information
 
-        auto robot1LocalMap = robot_local_map::RobotLocalMap(transformsByRobot[0], separatorsByRobot[0]);
-        auto robot2LocalMap = robot_local_map::RobotLocalMap(transformsByRobot[1], separatorsByRobot[1]);
-        auto interrobotMeasurements = robot_local_map::RobotMeasurements(separatorsTransforms, separatorsByRobot[0]);
+        auto robot1LocalMap = robot_measurements::RobotLocalMap(transformsByRobot[0], separatorsByRobot[0]);
+        auto robot2LocalMap = robot_measurements::RobotLocalMap(transformsByRobot[1], separatorsByRobot[1]);
+        auto interrobotMeasurements = robot_measurements::RobotMeasurements(separatorsTransforms, separatorsByRobot[0]);
 
         auto globalMap = global_map::GlobalMap(robot1LocalMap, robot2LocalMap, interrobotMeasurements, confidence_probability);
         std::vector<int> max_clique = globalMap.pairwiseConsistencyMaximization();

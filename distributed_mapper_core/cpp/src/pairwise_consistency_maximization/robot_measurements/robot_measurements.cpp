@@ -1,9 +1,9 @@
 // Copyright (C) 2018 by Pierre-Yves Lajoie <lajoie.py@gmail.com>
 
-#include "robot_local_map/robot_measurements.h"
+#include "robot_measurements/robot_measurements.h"
 #include "graph_utils/graph_utils_functions.h"
 
-namespace robot_local_map {
+namespace robot_measurements {
 
 RobotMeasurements::RobotMeasurements(const graph_utils::Transforms& transforms,
                                      const graph_utils::LoopClosures& loop_closures){
