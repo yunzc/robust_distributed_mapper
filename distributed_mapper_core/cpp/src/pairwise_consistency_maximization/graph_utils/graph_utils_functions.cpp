@@ -100,7 +100,7 @@ bool isInTrajectory(const Trajectory& trajectory, const size_t& pose_id) {
 void printConsistentLoopClosures(const LoopClosures& loop_closures, const std::vector<int>& max_clique_data, const std::string& file_name){
   std::ofstream output_file;
   output_file.open(file_name);
-  for (auto loop_closure_id: max_clique_data) {
+  for (const auto& loop_closure_id: max_clique_data) {
     // -1 because fast max-clique finder is one-based.
     output_file << loop_closures[loop_closure_id-1].first << " " << loop_closures[loop_closure_id-1].second << std::endl;
   }

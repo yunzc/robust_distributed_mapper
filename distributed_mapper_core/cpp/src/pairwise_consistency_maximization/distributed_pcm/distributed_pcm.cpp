@@ -11,7 +11,7 @@ namespace distributed_pcm {
         std::vector<graph_utils::LoopClosures> separatorsByRobot;
         std::vector<graph_utils::Transforms> transformsByRobot;
         graph_utils::Transforms separatorsTransforms;
-        for (auto distMapper : dist_mappers) {
+        for (const auto& distMapper : dist_mappers) {
             // Store separators key pairs
             graph_utils::LoopClosures separators;
             for (auto id : distMapper->seperatorEdge()) {
@@ -23,7 +23,7 @@ namespace distributed_pcm {
 
             graph_utils::Transforms transforms;
             bool idInitialized = false;
-            for (auto factorPtr : distMapper->currentGraph()) {
+            for (const auto& factorPtr : distMapper->currentGraph()) {
                 auto edgePtr = boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(factorPtr);
                 if (edgePtr) { // Possible bug : the graph size is 17, however there are only 16 edges..
                     graph_utils::Transform transform;
@@ -87,7 +87,7 @@ namespace distributed_pcm {
             // TODO: Fix "off by one" bug in innerEdges_ and graph_
             std::cout << "Robot " << robot << " : Size of the maximal consistency clique : "  << max_clique.size() << std::endl;
             int numberSeparatorIdsRemoved = 0;
-            for (auto index : rejectedSeparatorIds) {
+            for (const auto& index : rejectedSeparatorIds) {
                 auto id = separatorsIds[index] - numberSeparatorIdsRemoved;
                 numberSeparatorIdsRemoved++;
                 auto pose = boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(
