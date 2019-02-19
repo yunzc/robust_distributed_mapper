@@ -10,114 +10,114 @@ namespace distributed_mapper {
 /**
  * @brief function to run the whole pipeline
  */
-std::tuple<double, double, int> runDistributedMapper(const size_t& nrRobots, const string& logDir, const string& dataDir, const string& traceFile, const bool& useXY, const bool& useOP,
-                                                     const bool& debug, const noiseModel::Diagonal::shared_ptr& priorModel, const noiseModel::Isotropic::shared_ptr& model,
-                                                     const size_t& maxIter, const double& rotationEstimateChangeThreshold, const double& poseEstimateChangeThreshold,
-                                                     const double& gamma, const bool& useFlaggedInit, const distributed_mapper::DistributedMapper::UpdateType& updateType,
-                                                     const bool& useBetweenNoise,  const bool& useChrLessFullGraph, const bool& useLandmarks, const double& confidence_probability, const bool& use_covariance,
-                                                     const bool& usePCM) {
+std::tuple<double, double, int> runDistributedMapper(const size_t& nr_robots, const string& log_dir, const string& data_dir, const string& trace_file, const bool& use_XY, const bool& use_OP,
+                                                     const bool& debug, const noiseModel::Diagonal::shared_ptr& prior_model, const noiseModel::Isotropic::shared_ptr& model,
+                                                     const size_t& max_iter, const double& rotation_estimate_change_threshold, const double& pose_estimate_change_threshold,
+                                                     const double& gamma, const bool& use_flagged_init, const distributed_mapper::DistributedMapper::UpdateType& update_type,
+                                                     const bool& use_between_noise,  const bool& use_chr_less_full_graph, const bool& use_landmarks, const double& confidence_probability, const bool& use_covariance,
+                                                     const bool& use_PCM) {
 
-  vector <GraphAndValues> graphAndValuesVec; // vector of all graphs and initials
+  vector <GraphAndValues> graph_and_values_vec; // vector of all graphs and initials
 
   // Config
-  string robotNames_;
-  if (useXY) {
-    robotNames_ = string("xyz"); // robot names
+  string robot_names_;
+  if (use_XY) {
+    robot_names_ = string("xyz"); // robot names
   } else {
-    robotNames_ = string("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"); // robot names
+    robot_names_ = string("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"); // robot names
   }
 
-  if (useOP) {
-    robotNames_ = string("opqrstuvwxyz"); // robot names
+  if (use_OP) {
+    robot_names_ = string("opqrstuvwxyz"); // robot names
   }
 
-  if (useLandmarks) {
-    robotNames_ = string("abcdefghijklmnopqrstyvwxyz"); // robot names
+  if (use_landmarks) {
+    robot_names_ = string("abcdefghijklmnopqrstyvwxyz"); // robot names
     // ABC... are used for objects
   }
 
 
-  bool disconnectedGraph = false; // Flag to check whether graphs are connected or not
+  bool disconnected_graph_ = false; // Flag to check whether graphs are connected or not
 
   ////////////////////////////////////////////////////////////////////////////////
   // Distributed Optimization
   ////////////////////////////////////////////////////////////////////////////////
 
   // Vector of distributed optimizers, one for each robot
-  vector <boost::shared_ptr<DistributedMapper>> distMappers;
+  vector <boost::shared_ptr<DistributedMapper>> dist_mappers;
 
-  // Load subgraph and construct distMapper optimizers
-  for (size_t robot = 0; robot < nrRobots; robot++) {
+  // Load subgraph and construct dist_mapper optimizers
+  for (size_t robot = 0; robot < nr_robots; robot++) {
 
     // Construct a distributed jacobi object with the given robot name
-    boost::shared_ptr <DistributedMapper> distMapper(
-        new DistributedMapper(robotNames_[robot], useChrLessFullGraph));
+    boost::shared_ptr <DistributedMapper> dist_mapper(
+        new DistributedMapper(robot_names_[robot], use_chr_less_full_graph));
 
     // Read G2o files
-    string dataFile_i = dataDir + boost::lexical_cast<string>(robot) + ".g2o";
-    GraphAndValues graphAndValuesG2o = readG2o(dataFile_i, true);
-    Values initial = *(graphAndValuesG2o.second);
+    string data_file_i = data_dir + boost::lexical_cast<string>(robot) + ".g2o";
+    GraphAndValues graph_and_values_g2o = readG2o(data_file_i, true);
+    Values initial = *(graph_and_values_g2o.second);
 
     // Continue if empty
     if (initial.empty()) {
-      disconnectedGraph = true;
+      disconnected_graph_ = true;
       continue;
     }
 
-    // Construct graphAndValues using cleaned up initial values
-    GraphAndValues graphAndValues = make_pair(graphAndValuesG2o.first, boost::make_shared<Values>(initial));
-    graphAndValuesVec.push_back(graphAndValues);
+    // Construct graph_and_values using cleaned up initial values
+    GraphAndValues graph_and_values = make_pair(graph_and_values_g2o.first, boost::make_shared<Values>(initial));
+    graph_and_values_vec.push_back(graph_and_values);
 
     // Use between noise or not in optimizePoses
-    distMapper->setUseBetweenNoiseFlag(useBetweenNoise);
+    dist_mapper->setUseBetweenNoiseFlag(use_between_noise);
 
     // Use landmarks
-    distMapper->setUseLandmarksFlag(useLandmarks);
+    dist_mapper->setUseLandmarksFlag(use_landmarks);
 
     // Load subgraphs
-    distMapper->loadSubgraphAndCreateSubgraphEdge(graphAndValues);
+    dist_mapper->loadSubgraphAndCreateSubgraphEdge(graph_and_values);
 
     // Add prior to the first robot
     if (robot == 0) {
-      Key firstKey = KeyVector(initial.keys()).at(0);
-      distMapper->addPrior(firstKey, initial.at<Pose3>(firstKey), priorModel);
+      Key first_key = KeyVector(initial.keys()).at(0);
+      dist_mapper->addPrior(first_key, initial.at<Pose3>(first_key), prior_model);
     }
 
     // Verbosity level
-    distMapper->setVerbosity(DistributedMapper::ERROR);
+    dist_mapper->setVerbosity(DistributedMapper::ERROR);
 
     // Check for graph connectivity
-    std::set<char> neighboringRobots = distMapper->getNeighboringChars();
-    if (neighboringRobots.size() == 0)
-      disconnectedGraph = true;
+    std::set<char> neighboring_robots = dist_mapper->getNeighboringChars();
+    if (neighboring_robots.size() == 0)
+      disconnected_graph_ = true;
 
     // Push to the set of optimizers
-    distMappers.push_back(distMapper);
+    dist_mappers.push_back(dist_mapper);
   }
 
   // Vectors containing logs
-  vector <Values> rotationTrace;
-  vector <Values> poseTrace;
-  vector <Values> subgraphRotationTrace;
-  vector <Values> subgraphPoseTrace;
-  vector <VectorValues> rotationVectorValuesTrace;
+  vector <Values> rotation_trace;
+  vector <Values> pose_trace;
+  vector <Values> subgraph_rotation_trace;
+  vector <Values> subgraph_pose_trace;
+  vector <VectorValues> rotation_vector_values_trace;
 
   if (debug)
     cout << "Optimizing" << endl;
   // Distributed Estimate
 
-  if (!disconnectedGraph) {
+  if (!disconnected_graph_) {
     try {
       // try optimizing
       int max_clique_size = 0;
-      vector <Values> estimates = distributedOptimizer(distMappers, maxIter, max_clique_size, updateType,
-                                                       gamma, rotationEstimateChangeThreshold,
-                                                       poseEstimateChangeThreshold,
-                                                       useFlaggedInit, useLandmarks, debug, true,
-                                                       confidence_probability, use_covariance, usePCM,
-                                                       graphAndValuesVec,
-                                                       rotationTrace, poseTrace, subgraphRotationTrace,
-                                                       subgraphPoseTrace, rotationVectorValuesTrace);
+      vector <Values> estimates = distributedOptimizer(dist_mappers, max_iter, max_clique_size, update_type,
+                                                       gamma, rotation_estimate_change_threshold,
+                                                       pose_estimate_change_threshold,
+                                                       use_flagged_init, use_landmarks, debug, true,
+                                                       confidence_probability, use_covariance, use_PCM,
+                                                       graph_and_values_vec,
+                                                       rotation_trace, pose_trace, subgraph_rotation_trace,
+                                                       subgraph_pose_trace, rotation_vector_values_trace);
 
       if (debug)
         cout << "Done" << endl;
@@ -132,24 +132,24 @@ std::tuple<double, double, int> runDistributedMapper(const size_t& nrRobots, con
         }
 
         // Write the corresponding estimate to disk
-        string distOptimized_i = dataDir + boost::lexical_cast<string>(i) + "_optimized.g2o";
-        writeG2o(*(graphAndValuesVec[i].first), estimates[i], distOptimized_i);
+        string dist_optimized_i = data_dir + boost::lexical_cast<string>(i) + "_optimized.g2o";
+        writeG2o(*(graph_and_values_vec[i].first), estimates[i], dist_optimized_i);
       }
 
       if (debug)
         cout << "Done Aggregating" << endl;
 
-      GraphAndValues fullGraphAndValues = evaluation_utils::readFullGraph(nrRobots, graphAndValuesVec);
+      GraphAndValues full_graph_and_values = evaluation_utils::readFullGraph(nr_robots, graph_and_values_vec);
 
       // Write optimized full graph
-      string distOptimized = dataDir + "fullGraph_optimized.g2o";
-      writeG2o(*(fullGraphAndValues.first), distributed, distOptimized);
+      string dist_optimized = data_dir + "fullGraph_optimized.g2o";
+      writeG2o(*(full_graph_and_values.first), distributed, dist_optimized);
 
-      auto errors = evaluation_utils::evaluateEstimates(nrRobots,
-          fullGraphAndValues,
-          priorModel,
+      auto errors = evaluation_utils::evaluateEstimates(nr_robots,
+          full_graph_and_values,
+          prior_model,
           model,
-          useBetweenNoise,
+          use_between_noise,
           distributed);
 
       return std::make_tuple(errors.first, errors.second, max_clique_size);
@@ -157,12 +157,12 @@ std::tuple<double, double, int> runDistributedMapper(const size_t& nrRobots, con
     catch (...) {
       // Optimization failed (maybe due to disconnected graph)
       // Copy initial to optimized g2o files in that case
-      evaluation_utils::copyInitial(nrRobots, dataDir);
+      evaluation_utils::copyInitial(nr_robots, data_dir);
     }
   } else {
     // Graph is disconnected
     cout << "Graph is disconnected: " << endl;
-    evaluation_utils::copyInitial(nrRobots, dataDir);
+    evaluation_utils::copyInitial(nr_robots, data_dir);
   }
 }
 }

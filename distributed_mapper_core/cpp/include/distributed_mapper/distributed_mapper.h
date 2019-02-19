@@ -26,8 +26,8 @@ namespace distributed_mapper{
 // Static Consts
 static const gtsam::Matrix I9 = gtsam::eye(9);
 static const gtsam::Vector zero9 = gtsam::Vector::Zero(9);
-static const size_t maxIter_ = 1000;
-static const gtsam::Key keyAnchor = gtsam::symbol('Z', 9999999);
+static const size_t max_iter_ = 1000;
+static const gtsam::Key key_anchor_ = gtsam::symbol('Z', 9999999);
 
 /**
  * @brief The DistributedMapper class runs distributed mapping algorithm
@@ -39,40 +39,40 @@ class DistributedMapper{
     /**
      * @brief DistributedMapper constructor
      */
-    DistributedMapper(const char& robotName, const bool& useChrLessFullGraph = false, const bool& useFlaggedInit = false){
+    DistributedMapper(const char& robotName, const bool& use_chr_less_full_graph = false, const bool& use_flagged_init = false){
       // Config
       verbosity_ = SILENT;
       robotName_ = robotName;
-      rotationNoiseModel_ = gtsam::noiseModel::Isotropic::Variance(9, 1);
-      poseNoiseModel_ = gtsam::noiseModel::Isotropic::Variance(12, 1);
+      rotation_noise_model_ = gtsam::noiseModel::Isotropic::Variance(9, 1);
+      pose_noise_model_ = gtsam::noiseModel::Isotropic::Variance(12, 1);
       graph_ = gtsam::NonlinearFactorGraph();
-      chordalGraph_ = gtsam::NonlinearFactorGraph();
-      rotSubgraph_ = gtsam::GaussianFactorGraph();
+      chordal_graph_ = gtsam::NonlinearFactorGraph();
+      rot_subgraph_ = gtsam::GaussianFactorGraph();
       initial_ = gtsam::Values();
       neighbors_ = gtsam::Values();
-      rotationErrorTrace_ = std::vector<double>();
-      poseErrorTrace_ = std::vector<double>();
-      rotationEstimateChangeTrace_ = std::vector<double>();
-      poseEstimateChangeTrace_ = std::vector<double>();
-      centralizedValues_ = gtsam::Values();
-      useFlaggedInit_ = useFlaggedInit;
-      useChrLessFullGraph_ = useChrLessFullGraph;
-      updateType_ = incUpdate;
+      rotation_error_trace_ = std::vector<double>();
+      pose_error_trace_ = std::vector<double>();
+      rotation_estimate_change_trace_ = std::vector<double>();
+      pose_estimate_change_trace_ = std::vector<double>();
+      centralized_values_ = gtsam::Values();
+      use_flagged_init_ = use_flagged_init;
+      use_chr_less_full_graph_ = use_chr_less_full_graph;
+      update_type_ = incUpdate;
       gamma_ = 1.0f;
-      useBetweenNoise_ = false;
-      useLandmarks_ = false;
-      latestChange_ = DBL_MAX;
+      use_between_noise_ = false;
+      use_landmarks_ = false;
+      latest_change_ = DBL_MAX;
     }
 
 
     /** Set the flag whether to use landmarks or not */
-    void setUseLandmarksFlag(const bool& useLandmarks){
-      useLandmarks_ = useLandmarks;
+    void setUseLandmarksFlag(const bool& use_landmarks){
+      use_landmarks_ = use_landmarks;
     }
 
     /** Set the flag whether to use between noise or not */
-    void setUseBetweenNoiseFlag(const bool& useBetweenNoise){
-      useBetweenNoise_ = useBetweenNoise;
+    void setUseBetweenNoiseFlag(const bool& use_between_noise){
+      use_between_noise_ = use_between_noise;
     }
 
     /** updateType differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate)
@@ -80,13 +80,13 @@ class DistributedMapper{
     enum UpdateType{postUpdate, incUpdate};
 
     /** @brief setUpdateType sets the update type */
-    void setUpdateType(const UpdateType& updateType){updateType_ = updateType;}
+    void setUpdateType(const UpdateType& update_type){update_type_ = update_type;}
 
     /** @brief setGamma sets the gamma value for over relaxation methods
-     *  Distributed Jacobi: updateType_ = postUpdate, gamma = 1
-     *  Gauss Seidel: updateType_ = incUpdate, gamma = 1
-     *  Jacobi Overrelax: updateType_ = postUpdate, gamma != 1
-     *  Succ Overrelax: updateType_ = incUpdate, gamma != 1
+     *  Distributed Jacobi: update_type_ = postUpdate, gamma = 1
+     *  Gauss Seidel: update_type_ = incUpdate, gamma = 1
+     *  Jacobi Overrelax: update_type_ = postUpdate, gamma != 1
+     *  Succ Overrelax: update_type_ = incUpdate, gamma != 1
      */
     void setGamma(const double& gamma){gamma_ = gamma;}
 
@@ -102,19 +102,19 @@ class DistributedMapper{
      * @brief loadSubgraphsAndCreateSubgraphEdges loads the subgraph graphAndValues and creates inner and separator edges
      * @param graphAndValues contains the current subgraph and separator edges
      */
-    void loadSubgraphAndCreateSubgraphEdge(const gtsam::GraphAndValues& graphAndValues);
+    void loadSubgraphAndCreateSubgraphEdge(const gtsam::GraphAndValues& graph_and_values);
 
     /** @brief createLinearOrientationGraph creates orientation graph for distributed rotation estimation */
     void createLinearOrientationGraph();
 
     /** @brief addPriorToSubgraph adds prior to a subgraph "id" at particular symbol "sym"  */
     void
-    addPrior(const gtsam::Symbol& sym,  const gtsam::Pose3& priorPose, const gtsam::SharedNoiseModel& priorModel){
-      gtsam::NonlinearFactor::shared_ptr factor(new gtsam::PriorFactor<gtsam::Pose3>(sym, priorPose, priorModel));
+    addPrior(const gtsam::Symbol& sym,  const gtsam::Pose3& prior_pose, const gtsam::SharedNoiseModel& prior_model){
+      gtsam::NonlinearFactor::shared_ptr factor(new gtsam::PriorFactor<gtsam::Pose3>(sym, prior_pose, prior_model));
       graph_.push_back(factor);
-      innerEdges_.add(factor);
-      chordalGraph_.add(factor);
-      // recreate orientation graph of inner edges, this time with prior (included in innerEdges_)
+      inner_edges_.add(factor);
+      chordal_graph_.add(factor);
+      // recreate orientation graph of inner edges, this time with prior (included in inner_edges_)
       createLinearOrientationGraph();
     }
 
@@ -125,12 +125,12 @@ class DistributedMapper{
         if(!graph_.at(k))continue;
         gtsam::KeyVector keys = graph_.at(k)->keys();
         if (keys.size() != 2){
-          boost::shared_ptr<gtsam::PriorFactor<gtsam::Pose3> > pose3Prior =
+          boost::shared_ptr<gtsam::PriorFactor<gtsam::Pose3> > pose3_prior =
               boost::dynamic_pointer_cast<gtsam::PriorFactor<gtsam::Pose3> >(graph_.at(k));
-          if (pose3Prior){
+          if (pose3_prior){
             graph_.remove(k);
-            innerEdges_.remove(k);
-            chordalGraph_.remove(k);
+            inner_edges_.remove(k);
+            chordal_graph_.remove(k);
             createLinearOrientationGraph(); // linear orientation graph
             break;
           }
@@ -151,10 +151,10 @@ class DistributedMapper{
     void optimize();
 
     /** @brief innerEdges returns the inner edges  */
-    gtsam::NonlinearFactorGraph innerEdges(){ return innerEdges_; }
+    gtsam::NonlinearFactorGraph innerEdges(){ return inner_edges_; }
 
     /** @brief separatorEdges returns indices of separator edges  */
-    std::vector<size_t> seperatorEdge(){ return separatorEdgeIds_; }
+    std::vector<size_t> seperatorEdge(){ return separator_edge_ids_; }
 
     /** @brief subgraphs */
     gtsam::NonlinearFactorGraph currentGraph(){ return graph_; }
@@ -180,14 +180,14 @@ class DistributedMapper{
      *  @param id is the id to be removed
      */
     void setSeparatorIds(const std::vector<size_t>& ids){
-        separatorEdgeIds_ = ids;
+        separator_edge_ids_ = ids;
     }
 
     /** @brief allows to erase a separator ID.
      *  @param id is the id to be removed
      */
     void eraseSeparatorId(const int& id){
-        separatorEdgeIds_.erase(find(separatorEdgeIds_.begin(), separatorEdgeIds_.end(), id));
+        separator_edge_ids_.erase(find(separator_edge_ids_.begin(), separator_edge_ids_.end(), id));
     }
 
     /**
@@ -203,7 +203,7 @@ class DistributedMapper{
       else{
         initial_.insert(key, pose);
       }
-      linearizedRotation_ = evaluation_utils::rowMajorVectorValues(initial_);
+      linearized_rotation_ = evaluation_utils::rowMajorVectorValues(initial_);
     }
 
     /**removePrior
@@ -214,7 +214,7 @@ class DistributedMapper{
       graph_.push_back(factor);
       gtsam::KeyVector keys = factor->keys();
       if(gtsam::symbolChr(keys.at(0)) == gtsam::symbolChr(keys.at(1))){
-        innerEdges_.push_back(factor);
+        inner_edges_.push_back(factor);
 
         // Chordal factor
         boost::shared_ptr<gtsam::BetweenFactor<gtsam::Pose3> > between =
@@ -222,18 +222,18 @@ class DistributedMapper{
         gtsam::Key key1 = between->keys().at(0);
         gtsam::Key key2 = between->keys().at(1);
         gtsam::Pose3 measured = between->measured();
-        chordalGraph_.add(gtsam::BetweenChordalFactor<gtsam::Pose3>(key1, key2, measured, poseNoiseModel_));
+        chordal_graph_.add(gtsam::BetweenChordalFactor<gtsam::Pose3>(key1, key2, measured, pose_noise_model_));
 
         // Linear orientation graph
         createLinearOrientationGraph(); // TODO: Rebuilds entire linear orientation graph everytime a factor is added
       }
       else{
-        separatorEdgeIds_.push_back(graph_.size() -1);
+        separator_edge_ids_.push_back(graph_.size() -1);
       }
 
       // Clear traces
-      rotationErrorTrace_.clear();
-      poseErrorTrace_.clear();
+      rotation_error_trace_.clear();
+      pose_error_trace_.clear();
     }
 
     /**
@@ -248,71 +248,71 @@ class DistributedMapper{
       }
       else{
         neighbors_.insert(key, pose);
-        neighborsLinearizedPoses_.insert(key, gtsam::zero(6));
+        neighbors_linearized_poses_.insert(key, gtsam::zero(6));
         gtsam::Matrix3 R = pose.rotation().matrix();
         gtsam::Vector r = evaluation_utils::rowMajorVector(R);
-        neighborsLinearizedRotations_.insert(key, r);
+        neighbors_linearized_rotations_.insert(key, r);
       }
     }
 
     /**
-     * @brief updateNeighborLinearizedPoses updates neighboring node vectorValues with the new vectorValues
+     * @brief updateNeighborLinearizedPoses updates neighboring node vector_values with the new vector_values
      * @param sym is symbol
-     * @param vectorValue is the new vectorValue
+     * @param vector_value is the new vector_value
      */
-    void updateNeighborLinearizedPoses(const gtsam::Key& key, const gtsam::Vector& vectorValue){
+    void updateNeighborLinearizedPoses(const gtsam::Key& key, const gtsam::Vector& vector_value){
       // Update the value if symbol already exists
-      if(neighborsLinearizedPoses_.exists(key)){
-        neighborsLinearizedPoses_.at(key) = vectorValue;
+      if(neighbors_linearized_poses_.exists(key)){
+        neighbors_linearized_poses_.at(key) = vector_value;
       }
       else{
-        neighborsLinearizedPoses_.insert(key, vectorValue);
+        neighbors_linearized_poses_.insert(key, vector_value);
       }
     }
 
     /**
-     * @brief updateNeighborLinearizedRotations updates neighboring node vectorValues with the new vectorValues
+     * @brief updateNeighborLinearizedRotations updates neighboring node vector_values with the new vector_values
      * @param sym is symbol
-     * @param vectorValue is the new vectorValue
+     * @param vector_value is the new vector_value
      */
-    void updateNeighborLinearizedRotations(const gtsam::Key& key, const gtsam::Vector& vectorValue){
+    void updateNeighborLinearizedRotations(const gtsam::Key& key, const gtsam::Vector& vector_value){
       // Update the value if symbol already exists
-      if(neighborsLinearizedRotations_.exists(key)){
-        neighborsLinearizedRotations_.at(key) = vectorValue;
+      if(neighbors_linearized_rotations_.exists(key)){
+        neighbors_linearized_rotations_.at(key) = vector_value;
       }
       else{
-        neighborsLinearizedRotations_.insert(key, vectorValue);
+        neighbors_linearized_rotations_.insert(key, vector_value);
       }
     }
 
     /** @brief linearizedPoses returns the linearized poses */
-    gtsam::VectorValues linearizedPoses(){ return linearizedPoses_;}
+    gtsam::VectorValues linearizedPoses(){ return linearized_poses_;}
 
     /** @brief linearizedPosesAt returns the current pose estimate at sym */
-    gtsam::Vector linearizedPosesAt(const gtsam::Key& key){ return linearizedPoses_.at(key); }
+    gtsam::Vector linearizedPosesAt(const gtsam::Key& key){ return linearized_poses_.at(key); }
 
     /** @brief retractPose3Global performs global retraction using linearizedPoses and initial */
     void retractPose3Global(){
-      initial_ = evaluation_utils::retractPose3Global(initial_, linearizedPoses_);
+      initial_ = evaluation_utils::retractPose3Global(initial_, linearized_poses_);
     }
 
     /** @brief linearizedRotationAt returns the current rotation estimate at sym */
-    gtsam::Vector linearizedRotationAt(const gtsam::Key& key){ return linearizedRotation_.at(key); }
+    gtsam::Vector linearizedRotationAt(const gtsam::Key& key){ return linearized_rotation_.at(key); }
 
     /** @brief returns *latest* linear rotation estimate for neighbors */
-    gtsam::Vector neighborsLinearizedRotationsAt(const gtsam::Key& key){ return neighborsLinearizedRotations_.at(key); }
+    gtsam::Vector neighborsLinearizedRotationsAt(const gtsam::Key& key){ return neighbors_linearized_rotations_.at(key); }
 
 
     /** @brief convertLinearizedRotationToPoses iterates over linearized rotations and convert them to poses with zero translation  */
     void convertLinearizedRotationToPoses(){
-      gtsam::Values rotValue = gtsam::InitializePose3::normalizeRelaxedRotations(linearizedRotation_);
+      gtsam::Values rotValue = gtsam::InitializePose3::normalizeRelaxedRotations(linearized_rotation_);
       initial_ = evaluation_utils::pose3WithZeroTranslation(rotValue);
-      linearizedPoses_ = evaluation_utils::initializeVectorValues(initial_); // Init linearized poses
-      distGFG_ = *(chordalGraph_.linearize(initial_));
+      linearized_poses_ = evaluation_utils::initializeVectorValues(initial_); // Init linearized poses
+      dist_GFG_ = *(chordal_graph_.linearize(initial_));
 
       // Initial error
-      //double error = distGFG_.error(linearizedPoses_);
-      //poseErrorTrace_.push_back(error);
+      //double error = dist_GFG_.error(linearized_poses_);
+      //pose_error_trace_.push_back(error);
 
     }
 
@@ -330,7 +330,7 @@ class DistributedMapper{
       gtsam::Values converted_estimate;
       for(gtsam::Values::ConstKeyValuePair key_value: initial) {
         gtsam::Symbol key = key_value.key;
-        if(useChrLessFullGraph_){
+        if(use_chr_less_full_graph_){
           int index = gtsam::symbolIndex(key);
           converted_estimate.insert(index, initial.at<gtsam::Pose3>(key));
         }
@@ -346,28 +346,28 @@ class DistributedMapper{
      * @brief updateEstimate updates linearizedRotation according to gamma and old linearized rotation.
      */
     void updateRotation(){
-      for(gtsam::VectorValues::KeyValuePair& key_value: newLinearizedRotation_){
+      for(gtsam::VectorValues::KeyValuePair& key_value: new_linearized_rotation_){
         gtsam::Key key = key_value.first;
-        if(!linearizedRotation_.exists(key)){
-          linearizedRotation_.insert(key, newLinearizedRotation_.at(key));
+        if(!linearized_rotation_.exists(key)){
+          linearized_rotation_.insert(key, new_linearized_rotation_.at(key));
         }
         else{
-          linearizedRotation_.at(key) = (1-gamma_)*linearizedRotation_.at(key) + gamma_*newLinearizedRotation_.at(key);
+          linearized_rotation_.at(key) = (1-gamma_)*linearized_rotation_.at(key) + gamma_*new_linearized_rotation_.at(key);
         }
       }
     }
 
     /**
-     * @brief updatePoses updes linearizedPoses_ according to gamma and old linearized poses.
+     * @brief updatePoses updes linearized_poses_ according to gamma and old linearized poses.
      */
     void updatePoses(){
-      for(gtsam::VectorValues::KeyValuePair& key_value: newLinearizedPoses_){
+      for(gtsam::VectorValues::KeyValuePair& key_value: new_linearized_poses_){
         gtsam::Key key = key_value.first;
-        if(!linearizedPoses_.exists(key)){
-          linearizedPoses_.insert(key, newLinearizedPoses_.at(key));
+        if(!linearized_poses_.exists(key)){
+          linearized_poses_.insert(key, new_linearized_poses_.at(key));
         }
         else{
-          linearizedPoses_.at(key) = (1-gamma_)*linearizedPoses_.at(key) + gamma_*newLinearizedPoses_.at(key);
+          linearized_poses_.at(key) = (1-gamma_)*linearized_poses_.at(key) + gamma_*new_linearized_poses_.at(key);
         }
       }
     }
@@ -385,15 +385,15 @@ class DistributedMapper{
 
     /** @brief trace returns the trace */
     std::pair<std::vector<double>, std::vector<double> > trace()
-    {return std::make_pair(rotationErrorTrace_, poseErrorTrace_);}
+    {return std::make_pair(rotation_error_trace_, pose_error_trace_);}
 
     /** @brief traceEstimateChange returns the trace of change in estimate */
     std::pair<std::vector<double>, std::vector<double> > traceEstimateChange()
-    {return std::make_pair(rotationEstimateChangeTrace_, poseEstimateChangeTrace_);}
+    {return std::make_pair(rotation_estimate_change_trace_, pose_estimate_change_trace_);}
 
     /** @brief log centralized estimate error for plotting */
     std::pair<double, double> logCentralizedError(const gtsam::Values& centralized){
-      centralizedValues_.clear();
+      centralized_values_.clear();
       for(const gtsam::Values::KeyValuePair& key_value: initial_) {
         gtsam::Symbol key = key_value.key;
         int index = gtsam::symbolIndex(key);
@@ -405,20 +405,20 @@ class DistributedMapper{
         else{
           estimate = centralized.at<gtsam::Pose3>(key);
           }
-        if(useLandmarks_){
-            centralizedValues_.insert(key, estimate);
+        if(use_landmarks_){
+            centralized_values_.insert(key, estimate);
           }
         else{
-            centralizedValues_.insert(new_key, estimate);
+            centralized_values_.insert(new_key, estimate);
           }
       }
-      return std::make_pair(innerEdges_.error(centralizedValues_),
-                            innerEdges_.error(initial_));
+      return std::make_pair(inner_edges_.error(centralized_values_),
+                            inner_edges_.error(initial_));
       }
 
     /** @brief latestChange returns the latest change in estimate */
     double latestChange(){
-      return latestChange_;
+      return latest_change_;
     }
 
     /**
@@ -427,11 +427,11 @@ class DistributedMapper{
     * @param flag
     */
     void updateNeighboringRobotInitialized(const char& robot, const bool& flag){
-      if(neighboringRobotsInitialized_.find(robot) != neighboringRobotsInitialized_.end()){
-        neighboringRobotsInitialized_.at(robot) = flag;
+      if(neighboring_robots_initialized_.find(robot) != neighboring_robots_initialized_.end()){
+        neighboring_robots_initialized_.at(robot) = flag;
       }
       else{
-        neighboringRobotsInitialized_.insert(std::make_pair(robot, flag));
+        neighboring_robots_initialized_.insert(std::make_pair(robot, flag));
       }
     }
 
@@ -439,7 +439,7 @@ class DistributedMapper{
     * @brief clearNeighboringRobotInit
     */
     void clearNeighboringRobotInit(){
-      neighboringRobotsInitialized_.clear();
+      neighboring_robots_initialized_.clear();
     }
 
     /**
@@ -447,7 +447,7 @@ class DistributedMapper{
      * @return
      */
     bool isRobotInitialized(){
-      return robotInitialized_;
+      return robot_initialized_;
     }
 
     /**
@@ -455,7 +455,7 @@ class DistributedMapper{
      * @param flag
      */
     void updateInitialized(const bool& flag){
-      robotInitialized_ = flag;
+      robot_initialized_ = flag;
     }
 
     /**
@@ -463,64 +463,64 @@ class DistributedMapper{
      * @param flag
      */
     void setFlaggedInit(const bool& flag){
-      useFlaggedInit_ = flag;
+      use_flagged_init_ = flag;
     }
 
     /**
      * @brief getNeighboringChars returns the set of neighboring robot symbol chars
      */
     std::set<char> getNeighboringChars(){
-      return neighborChars_;
+      return neighbor_chars_;
     }
 
-    bool useChrLessFullGraph_; // full graph pose have no key characters if it is true.
+    bool use_chr_less_full_graph_; // full graph pose have no key characters if it is true.
 
     // UpdateType and Gamma
-    UpdateType updateType_;
+    UpdateType update_type_;
     double gamma_;
 
 
   protected:
     bool debug_; // Debug flag
-    gtsam::noiseModel::Diagonal::shared_ptr rotationNoiseModel_;
-    gtsam::noiseModel::Isotropic::shared_ptr poseNoiseModel_;
+    gtsam::noiseModel::Diagonal::shared_ptr rotation_noise_model_;
+    gtsam::noiseModel::Isotropic::shared_ptr pose_noise_model_;
 
     char robotName_;// Key for each robot
     gtsam::NonlinearFactorGraph graph_; // subgraph corresponding to each robot
     gtsam::Values initial_; // subinitials corresponding to each robot        
-    gtsam::NonlinearFactorGraph innerEdges_; // edges involving keys from a single robot (exclude separator edges)
-    std::vector<size_t>  separatorEdgeIds_; // for each robot stores the position of the factors corresponding to separator edges
+    gtsam::NonlinearFactorGraph inner_edges_; // edges involving keys from a single robot (exclude separator edges)
+    std::vector<size_t>  separator_edge_ids_; // for each robot stores the position of the factors corresponding to separator edges
     gtsam::Values neighbors_; // contains keys of all the neighboring robots
-    std::set<char> neighborChars_; // contains neighboring robot symbols
-    double latestChange_; // Latest change in estimate, stopping condition
-    bool useBetweenNoise_; // To use the between factor noise instead of isotropic unit noise during pose estimation
+    std::set<char> neighbor_chars_; // contains neighboring robot symbols
+    double latest_change_; // Latest change in estimate, stopping condition
+    bool use_between_noise_; // To use the between factor noise instead of isotropic unit noise during pose estimation
 
     // Cached values and graph required for fast optimization and communication
-    gtsam::VectorValues linearizedRotation_; // contains vector values of rotation of internal nodes
-    gtsam::VectorValues newLinearizedRotation_; // contains vector values of rotation of internal nodes after current iteration
-    gtsam::VectorValues neighborsLinearizedRotations_; // contains vector values of all the neighboring robots for distributed estimation
-    gtsam::VectorValues linearizedPoses_; // contains vector values of poses of internal nodes
-    gtsam::VectorValues newLinearizedPoses_; // contains vector values of poses of internal nodes after current iteration
-    gtsam::VectorValues neighborsLinearizedPoses_; // contains vector values of all the neighboring robots for distributed estimation
-    gtsam::NonlinearFactorGraph chordalGraph_; // edges involving keys from a single robot represented using BetweenChordalFactors
-    gtsam::GaussianFactorGraph rotSubgraph_; // linear orientation graph required for distributed rotation estimation
-    gtsam::GaussianFactorGraph distGFG_; // Gaussian factor graph initialized before distributed pose estimation
+    gtsam::VectorValues linearized_rotation_; // contains vector values of rotation of internal nodes
+    gtsam::VectorValues new_linearized_rotation_; // contains vector values of rotation of internal nodes after current iteration
+    gtsam::VectorValues neighbors_linearized_rotations_; // contains vector values of all the neighboring robots for distributed estimation
+    gtsam::VectorValues linearized_poses_; // contains vector values of poses of internal nodes
+    gtsam::VectorValues new_linearized_poses_; // contains vector values of poses of internal nodes after current iteration
+    gtsam::VectorValues neighbors_linearized_poses_; // contains vector values of all the neighboring robots for distributed estimation
+    gtsam::NonlinearFactorGraph chordal_graph_; // edges involving keys from a single robot represented using BetweenChordalFactors
+    gtsam::GaussianFactorGraph rot_subgraph_; // linear orientation graph required for distributed rotation estimation
+    gtsam::GaussianFactorGraph dist_GFG_; // Gaussian factor graph initialized before distributed pose estimation
 
     // Initialization
-    std::map<char, bool> neighboringRobotsInitialized_; // contains boolean flag to check if a robot is initialized or not
-    bool robotInitialized_; // flag to check if this robot is initialized or not
-    bool useFlaggedInit_; // flagged initialization
+    std::map<char, bool> neighboring_robots_initialized_; // contains boolean flag to check if a robot is initialized or not
+    bool robot_initialized_; // flag to check if this robot is initialized or not
+    bool use_flagged_init_; // flagged initialization
 
     // Landmarks
-    bool useLandmarks_; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
+    bool use_landmarks_; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
 
     // Verbosity
-    std::vector <double> rotationErrorTrace_; // error trace
-    std::vector <double> poseErrorTrace_; // error trace
-    std::vector <double> rotationEstimateChangeTrace_; // change in estimate trace
-    std::vector <double> poseEstimateChangeTrace_; // change in estimate trace
-    double centralizedError_; // log it for plotting
-    gtsam::Values centralizedValues_; // centralized estimate converted to the estimate format of this graph
+    std::vector <double> rotation_error_trace_; // error trace
+    std::vector <double> pose_error_trace_; // error trace
+    std::vector <double> rotation_estimate_change_trace_; // change in estimate trace
+    std::vector <double> pose_estimate_change_trace_; // change in estimate trace
+    double centralized_error_; // log it for plotting
+    gtsam::Values centralized_values_; // centralized estimate converted to the estimate format of this graph
     Verbosity verbosity_; // Verbosity level
 };
 

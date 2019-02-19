@@ -10,8 +10,8 @@ pair<NonlinearFactorGraph, vector<size_t> >
 DistributedMapper::createSubgraphInnerAndSepEdges(const NonlinearFactorGraph& subgraph){
 
   // we create the NFG including only the inner edges
-  NonlinearFactorGraph subgraphInnerEdge;
-  vector<size_t> subgraphsSepEdgesId;
+  NonlinearFactorGraph subgraph_inner_edge;
+  vector<size_t> subgraphs_sep_edges_id;
   neighbors_.clear();
 
   for(size_t k=0; k < subgraph.size(); k++){ // this loops over the factors in subgraphs[i]
@@ -22,79 +22,79 @@ DistributedMapper::createSubgraphInnerAndSepEdges(const NonlinearFactorGraph& su
     KeyVector keys = subgraph.at(k)->keys();
 
     if (keys.size() != 2){
-      subgraphInnerEdge.push_back(subgraph.at(k));
+      subgraph_inner_edge.push_back(subgraph.at(k));
       continue;
     }
     Symbol key0 = keys.at(0);
     Symbol key1 = keys.at(1);
-    size_t keyBits = sizeof(Key) * 8;
-    size_t chrBits = sizeof(unsigned char) * 8;
-    size_t indexBits = keyBits - chrBits;
-    Key chrMask = Key(UCHAR_MAX)  << indexBits; // For some reason, std::numeric_limits<unsigned char>::max() fails
-    Key indexMask = ~chrMask;
+    size_t key_bits = sizeof(Key) * 8;
+    size_t chr_bits = sizeof(unsigned char) * 8;
+    size_t index_bits = key_bits - chr_bits;
+    Key chr_mask = Key(UCHAR_MAX)  << index_bits; // For some reason, std::numeric_limits<unsigned char>::max() fails
+    Key index_mask = ~chr_mask;
 
     char robot0 = symbolChr(key0);
     char robot1 = symbolChr(key1);
 
-    if (robot0 == robot1 || (useLandmarks_ && robot1 == toupper(robot0))){ // keys from the same subgraph
+    if (robot0 == robot1 || (use_landmarks_ && robot1 == toupper(robot0))){ // keys from the same subgraph
       if(verbosity_ >= DEBUG) cout << "Factor connecting (intra): " << robot0 << " " << symbolIndex(key0) << " " <<  robot1 << " " << symbolIndex(key1) << endl;
-      subgraphInnerEdge.push_back(subgraph.at(k)); // the edge is not a separator, but belongs to the interior of the subgraph
+      subgraph_inner_edge.push_back(subgraph.at(k)); // the edge is not a separator, but belongs to the interior of the subgraph
     }
     else{
       // Add it as a prior factor using the current estimate from the other graph
       if(verbosity_ >= DEBUG) cout << "Factor connecting (extra): " << robot0 << " " << symbolIndex(key0) << " " <<  robot1 << " " << symbolIndex(key1) << endl;
-      subgraphsSepEdgesId.push_back(k); // TODO: allocate this
+      subgraphs_sep_edges_id.push_back(k); // TODO: allocate this
 
       // Neighbors data structure
-      if(robot0 == robotName_ || (useLandmarks_ && robot0 == toupper(robotName_))){
+      if(robot0 == robotName_ || (use_landmarks_ && robot0 == toupper(robotName_))){
         if(!neighbors_.exists(key1))
           neighbors_.insert(key1, Pose3());
 
-        if(!neighborChars_.count(robot1))
-          neighborChars_.insert(robot1);
+        if(!neighbor_chars_.count(robot1))
+          neighbor_chars_.insert(robot1);
       }
       else{
         if(!neighbors_.exists(key0))
           neighbors_.insert(key0, Pose3());
 
-        if(!neighborChars_.count(robot0))
-          neighborChars_.insert(robot0);
+        if(!neighbor_chars_.count(robot0))
+          neighbor_chars_.insert(robot0);
       }
     }
   }
 
   // Convert neighbor values into row major vector values
-  neighborsLinearizedRotations_ = evaluation_utils::rowMajorVectorValues(neighbors_);
-  neighborsLinearizedPoses_ = evaluation_utils::initializeVectorValues(neighbors_);
+  neighbors_linearized_rotations_ = evaluation_utils::rowMajorVectorValues(neighbors_);
+  neighbors_linearized_poses_ = evaluation_utils::initializeVectorValues(neighbors_);
 
-  return make_pair(subgraphInnerEdge,subgraphsSepEdgesId);
+  return make_pair(subgraph_inner_edge,subgraphs_sep_edges_id);
 }
 
 //*****************************************************************************
 void
-DistributedMapper::loadSubgraphAndCreateSubgraphEdge(const GraphAndValues& graphAndValues){
-  graph_ = *(graphAndValues.first);
-  initial_ = *(graphAndValues.second);    
+DistributedMapper::loadSubgraphAndCreateSubgraphEdge(const GraphAndValues& graph_and_values){
+  graph_ = *(graph_and_values.first);
+  initial_ = *(graph_and_values.second);    
 
   // Convert initial values into row major vector values
-  linearizedRotation_ = evaluation_utils::rowMajorVectorValues(initial_);
+  linearized_rotation_ = evaluation_utils::rowMajorVectorValues(initial_);
 
   // create a nonlinear factor graph with inner edges and store slots of separators
-  pair<NonlinearFactorGraph, vector<size_t> > subGraphEdge = createSubgraphInnerAndSepEdges(graph_);
-  innerEdges_ = subGraphEdge.first;
-  separatorEdgeIds_ = subGraphEdge.second;
+  pair<NonlinearFactorGraph, vector<size_t> > subgraph_edge = createSubgraphInnerAndSepEdges(graph_);
+  inner_edges_ = subgraph_edge.first;
+  separator_edge_ids_ = subgraph_edge.second;
 
   // Internal cached graphs for distributed estimations
   createLinearOrientationGraph(); // linear orientation graph with inner edges
-  chordalFactorGraph(); // nonlinear chordal pose3graph with inner edges
+  chordalFactorGraph(); // nonlinear chordal pose3_graph with inner edges
 }
 
 //*****************************************************************************
 void
 DistributedMapper::createLinearOrientationGraph(){
   // Preallocate
-  NonlinearFactorGraph pose3Graph = InitializePose3::buildPose3graph(innerEdges_);
-  rotSubgraph_ = evaluation_utils::buildLinearOrientationGraph(pose3Graph, useBetweenNoise_);
+  NonlinearFactorGraph pose3_graph = InitializePose3::buildPose3graph(inner_edges_);
+  rot_subgraph_ = evaluation_utils::buildLinearOrientationGraph(pose3_graph, use_between_noise_);
 }
 
 
@@ -104,52 +104,52 @@ DistributedMapper::estimateRotation(){
   // Rotation vector estimated using Chordal relaxation
 
   // Inner edges for the current subgraph
-  gtsam::GaussianFactorGraph rotSubgraph = rotSubgraph_.clone();
+  gtsam::GaussianFactorGraph rot_subgraph = rot_subgraph_.clone();
 
   // push back to rotgraph_i separator edges as priors
-  for(size_t s = 0 ; s < separatorEdgeIds_.size(); s++){ // for each separator
+  for(size_t s = 0 ; s < separator_edge_ids_.size(); s++){ // for each separator
     // | rj - Mij * ri | = | Mij * ri - rj |, with Mij = diag(Rij',Rij',Rij')
     // |Ab - b| -> Jacobian(key,A,b)
 
-    size_t sepSlot =  separatorEdgeIds_[s];
-    boost::shared_ptr<BetweenFactor<Pose3> > pose3Between =
-        boost::dynamic_pointer_cast<BetweenFactor<Pose3> >(graph_.at(sepSlot));
+    size_t sep_slot =  separator_edge_ids_[s];
+    boost::shared_ptr<BetweenFactor<Pose3> > pose3_between =
+        boost::dynamic_pointer_cast<BetweenFactor<Pose3> >(graph_.at(sep_slot));
 
-    Pose3 relativePose = pose3Between->measured();
-    Matrix3 R01t = relativePose.rotation().transpose().matrix();
+    Pose3 relative_pose = pose3_between->measured();
+    Matrix3 R01t = relative_pose.rotation().transpose().matrix();
     Matrix M9 = Matrix::Zero(9,9);
     M9.block(0,0,3,3) = R01t;
     M9.block(3,3,3,3) = R01t;
     M9.block(6,6,3,3) = R01t;
-    KeyVector keys = pose3Between->keys();
+    KeyVector keys = pose3_between->keys();
     Symbol key0 = keys.at(0);
     Symbol key1 = keys.at(1);
     char robot0 = symbolChr(key0);
     char robot1 = symbolChr(key1);
 
     // Landmarks use Upper case robot symbol
-    if(useLandmarks_){
+    if(use_landmarks_){
         robot0 = tolower(robot0);
         robot1 = tolower(robot1);
       }
 
     // if using between noise, use the factor noise model converted to a conservative diagonal estimate
-    SharedDiagonal model = rotationNoiseModel_;
-    if(useBetweenNoise_){
-        model = evaluation_utils::convertToDiagonalNoise(pose3Between->get_noiseModel());
+    SharedDiagonal model = rotation_noise_model_;
+    if(use_between_noise_){
+        model = evaluation_utils::convertToDiagonalNoise(pose3_between->get_noiseModel());
       }
 
     if(robot0 == robotName_){ // robot i owns the first key
-      if(!useFlaggedInit_ || neighboringRobotsInitialized_[robot1]){ // if use flagged initialization and robot sharing the edge is already optimized
-        Vector r1 = neighborsLinearizedRotations_.at(key1);
-        rotSubgraph.add(key0, M9, r1, model);
+      if(!use_flagged_init_ || neighboring_robots_initialized_[robot1]){ // if use flagged initialization and robot sharing the edge is already optimized
+        Vector r1 = neighbors_linearized_rotations_.at(key1);
+        rot_subgraph.add(key0, M9, r1, model);
       }
     }
     else if(robot1 == robotName_){ // robot i owns the second key
-      if(!useFlaggedInit_ || neighboringRobotsInitialized_[robot0]){ // if use flagged initialization and robot sharing the edge is already optimized
-        Vector r0 = neighborsLinearizedRotations_.at(key0);
+      if(!use_flagged_init_ || neighboring_robots_initialized_[robot0]){ // if use flagged initialization and robot sharing the edge is already optimized
+        Vector r0 = neighbors_linearized_rotations_.at(key0);
         Vector M9_r0 = M9*r0;
-        rotSubgraph.add(key1, I9, M9_r0, model);
+        rot_subgraph.add(key1, I9, M9_r0, model);
       }
     }
     else{
@@ -160,43 +160,43 @@ DistributedMapper::estimateRotation(){
   }
 
   // Solve the LFG
-  newLinearizedRotation_ = rotSubgraph.optimize();
+  new_linearized_rotation_ = rot_subgraph.optimize();
 
   // Log it
   if(verbosity_ >= ERROR){
-    if(linearizedRotation_.size() == newLinearizedRotation_.size()){
-      latestChange_ = newLinearizedRotation_.subtract(linearizedRotation_).norm();
-      rotationEstimateChangeTrace_.push_back(latestChange_);
+    if(linearized_rotation_.size() == new_linearized_rotation_.size()){
+      latest_change_ = new_linearized_rotation_.subtract(linearized_rotation_).norm();
+      rotation_estimate_change_trace_.push_back(latest_change_);
     }
 
-    double error = rotSubgraph.error(newLinearizedRotation_);
-    rotationErrorTrace_.push_back(error);
+    double error = rot_subgraph.error(new_linearized_rotation_);
+    rotation_error_trace_.push_back(error);
   }  
 }
 
 //*****************************************************************************
 void
 DistributedMapper::chordalFactorGraph(){
-  chordalGraph_ = gtsam::NonlinearFactorGraph(); // Clear the previous graph
-  for(size_t k = 0; k < innerEdges_.size(); k++){
+  chordal_graph_ = gtsam::NonlinearFactorGraph(); // Clear the previous graph
+  for(size_t k = 0; k < inner_edges_.size(); k++){
       boost::shared_ptr<BetweenFactor<Pose3> > factor =
-          boost::dynamic_pointer_cast<BetweenFactor<Pose3> >(innerEdges_[k]);
+          boost::dynamic_pointer_cast<BetweenFactor<Pose3> >(inner_edges_[k]);
       if(factor){
           Key key1 = factor->keys().at(0);
           Key key2 = factor->keys().at(1);
           Pose3 measured = factor->measured();
-          if(useBetweenNoise_){
+          if(use_between_noise_){
               // Convert noise model to chordal factor noise
-              SharedNoiseModel chordalNoise = evaluation_utils::convertToChordalNoise(factor->get_noiseModel());
-              //chordalNoise->print("Chordal Noise: \n");
-              chordalGraph_.add(BetweenChordalFactor<Pose3>(key1, key2, measured, chordalNoise));
+              SharedNoiseModel chordal_noise = evaluation_utils::convertToChordalNoise(factor->get_noiseModel());
+              //chordal_noise->print("Chordal Noise: \n");
+              chordal_graph_.add(BetweenChordalFactor<Pose3>(key1, key2, measured, chordal_noise));
             }
           else{
-              chordalGraph_.add(BetweenChordalFactor<Pose3>(key1, key2, measured, poseNoiseModel_));
+              chordal_graph_.add(BetweenChordalFactor<Pose3>(key1, key2, measured, pose_noise_model_));
             }
         }
       else{
-          chordalGraph_.add(innerEdges_[k]);
+          chordal_graph_.add(inner_edges_[k]);
         }
     }
 }
@@ -207,65 +207,65 @@ DistributedMapper::estimatePoses(){
 
   if(verbosity_ >= DEBUG)
     cout << "========= each robot normalizes rotations & linearize pose graph of inner edges " << endl;
-  // Gaussian factor graph for i_th subgraph using BetweenChordalFactor
+  // Gaussian factor graph for i_th subgraph using between_chordal_factor
   // Compute linearization point from rotation estimate (we need to project to SO(3))
-  GaussianFactorGraph distGFG = distGFG_.clone();
+  GaussianFactorGraph dist_GFG = dist_GFG_.clone();
 
-  // push back to distGFG_i separator edges as priors
-  for(size_t s = 0 ; s < separatorEdgeIds_.size(); s++){ // for each separator
+  // push back to dist_GFG_i separator edges as priors
+  for(size_t s = 0 ; s < separator_edge_ids_.size(); s++){ // for each separator
     // | rj - Mij * ri | = | Mij * ri - rj |, with Mij = diag(Rij',Rij',Rij')
     // |Ab - b| -> Jacobian(key,A,b)
 
-    size_t sepSlot =  separatorEdgeIds_[s];
-    boost::shared_ptr<BetweenFactor<Pose3> > pose3Between =
-        boost::dynamic_pointer_cast<BetweenFactor<Pose3> >(graph_.at(sepSlot));
+    size_t sep_slot =  separator_edge_ids_[s];
+    boost::shared_ptr<BetweenFactor<Pose3> > pose3_between =
+        boost::dynamic_pointer_cast<BetweenFactor<Pose3> >(graph_.at(sep_slot));
 
     // Construct between chordal factor corresponding to separator edges
-    KeyVector keys = pose3Between->keys();
+    KeyVector keys = pose3_between->keys();
     Symbol key0 = keys.at(0);
     Symbol key1 = keys.at(1);
     char robot0 = symbolChr(key0);
     char robot1 = symbolChr(key1);
-    Pose3 measured = pose3Between->measured();
+    Pose3 measured = pose3_between->measured();
 
-    BetweenChordalFactor<Pose3> betweenChordalFactor(key0, key1, measured, poseNoiseModel_);
+    BetweenChordalFactor<Pose3> between_chordal_factor(key0, key1, measured, pose_noise_model_);
 
     // Pre allocate jacobian matrices
     Matrix M0 = Matrix::Zero(12,6);
     Matrix M1 = Matrix::Zero(12,6);
 
     // Landmarks use Upper case robot symbol
-    if(useLandmarks_){
+    if(use_landmarks_){
         robot0 = tolower(robot0);
         robot1 = tolower(robot1);
       }
 
     if(robot0 == robotName_){ // robot i owns the first key
-        if(!useFlaggedInit_ || neighboringRobotsInitialized_[robot1]){ // if use flagged initialization and robot sharing the edge is already optimized
-            Vector error = betweenChordalFactor.evaluateError(initial_.at<Pose3>(key0), neighbors_.at<Pose3>(key1), M0, M1);
+        if(!use_flagged_init_ || neighboring_robots_initialized_[robot1]){ // if use flagged initialization and robot sharing the edge is already optimized
+            Vector error = between_chordal_factor.evaluateError(initial_.at<Pose3>(key0), neighbors_.at<Pose3>(key1), M0, M1);
             // Robot i owns the first key_i, on which we put a prior
             Matrix A = M0;
-            Vector b = -(M1 * neighborsLinearizedPoses_.at(key1) + error);
-            if(useBetweenNoise_){
+            Vector b = -(M1 * neighbors_linearized_poses_.at(key1) + error);
+            if(use_between_noise_){
                 Rot3 rotation = initial_.at<Pose3>(key0).rotation();
-                SharedNoiseModel chordalNoise = evaluation_utils::convertToChordalNoise(pose3Between->get_noiseModel(), rotation.matrix());
-                chordalNoise->WhitenSystem(A, b);
+                SharedNoiseModel chordal_noise = evaluation_utils::convertToChordalNoise(pose3_between->get_noiseModel(), rotation.matrix());
+                chordal_noise->WhitenSystem(A, b);
               }
-            distGFG.add(key0, A, b, poseNoiseModel_);
+            dist_GFG.add(key0, A, b, pose_noise_model_);
           }
       }
     else if(robot1 == robotName_){ // robot i owns the second key
-        if(!useFlaggedInit_ || neighboringRobotsInitialized_[robot0]){ // if use flagged initialization and robot sharing the edge is already optimized            
-            Vector error = betweenChordalFactor.evaluateError(neighbors_.at<Pose3>(key0), initial_.at<Pose3>(key1), M0, M1);
+        if(!use_flagged_init_ || neighboring_robots_initialized_[robot0]){ // if use flagged initialization and robot sharing the edge is already optimized            
+            Vector error = between_chordal_factor.evaluateError(neighbors_.at<Pose3>(key0), initial_.at<Pose3>(key1), M0, M1);
             // Robot i owns the second key_i, on which we put a prior
             Matrix A = M1;
-            Vector b = -(M0 * neighborsLinearizedPoses_.at(key0) + error);
-            if(useBetweenNoise_){
+            Vector b = -(M0 * neighbors_linearized_poses_.at(key0) + error);
+            if(use_between_noise_){
                 Rot3 rotation = neighbors_.at<Pose3>(key0).rotation();
-                SharedNoiseModel chordalNoise = evaluation_utils::convertToChordalNoise(pose3Between->get_noiseModel(), rotation.matrix());
-                chordalNoise->WhitenSystem(A, b);
+                SharedNoiseModel chordal_noise = evaluation_utils::convertToChordalNoise(pose3_between->get_noiseModel(), rotation.matrix());
+                chordal_noise->WhitenSystem(A, b);
               }
-            distGFG.add(key1, A, b, poseNoiseModel_);
+            dist_GFG.add(key1, A, b, pose_noise_model_);
           }
       }
     else{
@@ -276,17 +276,17 @@ DistributedMapper::estimatePoses(){
   }
 
   // Solve the LFG
-  newLinearizedPoses_ = distGFG.optimize();
+  new_linearized_poses_ = dist_GFG.optimize();
 
   // Log it
   if(verbosity_ >= ERROR){
-    if(linearizedPoses_.size() == newLinearizedPoses_.size()){
-      latestChange_ = newLinearizedPoses_.subtract(linearizedPoses_).norm();
-      poseEstimateChangeTrace_.push_back(latestChange_);
+    if(linearized_poses_.size() == new_linearized_poses_.size()){
+      latest_change_ = new_linearized_poses_.subtract(linearized_poses_).norm();
+      pose_estimate_change_trace_.push_back(latest_change_);
     }
 
-    double error = distGFG.error(newLinearizedPoses_);
-    poseErrorTrace_.push_back(error);
+    double error = dist_GFG.error(new_linearized_poses_);
+    pose_error_trace_.push_back(error);
   }
 }
 
