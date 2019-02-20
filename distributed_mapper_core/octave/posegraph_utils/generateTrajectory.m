@@ -1,7 +1,7 @@
 function [poses, measurements, edges_id] = generateTrajectory(node_offset, trajectory_size, trajectory_offset, information_matrix, use_rotation)
 
 poses(1).t = [0; 0; 0] + trajectory_offset(1:3);
-poses(1).R = rotx(trajectory_offset(4))*roty(trajectory_offset(5))*rotz(trajectory_offset(6));
+poses(1).R = rot_mat_x(trajectory_offset(4))*rot_mat_y(trajectory_offset(5))*rot_mat_z(trajectory_offset(6));
 measurements.between(1).R = eye(3);
 measurements.between(1).t = [0; 0; 0];
 measurements.between(1).Info = information_matrix;
@@ -9,7 +9,7 @@ edges_id = uint64([]);
 t_speed = 1;
 for i=1:trajectory_size
     if use_rotation
-        offset.R = rotx(360*rand)*roty(360*rand)*rotz(360*rand);
+        offset.R = rot_mat_x(360*rand)*rot_mat_y(360*rand)*rot_mat_z(360*rand);
     else
         offset.R = eye(3);
     end

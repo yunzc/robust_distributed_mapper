@@ -5,14 +5,19 @@ clear all
 close all
 clc
 
+%% Octave packages
+pkg load geometry
+pkg load io
+pkg load statistics
+
 %% Settings
 dataset_folder = horzcat(pwd, '/../test_data/pairwise_consistency_maximization/spoiled/simulation/');
-number_of_robots = 4; 
+number_of_robots = 2; 
 id_offset = 96; % letter a = 97 (ASCII)
 sigma_R = 0.01;
 sigma_t = 0.1;
 trajectory_size = 20;
-number_of_separators = 4;
+number_of_separators = 10;
 use_rotation = true;
 add_outliers = true;
 number_of_outlying_separators = number_of_separators;
@@ -59,7 +64,7 @@ for pair = 1:size(pairs_of_robots, 1)
     writeG2oDataset3D(file_names{robot2}, measurements, edges_id, [], 0, 1);
     
     %% Add outliers.
-    [measurements, edges_id] = generateOutliers(robots_offsets{robot1}, robots_offsets{robot2}, number_of_outlying_separators, trajectory_size, information_matrix, use_rotation);
+    [measurements, edges_id] = generateOutliers(robot_poses, robot1, robot2, robots_offsets{robot1}, robots_offsets{robot2}, number_of_outlying_separators, trajectory_size, information_matrix, use_rotation, sigma_R, sigma_t);
     writeG2oDataset3D(file_names{robot1}, measurements, edges_id, [], 0, 1);
     writeG2oDataset3D(file_names{robot2}, measurements, edges_id, [], 0, 1);
 end

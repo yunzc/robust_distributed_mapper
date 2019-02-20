@@ -19,7 +19,7 @@ eTranVec = gaussian_noise(sigmaT^2 * eye(3));
 
 % Add noise to measurements 
 if(norm(eRotVec)>1e-7)
-  eRot = vrrotvec2mat([eRotVec'/norm(eRotVec) norm(eRotVec)]);
+  eRot = axis_angle_to_mat([eRotVec'/norm(eRotVec) norm(eRotVec)]);
   Rij = Rij * eRot; % perturb the rotation measurement
 end
 tij = tij + eTranVec; 
