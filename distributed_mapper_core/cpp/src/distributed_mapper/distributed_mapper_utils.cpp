@@ -506,7 +506,7 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> >& dist_m
   }
 
   // TODO: Support N robots instead of 2.
-  if (use_pcm && (dist_mappers.size() == 2 && contains_odometry)) {
+  if (use_pcm && contains_odometry) {
     max_clique_size = distributed_pcm::DistributedPCM::solve(dist_mappers, graph_and_values_vec.get(),
                                                              confidence_probability, use_covariance);
   }

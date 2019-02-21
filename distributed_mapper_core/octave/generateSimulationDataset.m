@@ -12,12 +12,12 @@ pkg load statistics
 
 %% Settings
 dataset_folder = horzcat(pwd, '/../test_data/pairwise_consistency_maximization/spoiled/simulation/');
-number_of_robots = 2; 
+number_of_robots = 4; 
 id_offset = 96; % letter a = 97 (ASCII)
 sigma_R = 0.01;
 sigma_t = 0.1;
 trajectory_size = 20;
-number_of_separators = 10;
+number_of_separators = 4;
 use_rotation = true;
 add_outliers = true;
 number_of_outlying_separators = number_of_separators;

@@ -16,7 +16,6 @@ class InterRobotMeasurements : public RobotMeasurements {
    * @param file_name Name of the file containing the robot measurements.
    */
   InterRobotMeasurements(const graph_utils::Transforms& transforms,
-                         const graph_utils::LoopClosures& loop_closures,
                          const unsigned char& robot1_id,
                          const unsigned char& robot2_id);
 
