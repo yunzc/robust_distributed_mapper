@@ -5,8 +5,8 @@
 namespace distributed_pcm {
 
     int DistributedPCM::solve(std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
-                                std::vector<gtsam::GraphAndValues>& graph_and_values_vector,
-                                const double& confidence_probability, const bool& use_covariance){
+            std::vector<gtsam::GraphAndValues>& graph_and_values_vector,
+            const double& confidence_probability, const bool& use_covariance) {
 
         std::vector<graph_utils::LoopClosures> separators_by_robot;
         std::vector<graph_utils::Transforms> transforms_by_robot;
@@ -21,7 +21,7 @@ namespace distributed_pcm {
         for (const auto& dist_mapper : dist_mappers) {
             // Store separators key pairs
             graph_utils::LoopClosures separators;
-            for (auto id : dist_mapper->seperatorEdge()) {
+            for (auto id : dist_mapper->separatorEdge()) {
                 auto separator_edge = boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(
                         dist_mapper->currentGraph().at(id));
                 separators.emplace_back(std::make_pair(separator_edge->key1(), separator_edge->key2()));
@@ -45,7 +45,7 @@ namespace distributed_pcm {
                     }
                     transform.is_separator = std::find(separators.begin(), separators.end(),
                                                        std::make_pair(edge_ptr->key1(), edge_ptr->key2())) !=
-                                                       separators.end();
+                                             separators.end();
                     if (!transform.is_separator) {
                         if (!id_initialized) {
                             transforms.start_id = transform.i;
@@ -85,12 +85,13 @@ namespace distributed_pcm {
                 // Retrieve indexes of rejected measurements
                 auto robot_pair = {roboti, robotj};
                 for (auto robot : robot_pair) {
-                    auto separators_ids = dist_mappers[robot]->seperatorEdge();
+                    auto separators_ids = dist_mappers[robot]->separatorEdge();
                     int number_separators = separators_ids.size();
                     std::cout << "Robot " << robot << " : Number of separators : "  << number_separators << std::endl;
                     std::vector<int> rejected_separator_ids;
                     for (int i = 0; i < separators_ids.size(); i++) {
-                        if (std::find(max_clique.begin(), max_clique.end(), i) == max_clique.end()) { // TODO: Add a comparison function to reject the right measurments
+                        if (isSeparatorToBeRejected(max_clique, separators_ids[i], roboti_robotj_separators_transforms,
+                                                    interrobot_measurements.getLoopClosures(), dist_mappers[robot])) {
                             rejected_separator_ids.emplace_back(i);
                             number_separators--;
                         }
@@ -116,6 +117,31 @@ namespace distributed_pcm {
         }
 
         return total_max_clique_sizes;
+    }
+
+    bool DistributedPCM::isSeparatorToBeRejected(const std::vector<int>& max_clique, const int& separtor_id, const graph_utils::Transforms& separators_transforms,
+                                        const graph_utils::LoopClosures& loop_closures, boost::shared_ptr<distributed_mapper::DistributedMapper>& dist_mapper) {
+
+        auto separator_factor = boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(dist_mapper->currentGraph().at(separtor_id));
+        // First check if the separator is between the 2 robots
+        if (!((gtsam::symbolChr(separator_factor->keys().at(0)) == gtsam::symbolChr(separators_transforms.transforms.begin()->first.first)
+                && gtsam::symbolChr(separator_factor->keys().at(1)) == gtsam::symbolChr(separators_transforms.transforms.begin()->first.second)) ||
+              (gtsam::symbolChr(separator_factor->keys().at(0)) == gtsam::symbolChr(separators_transforms.transforms.begin()->first.second)
+                && gtsam::symbolChr(separator_factor->keys().at(1)) == gtsam::symbolChr(separators_transforms.transforms.begin()->first.first)))){
+            return false;
+        }
+        // Check if in the maximum clique
+        auto key_pair = std::make_pair(separator_factor->keys().at(0), separator_factor->keys().at(1));
+        int index;
+        for (index = 0; index < loop_closures.size(); index++) {
+            if (key_pair == loop_closures[index]) {
+                break;
+            }
+        }
+        if (std::find(max_clique.begin(), max_clique.end(), index) != max_clique.end()) {
+            return false;
+        }
+        return true;
     }
 
 }

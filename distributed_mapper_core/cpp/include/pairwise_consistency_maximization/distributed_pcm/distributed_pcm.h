@@ -32,6 +32,11 @@ namespace distributed_pcm {
                 std::vector<gtsam::GraphAndValues>& graph_and_values_vector,
                 const double& confidence_probability, const bool& use_covariance);
 
+        private:
+
+        static bool isSeparatorToBeRejected(const std::vector<int>& max_clique, const int& separtor_id, const graph_utils::Transforms& separators_transforms,
+                                                     const graph_utils::LoopClosures& loop_closures, boost::shared_ptr<distributed_mapper::DistributedMapper>& dist_mapper);
+
     };
 }
 

@@ -17,3 +17,4 @@ data/example_49robots/fullGraph.g2o
 *cmake-build-debug/
 distributed_mapper_core/*_data/*/*/*/*optimized*
 distributed_mapper_core/log/test*
+distributed_mapper_core/octave/octave-workspace

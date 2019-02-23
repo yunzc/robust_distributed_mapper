@@ -154,7 +154,7 @@ class DistributedMapper{
     gtsam::NonlinearFactorGraph innerEdges(){ return inner_edges_; }
 
     /** @brief separatorEdges returns indices of separator edges  */
-    std::vector<size_t> seperatorEdge(){ return separator_edge_ids_; }
+    std::vector<size_t> separatorEdge(){ return separator_edge_ids_; }
 
     /** @brief subgraphs */
     gtsam::NonlinearFactorGraph currentGraph(){ return graph_; }

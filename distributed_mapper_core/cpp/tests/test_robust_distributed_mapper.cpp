@@ -196,7 +196,7 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliers_4robots) {
     double tolerance = 1e-1;
     EXPECT(assert_equal(0.0, std::get<0>(results), tolerance));
     EXPECT(assert_equal(std::get<0>(results), std::get<1>(results), tolerance));
-    EXPECT(std::get<2>(results) == 4);
+    EXPECT(std::get<2>(results) == 24);
 }
 
 /****************************************************************************** */
