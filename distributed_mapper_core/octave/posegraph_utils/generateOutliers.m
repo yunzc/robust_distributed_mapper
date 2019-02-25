@@ -14,7 +14,7 @@ for i=1:number_of_separators
     separator_offset.t = [0; 0; 0];
     for d = 1:3
         t_offset = rand*sensor_radius;
-        while t_offset < 3*sigma_t
+        while t_offset < 5*sigma_t
             t_offset = rand*sensor_radius;
         end
         separator_offset.t(d) = t_offset;
@@ -23,7 +23,7 @@ for i=1:number_of_separators
         r_offsets = [0; 0; 0];
         for d = 1:3
             r_offset = rand*360;
-            while r_offset < 3*(sigma_R/pi)*180
+            while r_offset < 5*(sigma_R/pi)*180
                 r_offset = rand*360;
             end
             r_offsets(d) = r_offset;

@@ -12,7 +12,7 @@ pkg load statistics
 
 %% Settings
 dataset_folder = horzcat(pwd, '/../test_data/pairwise_consistency_maximization/spoiled/simulation/');
-number_of_robots = 4; 
+number_of_robots = 16; 
 id_offset = 96; % letter a = 97 (ASCII)
 sigma_R = 0.01;
 sigma_t = 0.1;
@@ -39,7 +39,7 @@ end
 %% Generate file names
 file_names = {};
 for robot=1:number_of_robots
-    file_names{end+1} = horzcat(example_folder,num2str(robot)-1,'.g2o');
+    file_names{end+1} = horzcat(example_folder,num2str(robot-1),'.g2o');
 end
 
 %% Generate trajectories
