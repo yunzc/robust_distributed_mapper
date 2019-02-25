@@ -4,13 +4,39 @@
 
 namespace distributed_pcm {
 
-    int DistributedPCM::solve(std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
+    int DistributedPCM::solveCentralized(std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
             std::vector<gtsam::GraphAndValues>& graph_and_values_vector,
             const double& confidence_probability, const bool& use_covariance) {
 
         std::vector<graph_utils::LoopClosures> separators_by_robot;
         std::vector<graph_utils::Transforms> transforms_by_robot;
         std::map<std::pair<char, char>,graph_utils::Transforms> separators_transforms_by_pair;
+
+        fillInRequiredInformation(separators_by_robot, transforms_by_robot, separators_transforms_by_pair,
+                dist_mappers, use_covariance);
+
+        // Apply PCM for each pair of robots
+        // For now I will work with perfect information
+        int total_max_clique_sizes = 0;
+        for (int roboti = 0; roboti < dist_mappers.size(); roboti++) {
+            for (int robotj = roboti+1; robotj < dist_mappers.size(); robotj++) {
+
+                int max_clique_size = callPCM(roboti, robotj, transforms_by_robot, separators_by_robot,
+                separators_transforms_by_pair, dist_mappers,
+                graph_and_values_vector, confidence_probability);
+
+                total_max_clique_sizes += max_clique_size;
+            }
+        }
+
+        return total_max_clique_sizes;
+    }
+
+    void DistributedPCM::fillInRequiredInformation(std::vector<graph_utils::LoopClosures>& separators_by_robot,
+                        std::vector<graph_utils::Transforms>& transforms_by_robot,
+                        std::map<std::pair<char, char>,graph_utils::Transforms>& separators_transforms_by_pair,
+                        const std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
+                        const bool& use_covariance){
         // Intialization of the pairs
         for (int i = 0; i < dist_mappers.size(); i++) {
             for (int j = i+1; j < dist_mappers.size(); j++) {
@@ -32,7 +58,7 @@ namespace distributed_pcm {
             bool id_initialized = false;
             for (const auto& factor_ptr : dist_mapper->currentGraph()) {
                 auto edge_ptr = boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(factor_ptr);
-                if (edge_ptr) { // Possible bug : the graph size is 17, however there are only 16 edges..
+                if (edge_ptr) { // Possible bug : sometimes the graph size is the number of edges + 1..
                     graph_utils::Transform transform;
                     transform.i = edge_ptr->key1();
                     transform.j = edge_ptr->key2();
@@ -65,58 +91,53 @@ namespace distributed_pcm {
             }
             transforms_by_robot.emplace_back(transforms);
         }
+    }
 
-        // Apply PCM for each robot
-        // TODO: Consider N robots case.
-        // TODO: Communication of the factors needed for optimization
-        // For now I will work with perfect information
-        int total_max_clique_sizes = 0;
-        for (int roboti = 0; roboti < dist_mappers.size(); roboti++) {
-            for (int robotj = roboti+1; robotj < dist_mappers.size(); robotj++) {
+    int DistributedPCM::callPCM(const int& roboti, const int& robotj, const std::vector<graph_utils::Transforms>& transforms_by_robot,
+                const std::vector<graph_utils::LoopClosures>& separators_by_robot,
+                const std::map<std::pair<char, char>,graph_utils::Transforms>& separators_transforms_by_pair,
+                std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
+                std::vector<gtsam::GraphAndValues>& graph_and_values_vector,
+                const double& confidence_probability){
+        auto roboti_local_map = robot_measurements::RobotLocalMap(transforms_by_robot[roboti], separators_by_robot[roboti]);
+        auto robotj_local_map = robot_measurements::RobotLocalMap(transforms_by_robot[robotj], separators_by_robot[robotj]);
+        auto roboti_robotj_separators_transforms = separators_transforms_by_pair.at(std::make_pair(dist_mappers[roboti]->robotName(),dist_mappers[robotj]->robotName()));
+        auto interrobot_measurements = robot_measurements::InterRobotMeasurements(roboti_robotj_separators_transforms, dist_mappers[roboti]->robotName(), dist_mappers[robotj]->robotName());
 
-                auto roboti_local_map = robot_measurements::RobotLocalMap(transforms_by_robot[roboti], separators_by_robot[roboti]);
-                auto robotj_local_map = robot_measurements::RobotLocalMap(transforms_by_robot[robotj], separators_by_robot[robotj]);
-                auto roboti_robotj_separators_transforms = separators_transforms_by_pair.at(std::make_pair(dist_mappers[roboti]->robotName(),dist_mappers[robotj]->robotName()));
-                auto interrobot_measurements = robot_measurements::InterRobotMeasurements(roboti_robotj_separators_transforms, dist_mappers[roboti]->robotName(), dist_mappers[robotj]->robotName());
+        auto global_map = global_map::GlobalMap(roboti_local_map, robotj_local_map, interrobot_measurements, confidence_probability);
+        std::vector<int> max_clique = global_map.pairwiseConsistencyMaximization();
 
-                auto global_map = global_map::GlobalMap(roboti_local_map, robotj_local_map, interrobot_measurements, confidence_probability);
-                std::vector<int> max_clique = global_map.pairwiseConsistencyMaximization();
-
-                // Retrieve indexes of rejected measurements
-                auto robot_pair = {roboti, robotj};
-                for (auto robot : robot_pair) {
-                    auto separators_ids = dist_mappers[robot]->separatorEdge();
-                    int number_separators = separators_ids.size();
-                    std::cout << "Robot " << robot << " : Number of separators : "  << number_separators << std::endl;
-                    std::vector<int> rejected_separator_ids;
-                    for (int i = 0; i < separators_ids.size(); i++) {
-                        if (isSeparatorToBeRejected(max_clique, separators_ids[i], roboti_robotj_separators_transforms,
-                                                    interrobot_measurements.getLoopClosures(), dist_mappers[robot])) {
-                            rejected_separator_ids.emplace_back(i);
-                            number_separators--;
-                        }
-                    }
-                    // Remove measurements not in the max clique
-                    // TODO: Fix "off by one" bug in innerEdges_ and graph_
-                    std::cout << "Robot " << robot << " : Size of the maximal consistency clique : "  << max_clique.size() << std::endl;
-                    int number_separator_ids_removed = 0;
-                    for (const auto& index : rejected_separator_ids) {
-                        auto id = separators_ids[index] - number_separator_ids_removed;
-                        number_separator_ids_removed++;
-                        dist_mappers[robot]->eraseFactor(id);
-                        graph_and_values_vector.at(robot).first->erase(graph_and_values_vector.at(robot).first->begin()+id);
-                    }
-                    std::vector<size_t> new_separator_ids;
-                    for (size_t i = separators_ids[0]; i < separators_ids[0]+number_separators; i++) {
-                        new_separator_ids.emplace_back(i);
-                    }
-                    dist_mappers[robot]->setSeparatorIds(new_separator_ids);
+        // Retrieve indexes of rejected measurements
+        auto robot_pair = {roboti, robotj};
+        for (auto robot : robot_pair) {
+            auto separators_ids = dist_mappers[robot]->separatorEdge();
+            int number_separators = separators_ids.size();
+            std::cout << "Robot " << robot << " : Number of separators : "  << number_separators << std::endl;
+            std::vector<int> rejected_separator_ids;
+            for (int i = 0; i < separators_ids.size(); i++) {
+                if (isSeparatorToBeRejected(max_clique, separators_ids[i], roboti_robotj_separators_transforms,
+                                            interrobot_measurements.getLoopClosures(), dist_mappers[robot])) {
+                    rejected_separator_ids.emplace_back(i);
+                    number_separators--;
                 }
-                total_max_clique_sizes += max_clique.size();
             }
+            // Remove measurements not in the max clique
+            // TODO: Fix "off by one" bug in innerEdges_ and graph_
+            std::cout << "Robot " << robot << " : Size of the maximal consistency clique : "  << max_clique.size() << std::endl;
+            int number_separator_ids_removed = 0;
+            for (const auto& index : rejected_separator_ids) {
+                auto id = separators_ids[index] - number_separator_ids_removed;
+                number_separator_ids_removed++;
+                dist_mappers[robot]->eraseFactor(id);
+                graph_and_values_vector.at(robot).first->erase(graph_and_values_vector.at(robot).first->begin()+id);
+            }
+            std::vector<size_t> new_separator_ids;
+            for (size_t i = separators_ids[0]; i < separators_ids[0]+number_separators; i++) {
+                new_separator_ids.emplace_back(i);
+            }
+            dist_mappers[robot]->setSeparatorIds(new_separator_ids);
         }
-
-        return total_max_clique_sizes;
+        return max_clique.size();
     }
 
     bool DistributedPCM::isSeparatorToBeRejected(const std::vector<int>& max_clique, const int& separtor_id, const graph_utils::Transforms& separators_transforms,

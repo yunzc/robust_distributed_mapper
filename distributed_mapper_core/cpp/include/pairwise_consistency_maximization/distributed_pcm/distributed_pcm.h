@@ -22,17 +22,30 @@ namespace distributed_pcm {
         DistributedPCM(){};
 
         /**
-         * \brief Function that solves the global maps according to the current constraints
+         * \brief Function that solves the global maps according to the current constraints with perfect information
          *
          * @param dist_mappers is the different distributed mappers in the system (one by robot)
          * @param graph_and_values is the collection of factors of all graph used for evaluation
          * @returns size of the maximum clique of pairwise consistent measurements
          */
-        static int solve(std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
+        static int solveCentralized(std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
                 std::vector<gtsam::GraphAndValues>& graph_and_values_vector,
                 const double& confidence_probability, const bool& use_covariance);
 
         private:
+
+        static void fillInRequiredInformation(std::vector<graph_utils::LoopClosures>& separators_by_robot,
+                                       std::vector<graph_utils::Transforms>& transforms_by_robot,
+                                       std::map<std::pair<char, char>,graph_utils::Transforms>& separators_transforms_by_pair,
+                                       const std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
+                                       const bool& use_covariance);
+
+        static int callPCM(const int& roboti, const int& robotj, const std::vector<graph_utils::Transforms>& transforms_by_robot,
+                                const std::vector<graph_utils::LoopClosures>& separators_by_robot,
+                                const std::map<std::pair<char, char>,graph_utils::Transforms>& separators_transforms_by_pair,
+                                std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
+                                std::vector<gtsam::GraphAndValues>& graph_and_values_vector,
+                                const double& confidence_probability);
 
         static bool isSeparatorToBeRejected(const std::vector<int>& max_clique, const int& separtor_id, const graph_utils::Transforms& separators_transforms,
                                                      const graph_utils::LoopClosures& loop_closures, boost::shared_ptr<distributed_mapper::DistributedMapper>& dist_mapper);
