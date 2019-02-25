@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
     ///////////////////////////////////////////////////////////////////
     //Command line arguments
     ///////////////////////////////////////////////////////////////////
-    size_t num_robots = 2; // number of robots
+    size_t nr_robots = 2; // number of robots
     string log_dir("/tmp/"); // log directory
     string data_dir("/tmp/"); // data directory
     string trace_file("/tmp/runG2o"); // data directory
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
         po::options_description desc("Options");
         desc.add_options()
                 ("help", "Print help messages")
-                ("num_robots, n", po::value<size_t>(&num_robots), "number of robots (default: 2)")
+                ("nr_robots, n", po::value<size_t>(&nr_robots), "number of robots (default: 2)")
                 ("data_dir, l", po::value<string>(&data_dir), "data directory (default: /tmp)")
                 ("trace_file, t", po::value<string>(&trace_file), "trace file (default: runG2o)")
                 ("log_dir, l", po::value<string>(&log_dir), "log directory (default: /tmp)")
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
              << e.what() << ", application will now exit" << endl;
         return 2;
     }
-    std::tuple<double, double, int> results = distributed_mapper::runDistributedMapper(num_robots, log_dir, data_dir, trace_file,
+    std::tuple<double, double, int> results = distributed_mapper::runDistributedMapper(nr_robots, log_dir, data_dir, trace_file,
             use_XY, use_OP, debug, priorModel, model,
             max_iter, rotation_estimate_change_threshold, pose_estimate_change_threshold,
             gamma, use_flagged_init, update_type, use_between_noise,

@@ -20,34 +20,34 @@ using namespace evaluation_utils;
 
 TEST(DistributedMapper, testdistributedEstimationWithOutliersNoRotation_2robots) {
     // Parameters
-    size_t nrRobots = 2; // number of robots
-    string logDir("/tmp/"); // log directory
-    string dataDir("../../../test_data/pairwise_consistency_maximization/spoiled/simulation_no_rotation/example_2robots/"); // data directory
-    string traceFile("/tmp/runG2o"); // data directory
-    bool useXY = false;
-    bool useOP = false;
+    size_t nr_robots = 2; // number of robots
+    string log_dir("/tmp/"); // log directory
+    string data_dir("../../../test_data/pairwise_consistency_maximization/spoiled/simulation_no_rotation/example_2robots/"); // data directory
+    string trace_file("/tmp/runG2o"); // data directory
+    bool use_XY = false;
+    bool use_OP = false;
     bool debug = false;
-    noiseModel::Diagonal::shared_ptr priorModel = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
+    noiseModel::Diagonal::shared_ptr prior_model = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
     noiseModel::Isotropic::shared_ptr model = noiseModel::Isotropic::Variance(12, 1);
-    size_t maxIter = 1000; // Maximum number of iterations of optimizer
-    double rotationEstimateChangeThreshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
-    double poseEstimateChangeThreshold = 1e-1; // Difference between pose estimate provides an early stopping condition
+    size_t max_iter = 1000; // Maximum number of iterations of optimizer
+    double rotation_estimate_change_threshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
+    double pose_estimate_change_threshold = 1e-1; // Difference between pose estimate provides an early stopping condition
     double gamma = 1.0f; // Gamma value for over relaxation methods
-    bool useFlaggedInit = true; // to use flagged initialization or not
-    distributed_mapper::DistributedMapper::UpdateType updateType = distributed_mapper::DistributedMapper::incUpdate; // updateType differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
-    bool useBetweenNoise = false; // use between factor noise or not
-    bool useChrLessFullGraph = false; // whether full graph has character indexes or not
-    bool useLandmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
+    bool use_flagged_init = true; // to use flagged initialization or not
+    distributed_mapper::DistributedMapper::UpdateType update_type = distributed_mapper::DistributedMapper::incUpdate; // update_type differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
+    bool use_between_noise = false; // use between factor noise or not
+    bool use_chr_less_full_graph = false; // whether full graph has character indexes or not
+    bool use_landmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
     double confidence_probability = 0.99; // Confidence probability for the pairwise consistency computation
-    bool useCovariance = false; // use covariance in dataset file
-    bool usePCM = true; // Use pairwise consistency maximization..
+    bool use_covariance = false; // use covariance in dataset file
+    bool use_PCM = true; // Use pairwise consistency maximization..
 
     // Call distributed optimization
-    std::tuple<double, double, int> results = runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
-            useXY, useOP, debug, priorModel, model,
-            maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
-            gamma, useFlaggedInit, updateType, useBetweenNoise,
-            useChrLessFullGraph, useLandmarks, confidence_probability, useCovariance, usePCM);
+    std::tuple<double, double, int> results = runDistributedMapper(nr_robots, log_dir, data_dir, trace_file,
+            use_XY, use_OP, debug, prior_model, model,
+            max_iter, rotation_estimate_change_threshold, pose_estimate_change_threshold,
+            gamma, use_flagged_init, update_type, use_between_noise,
+            use_chr_less_full_graph, use_landmarks, confidence_probability, use_covariance, use_PCM);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
     EXPECT(assert_equal(0.0, std::get<0>(results), tolerance));
@@ -57,34 +57,34 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersNoRotation_2robots)
 
 TEST(DistributedMapper, testdistributedEstimationWithoutOutliersWithRotation_2robots) {
     // Parameters
-    size_t nrRobots = 2; // number of robots
-    string logDir("/tmp/"); // log directory
-    string dataDir("../../../test_data/pairwise_consistency_maximization/clean/simulation/example_2robots/"); // data directory
-    string traceFile("/tmp/runG2o"); // data directory
-    bool useXY = false;
-    bool useOP = false;
+    size_t nr_robots = 2; // number of robots
+    string log_dir("/tmp/"); // log directory
+    string data_dir("../../../test_data/pairwise_consistency_maximization/clean/simulation/example_2robots/"); // data directory
+    string trace_file("/tmp/runG2o"); // data directory
+    bool use_XY = false;
+    bool use_OP = false;
     bool debug = false;
-    noiseModel::Diagonal::shared_ptr priorModel = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
+    noiseModel::Diagonal::shared_ptr prior_model = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
     noiseModel::Isotropic::shared_ptr model = noiseModel::Isotropic::Variance(12, 1);
-    size_t maxIter = 1000; // Maximum number of iterations of optimizer
-    double rotationEstimateChangeThreshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
-    double poseEstimateChangeThreshold = 1e-1; // Difference between pose estimate provides an early stopping condition
+    size_t max_iter = 1000; // Maximum number of iterations of optimizer
+    double rotation_estimate_change_threshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
+    double pose_estimate_change_threshold = 1e-1; // Difference between pose estimate provides an early stopping condition
     double gamma = 1.0f; // Gamma value for over relaxation methods
-    bool useFlaggedInit = true; // to use flagged initialization or not
-    distributed_mapper::DistributedMapper::UpdateType updateType = distributed_mapper::DistributedMapper::incUpdate; // updateType differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
-    bool useBetweenNoise = false; // use between factor noise or not
-    bool useChrLessFullGraph = false; // whether full graph has character indexes or not
-    bool useLandmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
+    bool use_flagged_init = true; // to use flagged initialization or not
+    distributed_mapper::DistributedMapper::UpdateType update_type = distributed_mapper::DistributedMapper::incUpdate; // update_type differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
+    bool use_between_noise = false; // use between factor noise or not
+    bool use_chr_less_full_graph = false; // whether full graph has character indexes or not
+    bool use_landmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
     double confidence_probability = 0.99; // Confidence probability for the pairwise consistency computation
-    bool useCovariance = false; // use covariance in dataset file.
-    bool usePCM = true; // Use pairwise consistency maximization.
+    bool use_covariance = false; // use covariance in dataset file.
+    bool use_PCM = true; // Use pairwise consistency maximization.
 
     // Call distributed optimization
-    std::tuple<double, double, int> results = runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
-                                                                   useXY, useOP, debug, priorModel, model,
-                                                                   maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
-                                                                   gamma, useFlaggedInit, updateType, useBetweenNoise,
-                                                                   useChrLessFullGraph, useLandmarks, confidence_probability, useCovariance, usePCM);
+    std::tuple<double, double, int> results = runDistributedMapper(nr_robots, log_dir, data_dir, trace_file,
+                                                                   use_XY, use_OP, debug, prior_model, model,
+                                                                   max_iter, rotation_estimate_change_threshold, pose_estimate_change_threshold,
+                                                                   gamma, use_flagged_init, update_type, use_between_noise,
+                                                                   use_chr_less_full_graph, use_landmarks, confidence_probability, use_covariance, use_PCM);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
     EXPECT(assert_equal(0.0, std::get<0>(results), tolerance));
@@ -94,33 +94,33 @@ TEST(DistributedMapper, testdistributedEstimationWithoutOutliersWithRotation_2ro
 
 TEST(DistributedMapper, testdistributedEstimationWithOutliersWithRotation_2robots) {
     // Parameters
-    size_t nrRobots = 2; // number of robots
-    string logDir("/tmp/"); // log directory
-    string dataDir("../../../test_data/pairwise_consistency_maximization/spoiled/simulation/example_2robots/"); // data directory
-    string traceFile("/tmp/runG2o"); // data directory
-    bool useXY = false;
-    bool useOP = false;
+    size_t nr_robots = 2; // number of robots
+    string log_dir("/tmp/"); // log directory
+    string data_dir("../../../test_data/pairwise_consistency_maximization/spoiled/simulation/example_2robots/"); // data directory
+    string trace_file("/tmp/runG2o"); // data directory
+    bool use_XY = false;
+    bool use_OP = false;
     bool debug = false;
-    noiseModel::Diagonal::shared_ptr priorModel = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
+    noiseModel::Diagonal::shared_ptr prior_model = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
     noiseModel::Isotropic::shared_ptr model = noiseModel::Isotropic::Variance(12, 1);
-    size_t maxIter = 1000; // Maximum number of iterations of optimizer
-    double rotationEstimateChangeThreshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
-    double poseEstimateChangeThreshold = 1e-1; // Difference between pose estimate provides an early stopping condition
+    size_t max_iter = 1000; // Maximum number of iterations of optimizer
+    double rotation_estimate_change_threshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
+    double pose_estimate_change_threshold = 1e-1; // Difference between pose estimate provides an early stopping condition
     double gamma = 1.0f; // Gamma value for over relaxation methods
-    bool useFlaggedInit = true; // to use flagged initialization or not
-    distributed_mapper::DistributedMapper::UpdateType updateType = distributed_mapper::DistributedMapper::incUpdate; // updateType differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
-    bool useBetweenNoise = false; // use between factor noise or not
-    bool useChrLessFullGraph = false; // whether full graph has character indexes or not
-    bool useLandmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
+    bool use_flagged_init = true; // to use flagged initialization or not
+    distributed_mapper::DistributedMapper::UpdateType update_type = distributed_mapper::DistributedMapper::incUpdate; // update_type differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
+    bool use_between_noise = false; // use between factor noise or not
+    bool use_chr_less_full_graph = false; // whether full graph has character indexes or not
+    bool use_landmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
     double confidence_probability = 0.99; // Confidence probability for the pairwise consistency computation
-    bool useCovariance = false; // use covariance in dataset file.
-    bool usePCM = true; // Use pairwise consistency maximization.
+    bool use_covariance = false; // use covariance in dataset file.
+    bool use_PCM = true; // Use pairwise consistency maximization.
     // Call distributed optimization
-    std::tuple<double, double, int> results = runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
-                                                                   useXY, useOP, debug, priorModel, model,
-                                                                   maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
-                                                                   gamma, useFlaggedInit, updateType, useBetweenNoise,
-                                                                   useChrLessFullGraph, useLandmarks, confidence_probability, useCovariance, usePCM);
+    std::tuple<double, double, int> results = runDistributedMapper(nr_robots, log_dir, data_dir, trace_file,
+                                                                   use_XY, use_OP, debug, prior_model, model,
+                                                                   max_iter, rotation_estimate_change_threshold, pose_estimate_change_threshold,
+                                                                   gamma, use_flagged_init, update_type, use_between_noise,
+                                                                   use_chr_less_full_graph, use_landmarks, confidence_probability, use_covariance, use_PCM);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
     EXPECT(assert_equal(0.0, std::get<0>(results), tolerance));
@@ -130,33 +130,33 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersWithRotation_2robot
 
 TEST(DistributedMapper, testdistributedEstimationWithOutliersWithRotationNoPCM_2robots) {
     // Parameters
-    size_t nrRobots = 2; // number of robots
-    string logDir("/tmp/"); // log directory
-    string dataDir("../../../test_data/pairwise_consistency_maximization/spoiled/simulation/example_2robots/"); // data directory
-    string traceFile("/tmp/runG2o"); // data directory
-    bool useXY = false;
-    bool useOP = false;
+    size_t nr_robots = 2; // number of robots
+    string log_dir("/tmp/"); // log directory
+    string data_dir("../../../test_data/pairwise_consistency_maximization/spoiled/simulation/example_2robots/"); // data directory
+    string trace_file("/tmp/runG2o"); // data directory
+    bool use_XY = false;
+    bool use_OP = false;
     bool debug = false;
-    noiseModel::Diagonal::shared_ptr priorModel = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
+    noiseModel::Diagonal::shared_ptr prior_model = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
     noiseModel::Isotropic::shared_ptr model = noiseModel::Isotropic::Variance(12, 1);
-    size_t maxIter = 1000; // Maximum number of iterations of optimizer
-    double rotationEstimateChangeThreshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
-    double poseEstimateChangeThreshold = 1e-1; // Difference between pose estimate provides an early stopping condition
+    size_t max_iter = 1000; // Maximum number of iterations of optimizer
+    double rotation_estimate_change_threshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
+    double pose_estimate_change_threshold = 1e-1; // Difference between pose estimate provides an early stopping condition
     double gamma = 1.0f; // Gamma value for over relaxation methods
-    bool useFlaggedInit = true; // to use flagged initialization or not
-    distributed_mapper::DistributedMapper::UpdateType updateType = distributed_mapper::DistributedMapper::incUpdate; // updateType differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
-    bool useBetweenNoise = false; // use between factor noise or not
-    bool useChrLessFullGraph = false; // whether full graph has character indexes or not
-    bool useLandmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
+    bool use_flagged_init = true; // to use flagged initialization or not
+    distributed_mapper::DistributedMapper::UpdateType update_type = distributed_mapper::DistributedMapper::incUpdate; // update_type differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
+    bool use_between_noise = false; // use between factor noise or not
+    bool use_chr_less_full_graph = false; // whether full graph has character indexes or not
+    bool use_landmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
     double confidence_probability = 0.99; // Confidence probability for the pairwise consistency computation
-    bool useCovariance = false; // use covariance in dataset file.
-    bool usePCM = false; // Use pairwise consistency maximization.
+    bool use_covariance = false; // use covariance in dataset file.
+    bool use_PCM = false; // Use pairwise consistency maximization.
     // Call distributed optimization
-    std::tuple<double, double, int> results = runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
-                                                                   useXY, useOP, debug, priorModel, model,
-                                                                   maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
-                                                                   gamma, useFlaggedInit, updateType, useBetweenNoise,
-                                                                   useChrLessFullGraph, useLandmarks, confidence_probability, useCovariance, usePCM);
+    std::tuple<double, double, int> results = runDistributedMapper(nr_robots, log_dir, data_dir, trace_file,
+                                                                   use_XY, use_OP, debug, prior_model, model,
+                                                                   max_iter, rotation_estimate_change_threshold, pose_estimate_change_threshold,
+                                                                   gamma, use_flagged_init, update_type, use_between_noise,
+                                                                   use_chr_less_full_graph, use_landmarks, confidence_probability, use_covariance, use_PCM);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
     EXPECT(assert_equal(24.1, std::get<0>(results), tolerance));
@@ -166,33 +166,33 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersWithRotationNoPCM_2
 
 TEST(DistributedMapper, testdistributedEstimationWithOutliers_4robots) {
     // Parameters
-    size_t nrRobots = 4; // number of robots
-    string logDir("/tmp/"); // log directory
-    string dataDir("../../../test_data/pairwise_consistency_maximization/spoiled/simulation/example_4robots/"); // data directory
-    string traceFile("/tmp/runG2o"); // data directory
-    bool useXY = false;
-    bool useOP = false;
+    size_t nr_robots = 4; // number of robots
+    string log_dir("/tmp/"); // log directory
+    string data_dir("../../../test_data/pairwise_consistency_maximization/spoiled/simulation/example_4robots/"); // data directory
+    string trace_file("/tmp/runG2o"); // data directory
+    bool use_XY = false;
+    bool use_OP = false;
     bool debug = false;
-    noiseModel::Diagonal::shared_ptr priorModel = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
+    noiseModel::Diagonal::shared_ptr prior_model = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
     noiseModel::Isotropic::shared_ptr model = noiseModel::Isotropic::Variance(12, 1);
-    size_t maxIter = 1000; // Maximum number of iterations of optimizer
-    double rotationEstimateChangeThreshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
-    double poseEstimateChangeThreshold = 1e-1; // Difference between pose estimate provides an early stopping condition
+    size_t max_iter = 1000; // Maximum number of iterations of optimizer
+    double rotation_estimate_change_threshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
+    double pose_estimate_change_threshold = 1e-1; // Difference between pose estimate provides an early stopping condition
     double gamma = 1.0f; // Gamma value for over relaxation methods
-    bool useFlaggedInit = true; // to use flagged initialization or not
-    distributed_mapper::DistributedMapper::UpdateType updateType = distributed_mapper::DistributedMapper::incUpdate; // updateType differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
-    bool useBetweenNoise = false; // use between factor noise or not
-    bool useChrLessFullGraph = false; // whether full graph has character indexes or not
-    bool useLandmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
+    bool use_flagged_init = true; // to use flagged initialization or not
+    distributed_mapper::DistributedMapper::UpdateType update_type = distributed_mapper::DistributedMapper::incUpdate; // update_type differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
+    bool use_between_noise = false; // use between factor noise or not
+    bool use_chr_less_full_graph = false; // whether full graph has character indexes or not
+    bool use_landmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
     double confidence_probability = 0.99; // Confidence probability for the pairwise consistency computation
-    bool useCovariance = false; // use covariance in dataset file.
-    bool usePCM = true; // Use pairwise consistency maximization.
+    bool use_covariance = false; // use covariance in dataset file.
+    bool use_PCM = true; // Use pairwise consistency maximization.
     // Call distributed optimization
-    std::tuple<double, double, int> results = runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
-                                                                   useXY, useOP, debug, priorModel, model,
-                                                                   maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
-                                                                   gamma, useFlaggedInit, updateType, useBetweenNoise,
-                                                                   useChrLessFullGraph, useLandmarks, confidence_probability, useCovariance, usePCM);
+    std::tuple<double, double, int> results = runDistributedMapper(nr_robots, log_dir, data_dir, trace_file,
+                                                                   use_XY, use_OP, debug, prior_model, model,
+                                                                   max_iter, rotation_estimate_change_threshold, pose_estimate_change_threshold,
+                                                                   gamma, use_flagged_init, update_type, use_between_noise,
+                                                                   use_chr_less_full_graph, use_landmarks, confidence_probability, use_covariance, use_PCM);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
     EXPECT(assert_equal(0.0, std::get<0>(results), tolerance));
@@ -202,75 +202,75 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliers_4robots) {
 
 TEST(DistributedMapper, testdistributedEstimationWithOutliers_8robots) {
     // Parameters
-    size_t nrRobots = 8; // number of robots
+    size_t nr_robots = 8; // number of robots
     size_t nr_separators_by_pair = 4; // number of separators by pair of robots
-    string logDir("/tmp/"); // log directory
-    string dataDir("../../../test_data/pairwise_consistency_maximization/spoiled/simulation/example_8robots/"); // data directory
-    string traceFile("/tmp/runG2o"); // data directory
-    bool useXY = false;
-    bool useOP = false;
+    string log_dir("/tmp/"); // log directory
+    string data_dir("../../../test_data/pairwise_consistency_maximization/spoiled/simulation/example_8robots/"); // data directory
+    string trace_file("/tmp/runG2o"); // data directory
+    bool use_XY = false;
+    bool use_OP = false;
     bool debug = false;
-    noiseModel::Diagonal::shared_ptr priorModel = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
+    noiseModel::Diagonal::shared_ptr prior_model = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
     noiseModel::Isotropic::shared_ptr model = noiseModel::Isotropic::Variance(12, 1);
-    size_t maxIter = 1000; // Maximum number of iterations of optimizer
-    double rotationEstimateChangeThreshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
-    double poseEstimateChangeThreshold = 1e-1; // Difference between pose estimate provides an early stopping condition
+    size_t max_iter = 1000; // Maximum number of iterations of optimizer
+    double rotation_estimate_change_threshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
+    double pose_estimate_change_threshold = 1e-1; // Difference between pose estimate provides an early stopping condition
     double gamma = 1.0f; // Gamma value for over relaxation methods
-    bool useFlaggedInit = true; // to use flagged initialization or not
-    distributed_mapper::DistributedMapper::UpdateType updateType = distributed_mapper::DistributedMapper::incUpdate; // updateType differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
-    bool useBetweenNoise = false; // use between factor noise or not
-    bool useChrLessFullGraph = false; // whether full graph has character indexes or not
-    bool useLandmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
+    bool use_flagged_init = true; // to use flagged initialization or not
+    distributed_mapper::DistributedMapper::UpdateType update_type = distributed_mapper::DistributedMapper::incUpdate; // update_type differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
+    bool use_between_noise = false; // use between factor noise or not
+    bool use_chr_less_full_graph = false; // whether full graph has character indexes or not
+    bool use_landmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
     double confidence_probability = 0.99; // Confidence probability for the pairwise consistency computation
-    bool useCovariance = false; // use covariance in dataset file.
-    bool usePCM = true; // Use pairwise consistency maximization.
+    bool use_covariance = false; // use covariance in dataset file.
+    bool use_PCM = true; // Use pairwise consistency maximization.
     // Call distributed optimization
-    std::tuple<double, double, int> results = runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
-                                                                   useXY, useOP, debug, priorModel, model,
-                                                                   maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
-                                                                   gamma, useFlaggedInit, updateType, useBetweenNoise,
-                                                                   useChrLessFullGraph, useLandmarks, confidence_probability, useCovariance, usePCM);
+    std::tuple<double, double, int> results = runDistributedMapper(nr_robots, log_dir, data_dir, trace_file,
+                                                                   use_XY, use_OP, debug, prior_model, model,
+                                                                   max_iter, rotation_estimate_change_threshold, pose_estimate_change_threshold,
+                                                                   gamma, use_flagged_init, update_type, use_between_noise,
+                                                                   use_chr_less_full_graph, use_landmarks, confidence_probability, use_covariance, use_PCM);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
     EXPECT(assert_equal(std::get<0>(results), std::get<1>(results), tolerance));
-    EXPECT(std::get<2>(results) == (nrRobots-1)*nrRobots*nr_separators_by_pair/2);
+    EXPECT(std::get<2>(results) == (nr_robots-1)*nr_robots*nr_separators_by_pair/2);
 }
 
 
 TEST(DistributedMapper, testdistributedEstimationWithOutliers_16robots) {
     // Parameters
-    size_t nrRobots = 16; // number of robots
+    size_t nr_robots = 16; // number of robots
     size_t nr_separators_by_pair = 4; // number of separators by pair of robots
-    string logDir("/tmp/"); // log directory
-    string dataDir("../../../test_data/pairwise_consistency_maximization/spoiled/simulation/example_16robots/"); // data directory
-    string traceFile("/tmp/runG2o"); // data directory
-    bool useXY = false;
-    bool useOP = false;
+    string log_dir("/tmp/"); // log directory
+    string data_dir("../../../test_data/pairwise_consistency_maximization/spoiled/simulation/example_16robots/"); // data directory
+    string trace_file("/tmp/runG2o"); // data directory
+    bool use_XY = false;
+    bool use_OP = false;
     bool debug = false;
-    noiseModel::Diagonal::shared_ptr priorModel = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
+    noiseModel::Diagonal::shared_ptr prior_model = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
     noiseModel::Isotropic::shared_ptr model = noiseModel::Isotropic::Variance(12, 1);
-    size_t maxIter = 1000; // Maximum number of iterations of optimizer
-    double rotationEstimateChangeThreshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
-    double poseEstimateChangeThreshold = 1e-1; // Difference between pose estimate provides an early stopping condition
+    size_t max_iter = 1000; // Maximum number of iterations of optimizer
+    double rotation_estimate_change_threshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
+    double pose_estimate_change_threshold = 1e-1; // Difference between pose estimate provides an early stopping condition
     double gamma = 1.0f; // Gamma value for over relaxation methods
-    bool useFlaggedInit = true; // to use flagged initialization or not
-    distributed_mapper::DistributedMapper::UpdateType updateType = distributed_mapper::DistributedMapper::incUpdate; // updateType differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
-    bool useBetweenNoise = false; // use between factor noise or not
-    bool useChrLessFullGraph = false; // whether full graph has character indexes or not
-    bool useLandmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
+    bool use_flagged_init = true; // to use flagged initialization or not
+    distributed_mapper::DistributedMapper::UpdateType update_type = distributed_mapper::DistributedMapper::incUpdate; // update_type differetiates between Distributed Jacobi/Jacobi OverRelaxation (postUpdate) and Gauss-Seidel/Successive OverRelaxation (incUpdate)
+    bool use_between_noise = false; // use between factor noise or not
+    bool use_chr_less_full_graph = false; // whether full graph has character indexes or not
+    bool use_landmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
     double confidence_probability = 0.99; // Confidence probability for the pairwise consistency computation
-    bool useCovariance = false; // use covariance in dataset file.
-    bool usePCM = true; // Use pairwise consistency maximization.
+    bool use_covariance = false; // use covariance in dataset file.
+    bool use_PCM = true; // Use pairwise consistency maximization.
     // Call distributed optimization
-    std::tuple<double, double, int> results = runDistributedMapper(nrRobots, logDir, dataDir, traceFile,
-                                                                   useXY, useOP, debug, priorModel, model,
-                                                                   maxIter, rotationEstimateChangeThreshold, poseEstimateChangeThreshold,
-                                                                   gamma, useFlaggedInit, updateType, useBetweenNoise,
-                                                                   useChrLessFullGraph, useLandmarks, confidence_probability, useCovariance, usePCM);
+    std::tuple<double, double, int> results = runDistributedMapper(nr_robots, log_dir, data_dir, trace_file,
+                                                                   use_XY, use_OP, debug, prior_model, model,
+                                                                   max_iter, rotation_estimate_change_threshold, pose_estimate_change_threshold,
+                                                                   gamma, use_flagged_init, update_type, use_between_noise,
+                                                                   use_chr_less_full_graph, use_landmarks, confidence_probability, use_covariance, use_PCM);
     // Compare centralized and distributed pose estimates
     double tolerance = 2e0;
     EXPECT(assert_equal(std::get<0>(results), std::get<1>(results), tolerance));
-    EXPECT(std::abs((int)(std::get<2>(results)-(nrRobots-1)*nrRobots*nr_separators_by_pair/2)) < 5);
+    EXPECT(std::abs((int)(std::get<2>(results)-(nr_robots-1)*nr_robots*nr_separators_by_pair/2)) < 5);
 }
 
 /****************************************************************************** */
