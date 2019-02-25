@@ -21,7 +21,7 @@ namespace distributed_pcm {
         for (int roboti = 0; roboti < dist_mappers.size(); roboti++) {
             for (int robotj = roboti+1; robotj < dist_mappers.size(); robotj++) {
 
-                int max_clique_size = callPCM(roboti, robotj, transforms_by_robot, separators_by_robot,
+                int max_clique_size = executePCM(roboti, robotj, transforms_by_robot, separators_by_robot,
                 separators_transforms_by_pair, dist_mappers,
                 graph_and_values_vector, confidence_probability);
 
@@ -93,7 +93,7 @@ namespace distributed_pcm {
         }
     }
 
-    int DistributedPCM::callPCM(const int& roboti, const int& robotj, const std::vector<graph_utils::Transforms>& transforms_by_robot,
+    int DistributedPCM::executePCM(const int& roboti, const int& robotj, const std::vector<graph_utils::Transforms>& transforms_by_robot,
                 const std::vector<graph_utils::LoopClosures>& separators_by_robot,
                 const std::map<std::pair<char, char>,graph_utils::Transforms>& separators_transforms_by_pair,
                 std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,

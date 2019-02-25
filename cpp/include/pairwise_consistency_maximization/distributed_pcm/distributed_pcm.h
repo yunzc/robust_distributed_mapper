@@ -40,7 +40,7 @@ namespace distributed_pcm {
                                        const std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
                                        const bool& use_covariance);
 
-        static int callPCM(const int& roboti, const int& robotj, const std::vector<graph_utils::Transforms>& transforms_by_robot,
+        static int executePCM(const int& roboti, const int& robotj, const std::vector<graph_utils::Transforms>& transforms_by_robot,
                                 const std::vector<graph_utils::LoopClosures>& separators_by_robot,
                                 const std::map<std::pair<char, char>,graph_utils::Transforms>& separators_transforms_by_pair,
                                 std::vector< boost::shared_ptr<distributed_mapper::DistributedMapper> >& dist_mappers,
