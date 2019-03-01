@@ -111,3 +111,33 @@ target_link_libraries (robust_distributed_optimization_example_2robots
 ###########################################################################
 # Tests
 add_subdirectory(tests)
+
+###########################################################################
+# Install
+install(TARGETS graph_utils DESTINATION lib)
+file(GLOB headers_graph_utils "include/pairwise_consistency_maximization/graph_utils/*.h")
+install(FILES ${headers_graph_utils} DESTINATION include/graph_utils/)
+
+install(TARGETS robot_measurements DESTINATION lib)
+file(GLOB headers_robot_measurements "include/pairwise_consistency_maximization/robot_measurements/*.h")
+install(FILES ${headers_robot_measurements} DESTINATION include/robot_measurements/)
+
+install(TARGETS pairwise_consistency DESTINATION lib)
+file(GLOB headers_pairwise_consistency "include/pairwise_consistency_maximization/pairwise_consistency/*.h")
+install(FILES ${headers_pairwise_consistency} DESTINATION include/pairwise_consistency/)
+
+install(TARGETS fast_max-clique_finder DESTINATION lib)
+file(GLOB headers_fmc "${CMAKE_CURRENT_SOURCE_DIR}/src/pairwise_consistency_maximization/third_parties/fast_max-clique_finder/src/*.h")
+install(FILES ${headers_fmc} DESTINATION include/distributed_mapper/)
+
+install(TARGETS global_map_solver DESTINATION lib)
+file(GLOB headers_global_map "include/pairwise_consistency_maximization/global_map/*.h")
+install(FILES ${headers_global_map} DESTINATION include/global_map/)
+
+install(TARGETS distributed_pcm DESTINATION lib)
+file(GLOB headers_dpcm "include/pairwise_consistency_maximization/distributed_pcm/*.h")
+install(FILES ${headers_dpcm} DESTINATION include/distributed_pcm/)
+
+install(TARGETS distributed_mapper DESTINATION lib)
+file(GLOB headers_distributed_mapper "include/distributed_mapper/*.h")
+install(FILES ${headers_distributed_mapper} DESTINATION include/distributed_mapper/)
