@@ -12,12 +12,12 @@ pkg load statistics
 
 %% Settings
 dataset_folder = horzcat(pwd, '/../test_data/pairwise_consistency_maximization/spoiled/simulation/');
-number_of_robots = 16; 
+number_of_robots = 2; 
 id_offset = 96; % letter a = 97 (ASCII)
 sigma_R = 0.01;
 sigma_t = 0.1;
 trajectory_size = 20;
-number_of_separators = 4;
+number_of_separators = 10;
 use_rotation = true;
 add_outliers = true;
 number_of_outlying_separators = number_of_separators;
@@ -45,7 +45,7 @@ end
 %% Generate trajectories
 robot_poses = {};
 for robot=1:number_of_robots
-    [poses, measurements, edges_id] = generateTrajectory(robots_offsets{robot}, trajectory_size, trajectory_offsets{robot}, information_matrix, use_rotation);
+    [poses, measurements, edges_id] = generateTrajectory(robots_offsets{robot}, trajectory_size, trajectory_offsets{robot}, information_matrix, use_rotation, sigma_R, sigma_t);
     poses_to_write = poses;
     for i=1:size(poses_to_write,2)
         poses_to_write(i).t = poses_to_write(i).t - trajectory_offsets{robot}(1:3);
