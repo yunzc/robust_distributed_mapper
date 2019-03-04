@@ -14,6 +14,7 @@ for i=1:trajectory_size
         offset.R = eye(3);
     end
     offset.t = [2*t_speed*rand-t_speed; 2*t_speed*rand-t_speed; 2*t_speed*rand-t_speed];
+    offset.t = offset.t ./ norm(offset.t);
     measurements.between(i).R = offset.R;
     measurements.between(i).t = offset.t;
     

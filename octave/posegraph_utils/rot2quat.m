@@ -10,8 +10,9 @@ end
 if isrot(R, tol) == 0
   s(4) = .5 * sqrt( 1 + R(1,1) + R(2,2) + R(3,3) );
   if norm(s(4)) <= tol
-    %disp ('rotation = 180 degrees')
-    [u,teta]=rot2uth(R);
+    disp ('rotation = 180 degrees!')
+    abort();
+    %[u,teta]=rot2uth(R);
     s(1)=u(1);
     s(2)=u(2);
     s(3)=u(3);

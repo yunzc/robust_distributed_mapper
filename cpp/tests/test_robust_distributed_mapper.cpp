@@ -159,8 +159,8 @@ TEST(DistributedMapper, testdistributedEstimationWithOutliersWithRotationNoPCM_2
                                                                    use_chr_less_full_graph, use_landmarks, confidence_probability, use_covariance, use_PCM);
     // Compare centralized and distributed pose estimates
     double tolerance = 1e-1;
-    EXPECT(assert_equal(28.67, std::get<0>(results), tolerance));
-    EXPECT(assert_equal(29.90, std::get<1>(results), tolerance));
+    EXPECT(assert_equal(27.8, std::get<0>(results), tolerance));
+    EXPECT(assert_equal(27.8, std::get<1>(results), tolerance));
     EXPECT(std::get<2>(results) == 0);
 }
 
