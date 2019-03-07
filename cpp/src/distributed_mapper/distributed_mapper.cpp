@@ -74,19 +74,21 @@ DistributedMapper::createSubgraphInnerAndSepEdges(const NonlinearFactorGraph& su
 void
 DistributedMapper::loadSubgraphAndCreateSubgraphEdge(const GraphAndValues& graph_and_values){
   graph_ = *(graph_and_values.first);
-  initial_ = *(graph_and_values.second);    
+  initial_ = *(graph_and_values.second);
 
-  // Convert initial values into row major vector values
+      // Convert initial values into row major vector values
   linearized_rotation_ = evaluation_utils::rowMajorVectorValues(initial_);
 
   // create a nonlinear factor graph with inner edges and store slots of separators
   pair<NonlinearFactorGraph, vector<size_t> > subgraph_edge = createSubgraphInnerAndSepEdges(graph_);
+
   inner_edges_ = subgraph_edge.first;
   separator_edge_ids_ = subgraph_edge.second;
 
   // Internal cached graphs for distributed estimations
   createLinearOrientationGraph(); // linear orientation graph with inner edges
   chordalFactorGraph(); // nonlinear chordal pose3_graph with inner edges
+
 }
 
 //*****************************************************************************

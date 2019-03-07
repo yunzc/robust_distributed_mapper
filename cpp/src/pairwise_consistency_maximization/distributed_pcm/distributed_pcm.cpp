@@ -58,7 +58,7 @@ namespace distributed_pcm {
             bool id_initialized = false;
             for (const auto& factor_ptr : dist_mapper->currentGraph()) {
                 auto edge_ptr = boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3> >(factor_ptr);
-                if (edge_ptr) { // Possible bug : sometimes the graph size is the number of edges + 1..
+                if (edge_ptr) { // Do nothing with the prior in the first robot graph
                     graph_utils::Transform transform;
                     transform.i = edge_ptr->key1();
                     transform.j = edge_ptr->key2();
@@ -111,19 +111,14 @@ namespace distributed_pcm {
         auto robot_pair = {roboti, robotj};
         for (auto robot : robot_pair) {
             auto separators_ids = dist_mappers[robot]->separatorEdge();
-            int number_separators = separators_ids.size();
-            std::cout << "Robot " << robot << " : Number of separators : "  << number_separators << std::endl;
             std::vector<int> rejected_separator_ids;
             for (int i = 0; i < separators_ids.size(); i++) {
                 if (isSeparatorToBeRejected(max_clique, separators_ids[i], roboti_robotj_separators_transforms,
                                             interrobot_measurements.getLoopClosures(), dist_mappers[robot])) {
                     rejected_separator_ids.emplace_back(i);
-                    number_separators--;
                 }
             }
             // Remove measurements not in the max clique
-            // TODO: Fix "off by one" bug in innerEdges_ and graph_
-            std::cout << "Robot " << robot << " : Size of the maximal consistency clique : "  << max_clique.size() << std::endl;
             int number_separator_ids_removed = 0;
             for (const auto& index : rejected_separator_ids) {
                 auto id = separators_ids[index] - number_separator_ids_removed;
@@ -131,9 +126,20 @@ namespace distributed_pcm {
                 dist_mappers[robot]->eraseFactor(id);
                 graph_and_values_vector.at(robot).first->erase(graph_and_values_vector.at(robot).first->begin()+id);
             }
+            // Update separator ids
             std::vector<size_t> new_separator_ids;
-            for (size_t i = separators_ids[0]; i < separators_ids[0]+number_separators; i++) {
-                new_separator_ids.emplace_back(i);
+            int number_of_edges = dist_mappers[robot]->currentGraph().size();
+            if (robot == 0){
+                // Do not count the prior in the first robot graph
+                number_of_edges--;
+            }
+            for (int i = 0; i < number_of_edges; i++) {
+                auto keys = dist_mappers[robot]->currentGraph().at(i)->keys();
+                char robot0 = gtsam::symbolChr(keys.at(0));
+                char robot1 = gtsam::symbolChr(keys.at(1));
+                if (robot0 != robot1) {
+                    new_separator_ids.push_back(i);
+                }
             }
             dist_mappers[robot]->setSeparatorIds(new_separator_ids);
         }
