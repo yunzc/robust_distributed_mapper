@@ -274,12 +274,12 @@ TEST_DISABLED(DistributedMapper, test_distributed_estimation_16robots) {
     EXPECT(std::abs((int)(std::get<2>(results)-(nr_robots-1)*nr_robots*nr_separators_by_pair/2)) < 5);
 }
 
-TEST(DistributedMapper, test_distributed_estimation_argos_10robots) {
+TEST(DistributedMapper, test_distributed_estimation_argos_2robots) {
     // Parameters
     size_t nr_robots = 2; // number of robots
     // size_t nr_separators_by_pair = 4; // number of separators by pair of robots
     string log_dir("/tmp/"); // log directory
-    string data_dir("../../../test_data/argos_simulation/clean/example_10robots/"); // data directory
+    string data_dir("../../../test_data/argos_simulation/clean/example_2robots/"); // data directory
     string trace_file("/tmp/runG2o"); // data directory
     bool use_XY = false;
     bool use_OP = false;
