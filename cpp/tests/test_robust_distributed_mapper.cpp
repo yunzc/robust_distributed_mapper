@@ -18,7 +18,7 @@ using namespace evaluation_utils;
 
 /******************************************************************************/
 
-TEST_DISABLED(DistributedMapper, test_distributed_estimation_without_outliers_2robots) {
+TEST(DistributedMapper, test_distributed_estimation_without_outliers_2robots) {
     // Parameters
     size_t nr_robots = 2; // number of robots
     string log_dir("/tmp/"); // log directory
@@ -55,7 +55,7 @@ TEST_DISABLED(DistributedMapper, test_distributed_estimation_without_outliers_2r
     EXPECT(std::get<2>(results) == 10);
 }
 
-TEST_DISABLED(DistributedMapper, test_distributed_estimation_2robots) {
+TEST(DistributedMapper, test_distributed_estimation_2robots) {
     // Parameters
     size_t nr_robots = 2; // number of robots
     string log_dir("/tmp/"); // log directory
@@ -93,7 +93,7 @@ TEST_DISABLED(DistributedMapper, test_distributed_estimation_2robots) {
 
 /* Test where the loop closure measurements are mixed with the odometry measurements
  * and not in the same order in the 2 files as we can expect in a asynchronous system */
-TEST_DISABLED(DistributedMapper, test_distributed_estimation_not_in_order_2robots) {
+TEST(DistributedMapper, test_distributed_estimation_not_in_order_2robots) {
     // Parameters
     size_t nr_robots = 2; // number of robots
     string log_dir("/tmp/"); // log directory
@@ -129,7 +129,7 @@ TEST_DISABLED(DistributedMapper, test_distributed_estimation_not_in_order_2robot
     EXPECT(std::get<2>(results) == 10);
 }
 
-TEST_DISABLED(DistributedMapper, test_distributed_estimation_no_PCM_2robots) {
+TEST(DistributedMapper, test_distributed_estimation_no_PCM_2robots) {
     // Parameters
     size_t nr_robots = 2; // number of robots
     string log_dir("/tmp/"); // log directory
@@ -165,7 +165,7 @@ TEST_DISABLED(DistributedMapper, test_distributed_estimation_no_PCM_2robots) {
     EXPECT(std::get<2>(results) == 0);
 }
 
-TEST_DISABLED(DistributedMapper, test_distributed_estimation_4robots) {
+TEST(DistributedMapper, test_distributed_estimation_4robots) {
     // Parameters
     size_t nr_robots = 4; // number of robots
     string log_dir("/tmp/"); // log directory
@@ -201,7 +201,7 @@ TEST_DISABLED(DistributedMapper, test_distributed_estimation_4robots) {
     EXPECT(std::get<2>(results) == 24);
 }
 
-TEST_DISABLED(DistributedMapper, test_distributed_estimation_8robots) {
+TEST(DistributedMapper, test_distributed_estimation_8robots) {
     // Parameters
     size_t nr_robots = 8; // number of robots
     size_t nr_separators_by_pair = 4; // number of separators by pair of robots
@@ -238,7 +238,7 @@ TEST_DISABLED(DistributedMapper, test_distributed_estimation_8robots) {
 }
 
 
-TEST_DISABLED(DistributedMapper, test_distributed_estimation_16robots) {
+TEST(DistributedMapper, test_distributed_estimation_16robots) {
     // Parameters
     size_t nr_robots = 16; // number of robots
     size_t nr_separators_by_pair = 4; // number of separators by pair of robots
@@ -274,7 +274,7 @@ TEST_DISABLED(DistributedMapper, test_distributed_estimation_16robots) {
     EXPECT(std::abs((int)(std::get<2>(results)-(nr_robots-1)*nr_robots*nr_separators_by_pair/2)) < 5);
 }
 
-TEST_DISABLED(DistributedMapper, test_distributed_estimation_no_outliers_argos_2robots) {
+TEST(DistributedMapper, test_distributed_estimation_no_outliers_argos_2robots) {
     // Parameters
     size_t nr_robots = 2; // number of robots
     // size_t nr_separators_by_pair = 4; // number of separators by pair of robots
@@ -309,7 +309,7 @@ TEST_DISABLED(DistributedMapper, test_distributed_estimation_no_outliers_argos_2
     EXPECT(assert_equal(std::get<0>(results), std::get<1>(results), tolerance));
 }
 
-TEST_DISABLED(DistributedMapper, test_distributed_estimation_no_outliers_argos_4robots) {
+TEST(DistributedMapper, test_distributed_estimation_no_outliers_argos_4robots) {
     // Parameters
     size_t nr_robots = 4; // number of robots
     string log_dir("/tmp/"); // log directory
@@ -344,7 +344,7 @@ TEST_DISABLED(DistributedMapper, test_distributed_estimation_no_outliers_argos_4
 }
 
 
-TEST_DISABLED(DistributedMapper, test_distributed_estimation_no_outliers_argos_10robots) {
+TEST(DistributedMapper, test_distributed_estimation_no_outliers_argos_10robots) {
     // Parameters
     size_t nr_robots = 10; // number of robots
     string log_dir("/tmp/"); // log directory
@@ -378,7 +378,7 @@ TEST_DISABLED(DistributedMapper, test_distributed_estimation_no_outliers_argos_1
     EXPECT(assert_equal(std::get<0>(results), std::get<1>(results), tolerance*std::get<0>(results)));
 }
 
-TEST_DISABLED(DistributedMapper, test_distributed_estimation_argos_2robots) {
+TEST(DistributedMapper, test_distributed_estimation_argos_2robots) {
     // Parameters
     size_t nr_robots = 2; // number of robots
     string log_dir("/tmp/"); // log directory
@@ -413,7 +413,7 @@ TEST_DISABLED(DistributedMapper, test_distributed_estimation_argos_2robots) {
     std::cout << "Max clique size: " << std::get<2>(results) << std::endl;
 }
 
-TEST_DISABLED(DistributedMapper, test_distributed_estimation_argos_4robots) {
+TEST(DistributedMapper, test_distributed_estimation_argos_4robots) {
     // Parameters
     size_t nr_robots = 4; // number of robots
     string log_dir("/tmp/"); // log directory
@@ -457,7 +457,7 @@ TEST(DistributedMapper, test_distributed_estimation_argos_10robots) {
     bool use_XY = false;
     bool use_OP = false;
     bool debug = false;
-    noiseModel::Diagonal::shared_ptr prior_model = noiseModel::Isotropic::Variance(6, 1e-12); // prior noise
+    noiseModel::Diagonal::shared_ptr prior_model = noiseModel::Isotropic::Variance(6, 1e-2); // prior noise
     noiseModel::Isotropic::shared_ptr model = noiseModel::Isotropic::Variance(12, 1);
     size_t max_iter = 1000; // Maximum number of iterations of optimizer
     double rotation_estimate_change_threshold = 1e-1; // Difference between rotation estimate provides an early stopping condition
