@@ -3,6 +3,7 @@
 #ifndef GRAPH_UTILS_TYPES_H
 #define GRAPH_UTILS_TYPES_H
 
+#include <boost/shared_ptr.hpp>
 #include <gtsam/base/Value.h>
 #include <gtsam/geometry/Pose3.h>
 #include <gtsam/geometry/Rot3.h>
