@@ -76,7 +76,7 @@ function [measurements, edges_id, readPoses] = readG2oDataset3D(input_file_g2o, 
                        I44, I45, I46, ...
                             I55, I56, ...
                             I66] = ... 
-      strread(tline, '%s %d %d %f %f %f %f %f %f %f    %f %f %f %f %f %f    %f %f %f %f %f   %f %f %f %f   %f %f %f    %f %f    %f');
+      strread(tline, '%s %f %f %f %f %f %f %f %f %f    %f %f %f %f %f %f    %f %f %f %f %f   %f %f %f %f   %f %f %f    %f %f    %f');
       if edgeId < nodeId && (id1 ~= edgeId-1 || id2 ~= edgeId) % only on spanning tree
         unorderedFlag = 1;
       end
@@ -116,14 +116,14 @@ function [measurements, edges_id, readPoses] = readG2oDataset3D(input_file_g2o, 
     readPoses  = [];
   end
   
-  if unorderedFlag==1 && orderEdgesFlag
-    minInd = min ( edges_id(:,1), min(edges_id(:,2)) );
-    if minInd>1
-      warning(sprintf('minimum node id in g2o file is %d - replacing with 1 \n',minInd))
-      edges_id(:,1:2) = edges_id(:,1:2) - (minInd+1) * ones(size(edges_id(:,1:2)));
-    end
-    disp('readG2oDataset3D: incorrect edge ids in g2o file, we are going to sort them')
-    desiredOrder = orderingEdges(edges_id);
-    edges_id = edges_id(desiredOrder,:);
-    measurements.between = measurements.between(desiredOrder);
-  end
+  %if unorderedFlag==1 && orderEdgesFlag
+  %  minInd = min ( edges_id(:,1), min(edges_id(:,2)) );
+  %  if minInd>1
+  %    warning(sprintf('minimum node id in g2o file is %d - replacing with 1 \n',minInd))
+  %    edges_id(:,1:2) = edges_id(:,1:2) - (minInd+1) * ones(size(edges_id(:,1:2)));
+  %  end
+  %  disp('readG2oDataset3D: incorrect edge ids in g2o file, we are going to sort them')
+  %  desiredOrder = orderingEdges(edges_id);
+  %  edges_id = edges_id(desiredOrder,:);
+ %   measurements.between = measurements.between(desiredOrder);
+  %end
