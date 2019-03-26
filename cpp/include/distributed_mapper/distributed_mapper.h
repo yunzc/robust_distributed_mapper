@@ -50,6 +50,7 @@ class DistributedMapper{
       rot_subgraph_ = gtsam::GaussianFactorGraph();
       initial_ = gtsam::Values();
       neighbors_ = gtsam::Values();
+      separators_symbols_ = std::vector<std::pair<gtsam::Symbol, gtsam::Symbol>>();
       rotation_error_trace_ = std::vector<double>();
       pose_error_trace_ = std::vector<double>();
       rotation_estimate_change_trace_ = std::vector<double>();
@@ -161,6 +162,9 @@ class DistributedMapper{
 
     /** @brief neighbors returns the neighboring values  */
     gtsam::Values neighbors() {return neighbors_;}
+
+    /** @brief neighbors returns the separators factor symbols  */
+    std::vector<std::pair<gtsam::Symbol, gtsam::Symbol>> separatorsSymbols() {return separators_symbols_;}
 
     /** @brief allows to remove a factor from the graph.
      *  @param index is the factor index in the graph
@@ -491,6 +495,7 @@ class DistributedMapper{
     gtsam::NonlinearFactorGraph inner_edges_; // edges involving keys from a single robot (exclude separator edges)
     std::vector<size_t>  separator_edge_ids_; // for each robot stores the position of the factors corresponding to separator edges
     gtsam::Values neighbors_; // contains keys of all the neighboring robots
+    std::vector<std::pair<gtsam::Symbol, gtsam::Symbol>> separators_symbols_; // contains keys of all the separators
     std::set<char> neighbor_chars_; // contains neighboring robot symbols
     double latest_change_; // Latest change in estimate, stopping condition
     bool use_between_noise_; // To use the between factor noise instead of isotropic unit noise during pose estimation

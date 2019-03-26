@@ -13,6 +13,7 @@ DistributedMapper::createSubgraphInnerAndSepEdges(const NonlinearFactorGraph& su
   NonlinearFactorGraph subgraph_inner_edge;
   vector<size_t> subgraphs_sep_edges_id;
   neighbors_.clear();
+  separators_symbols_.clear();
 
   for(size_t k=0; k < subgraph.size(); k++){ // this loops over the factors in subgraphs[i]
     // Continue if factor does not exist
@@ -47,18 +48,22 @@ DistributedMapper::createSubgraphInnerAndSepEdges(const NonlinearFactorGraph& su
 
       // Neighbors data structure
       if(robot0 == robotName_ || (use_landmarks_ && robot0 == toupper(robotName_))){
-        if(!neighbors_.exists(key1))
+        if(!neighbors_.exists(key1)) {
           neighbors_.insert(key1, Pose3());
-
-        if(!neighbor_chars_.count(robot1))
+          separators_symbols_.emplace_back(std::make_pair(key1, key0));
+        }
+        if(!neighbor_chars_.count(robot1)) {
           neighbor_chars_.insert(robot1);
+        }
       }
       else{
-        if(!neighbors_.exists(key0))
+        if(!neighbors_.exists(key0)) {
           neighbors_.insert(key0, Pose3());
-
-        if(!neighbor_chars_.count(robot0))
+          separators_symbols_.emplace_back(std::make_pair(key0, key1));
+        }
+        if(!neighbor_chars_.count(robot0)) {
           neighbor_chars_.insert(robot0);
+        }
       }
     }
   }
