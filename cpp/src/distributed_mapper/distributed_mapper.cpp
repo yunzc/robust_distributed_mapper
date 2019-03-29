@@ -69,8 +69,13 @@ DistributedMapper::createSubgraphInnerAndSepEdges(const NonlinearFactorGraph& su
   }
 
   // Convert neighbor values into row major vector values
-  neighbors_linearized_rotations_ = evaluation_utils::rowMajorVectorValues(neighbors_);
-  neighbors_linearized_poses_ = evaluation_utils::initializeVectorValues(neighbors_);
+  for (auto neighbor_value : evaluation_utils::rowMajorVectorValues(neighbors_)){
+      neighbors_linearized_rotations_.tryInsert(neighbor_value.first, neighbor_value.second);
+  }
+
+  for (auto neighbor_value : evaluation_utils::initializeVectorValues(neighbors_)){
+      neighbors_linearized_poses_.tryInsert(neighbor_value.first, neighbor_value.second);
+  }
 
   return make_pair(subgraph_inner_edge,subgraphs_sep_edges_id);
 }
