@@ -451,6 +451,13 @@ class DistributedMapper{
     }
 
     /**
+    * @brief getNeighboringRobotsInit
+    */
+    std::map<char, bool> getNeighboringRobotsInit(){
+      return neighboring_robots_initialized_;
+    }
+
+    /**
      * @brief isRobotInitialized
      * @return
      */
