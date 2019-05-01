@@ -326,6 +326,9 @@ class DistributedMapper{
     /** @brief returns the current estimate */
     gtsam::Values currentEstimate(){ return initial_; }
 
+    /** @brief returns the current estimate */
+    int numberOfPosesInCurrentEstimate(){ return initial_.size(); }
+
     /** @brief returns the robot name */
     char robotName(){ return robotName_; }
 
