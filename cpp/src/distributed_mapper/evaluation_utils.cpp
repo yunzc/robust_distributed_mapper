@@ -504,6 +504,9 @@ namespace evaluation_utils{
     Values centralized = centralizedEstimation(full_graph_with_prior,
                                                                    model, prior_model,
                                                                    use_between_noise);
+
+    std::string dataset_file_name = "log/datasets/centralized.g2o";
+    gtsam::writeG2o(full_graph_with_prior, centralized, dataset_file_name);
     double centralized_error = chordal_graph.error(centralized);
     std::cout << "Centralized Two Stage Error: " << centralized_error << std::endl;
 
