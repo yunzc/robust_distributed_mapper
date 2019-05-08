@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     bool use_landmarks = false; // use landmarks -- landmarks are given symbols as upper case of robot name, for eg: if robot is 'a', landmark will be 'A'
     double confidence_probability = 0.99; // confidence probability for the pairwise consistency computation.
     bool use_covariance = false; // use covariance in dataset file.
-    bool use_PCM = true; // Use pairwise consistency maximization.
+    bool use_PCM = false; // Use pairwise consistency maximization.
 
     try {
         // Parse program options
@@ -40,35 +40,35 @@ int main(int argc, char *argv[]) {
         po::options_description desc("Options");
         desc.add_options()
                 ("help", "Print help messages")
-                ("nr_robots, n", po::value<size_t>(&nr_robots), "number of robots (default: 2)")
-                ("data_dir, l", po::value<string>(&data_dir), "data directory (default: /tmp)")
-                ("trace_file, t", po::value<string>(&trace_file), "trace file (default: runG2o)")
-                ("log_dir, l", po::value<string>(&log_dir), "log directory (default: /tmp)")
-                ("use_XY, u", po::value<bool>(&use_XY), "use x,y,z as naming convention or a,b,c (default: x,y,z)")
-                ("use_OP, o", po::value<bool>(&use_OP), "use o,p,q as naming convention (default: x,y,z)")
-                ("use_flagged_init, f", po::value<bool>(&use_flagged_init),
+                ("nrRobots, n", po::value<size_t>(&nr_robots), "number of robots (default: 2)")
+                ("dataDir, l", po::value<string>(&data_dir), "data directory (default: /tmp)")
+                ("traceFile, t", po::value<string>(&trace_file), "trace file (default: runG2o)")
+                ("logDir, l", po::value<string>(&log_dir), "log directory (default: /tmp)")
+                ("useXY, u", po::value<bool>(&use_XY), "use x,y,z as naming convention or a,b,c (default: x,y,z)")
+                ("useOP, o", po::value<bool>(&use_OP), "use o,p,q as naming convention (default: x,y,z)")
+                ("useFlaggedInit, f", po::value<bool>(&use_flagged_init),
                  "use flagged initialization or not (default: true)")
-                ("use_between_noise, b", po::value<bool>(&use_between_noise),
+                ("useBetweenNoise, b", po::value<bool>(&use_between_noise),
                  "use the given factor between noise instead of unit noise(default: false)")
-                ("use_chr_less_full_graph", po::value<bool>(&use_chr_less_full_graph),
+                ("useChrLessFullGraph", po::value<bool>(&use_chr_less_full_graph),
                  "whether full graph has character indexes or not (default: false)")
-                ("use_landmarks, l", po::value<bool>(&use_landmarks), "use landmarks or not (default: false)")
+                ("useLandmarks, l", po::value<bool>(&use_landmarks), "use landmarks or not (default: false)")
                 ("rthresh, r", po::value<double>(&rotation_estimate_change_threshold),
                  "Specify difference between rotation estimate provides an early stopping condition (default: 1e-2)")
                 ("pthresh, p", po::value<double>(&pose_estimate_change_threshold),
                  "Specify difference between pose estimate provides an early stopping condition (default: 1e-2)")
-                ("max_iter, m", po::value<size_t>(&max_iter), "maximum number of iterations (default: 100000)")
+                ("maxIter, m", po::value<size_t>(&max_iter), "maximum number of iterations (default: 100000)")
                 ("confidence, c", po::value<double>(&confidence_probability), "confidence probability for the pairwise consistency computation (default: 0.99)")
-                ("use_covariance, i", po::value<bool>(&use_covariance), "use covariance in dataset file (default: false)")
+                ("useCovariance, i", po::value<bool>(&use_covariance), "use covariance in dataset file (default: false)")
                 ("debug, d", po::value<bool>(&debug), "debug (default: false)")
-                ("use_PCM", po::value<bool>(&use_PCM), "use pairwise consistency maximization (default: true)");
+                ("usePCM", po::value<bool>(&use_PCM), "use pairwise consistency maximization (default: true)");
 
         po::variables_map vm;
         try {
             po::store(po::parse_command_line(argc, argv, desc), vm); // can throw
             if (vm.count("help")) { // --help option
                 cout << "Run Distributed-Mapper" << endl
-                     << "Example: ./rung2o --data_dir ../../../example/ --num_robots 4"
+                     << "Example: ./rung2o --dataDir ../../../example/ --nrRobots 4"
                      << endl << desc << endl;
                 return 0;
             }

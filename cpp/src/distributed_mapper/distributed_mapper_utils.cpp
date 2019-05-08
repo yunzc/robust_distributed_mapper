@@ -288,6 +288,10 @@ void optimizeRotation(std::vector< boost::shared_ptr<DistributedMapper> >& dist_
       for(size_t robot = 0; robot < nr_robots; robot++){
         double change = dist_mappers[robot]->latestChange();
         std::cout << "[optimizeRotation] Change (Robot " << robot << "): " << change << std::endl;
+      }
+      for(size_t robot = 0; robot < nr_robots; robot++){
+        double change = dist_mappers[robot]->latestChange();
+        // std::cout << "[optimizeRotation] Change (Robot " << robot << "): " << change << std::endl;
         if(change > rotation_estimate_change_threshold){
           stop = false;
           break;
@@ -356,6 +360,8 @@ void optimizePose(std::vector< boost::shared_ptr<DistributedMapper> >& dist_mapp
           dist_mappers[robot]->updateNeighborLinearizedPoses(key, poseEstimate);
           bool neighboring_robot_initialized = dist_mappers[neighboring_robot_id]->isRobotInitialized();
           dist_mappers[robot]->updateNeighboringRobotInitialized(symbol, neighboring_robot_initialized); // this requires communication
+          //std::cout << "Robot " << neighboring_robot_id << " at " << key << ". Est[0]=" << poseEstimate << std::endl;
+          //std::cout << "Robot " << neighboring_robot_id << " is init? " << neighboring_robot_initialized << std::endl;
         }
         else{
           // Robot we are not communicating with are considered as optimized
@@ -380,7 +386,6 @@ void optimizePose(std::vector< boost::shared_ptr<DistributedMapper> >& dist_mapp
           subgraph_iter.insert(key, distributed_robot_i.at<gtsam::Pose3>(key));
         }
       }
-
 
       if(debug)
         std::cout << "[optimizePoses] Estimating poses"  << std::endl;
@@ -456,6 +461,10 @@ void optimizePose(std::vector< boost::shared_ptr<DistributedMapper> >& dist_mapp
       for(size_t robot = 0; robot < nr_robots; robot++){     // Iterate each optimizer once
         double change = dist_mappers[robot]->latestChange();
         std::cout << "[optimizePoses] Change (Robot " << robot << "): " << change << std::endl;
+      }
+      for(size_t robot = 0; robot < nr_robots; robot++){     // Iterate each optimizer once
+        double change = dist_mappers[robot]->latestChange();
+        //std::cout << "[optimizePoses] Change (Robot " << robot << "): " << change << std::endl;
         if(change > pose_estimate_change_threshold){
           stop = false;
           break;
