@@ -174,9 +174,9 @@ namespace distributed_mapper{
 
     /**
      *  @brief function to evaluate the resulting estimates of the optimization
-     *  @returns a tuple containing the distributed cost, the centralized cost and the maximal clique size.
+     *  @returns a tuple containing the distributed cost, the centralized cost and the initial cost.
      */
-    std::pair<double, double> evaluateEstimates(const size_t& nr_robots,
+    std::tuple<double, double, double> evaluateEstimates(const size_t& nr_robots,
                                                 const gtsam::GraphAndValues& full_graph_and_values,
                                                 const gtsam::noiseModel::Diagonal::shared_ptr& prior_model,
                                                 const gtsam::noiseModel::Isotropic::shared_ptr& model,

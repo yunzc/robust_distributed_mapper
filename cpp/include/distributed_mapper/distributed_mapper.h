@@ -443,6 +443,7 @@ class DistributedMapper{
       }
       else{
         neighboring_robots_initialized_.insert(std::make_pair(robot, flag));
+        std::cout << "Robot " << robotName_-97 << " neighbor init size : " << neighboring_robots_initialized_.size() << std::endl;
       }
     }
 

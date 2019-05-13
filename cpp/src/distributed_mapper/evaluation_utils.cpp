@@ -468,7 +468,7 @@ namespace evaluation_utils{
     return make_pair(combined_graph, combined_values);
   }
 
-  std::pair<double, double> evaluateEstimates(const size_t &nr_robots,
+  std::tuple<double, double, double> evaluateEstimates(const size_t &nr_robots,
                                               const gtsam::GraphAndValues &full_graph_and_values,
                                               const gtsam::noiseModel::Diagonal::shared_ptr &prior_model,
                                               const gtsam::noiseModel::Isotropic::shared_ptr &model,
@@ -496,7 +496,8 @@ namespace evaluation_utils{
     ////////////////////////////////////////////////////////////////////////////////
     // Initial Error
     ////////////////////////////////////////////////////////////////////////////////
-    std::cout << "Initial Error: " << chordal_graph.error(full_initial) << std::endl;
+    double initial_error = chordal_graph.error(full_initial);
+    std::cout << "Initial Error: " << initial_error << std::endl;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Centralized Two Stage
@@ -524,7 +525,7 @@ namespace evaluation_utils{
     double distributed_error = chordal_graph.error(distributed_estimates);
     std::cout << "Distributed Error: " << distributed_error << std::endl;
 
-    return std::make_pair(centralized_error, distributed_error);
+    return std::make_tuple(centralized_error, distributed_error, initial_error);
   }
 }
 }
