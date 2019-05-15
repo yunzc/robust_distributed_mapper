@@ -13,9 +13,15 @@ namespace robot_measurements {
       public:
         /**
          * \brief Constructor
-         * @param file_name Name of the file containing the robot measurements.
          */
         RobotLocalMap(const graph_utils::Transforms& transforms,
+                      const graph_utils::LoopClosures& loop_closures);
+
+        /**
+         * \brief Constructor
+         */
+        RobotLocalMap(const graph_utils::Trajectory& trajectory,
+                      const graph_utils::Transforms& transforms,
                       const graph_utils::LoopClosures& loop_closures);
 
         /*
