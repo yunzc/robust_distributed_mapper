@@ -7,7 +7,7 @@ namespace pairwise_consistency {
 double PairwiseConsistency::getChiSquaredThreshold(){
     double threshold;
     if (nb_degree_freedom_ == 6) {
-        switch ((int)(confidence_probability_*100)){
+        switch ((int)std::round(confidence_probability_*100)){
             case 99:
                 threshold = 0.872;
                 break;

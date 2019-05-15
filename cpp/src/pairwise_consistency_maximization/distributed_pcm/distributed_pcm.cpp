@@ -186,6 +186,7 @@ namespace distributed_pcm {
             graph_utils::TrajectoryPose trajectory_pose;
             trajectory_pose.id = key_value_pair.key;
             trajectory_pose.pose.pose = other_robot_poses.at<gtsam::Pose3>(key_value_pair.key);
+            trajectory_pose.pose.covariance_matrix = graph_utils::FIXED_COVARIANCE;
             other_robot_trajectory.trajectory_poses.insert(std::make_pair(key_value_pair.key, trajectory_pose));
         }
         other_robot_trajectory.start_id = first_key;
