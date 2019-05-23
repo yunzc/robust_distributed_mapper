@@ -17,7 +17,7 @@
 /*   http://arxiv.org/abs/1411.7460 		 					   */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "findClique.h"
+#include "max_clique_finder/findClique.h"
 
 namespace FMC {
 bool fexists(const char *filename)

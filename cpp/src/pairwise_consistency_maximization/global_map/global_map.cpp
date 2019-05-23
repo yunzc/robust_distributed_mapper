@@ -1,7 +1,6 @@
 // Copyright (C) 2018 by Pierre-Yves Lajoie <lajoie.py@gmail.com>
 
 #include "global_map/global_map.h"
-#include "findClique.h"
 #include <math.h>
 
 #ifdef LOG_DIR

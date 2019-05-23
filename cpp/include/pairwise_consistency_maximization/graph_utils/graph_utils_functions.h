@@ -4,6 +4,8 @@
 #define GRAPH_UTILS_FUNCTIONS_H
 
 #include "graph_utils/graph_types.h"
+#include "max_clique_finder/findClique.h"
+#include <eigen3/Eigen/Geometry>
 #include <iostream>
 #include <fstream>
 
@@ -80,6 +82,8 @@ bool isInTrajectory(const Trajectory& trajectory, const size_t& pose_id);
 * @param[in] file_name Name of the file to save the results.
 */
 void printConsistentLoopClosures(const LoopClosures& loop_closures, const std::vector<int>& max_clique_data, const std::string& file_name);
+
+int findMaxClique(const Eigen::MatrixXd adjMatrix, std::vector<int>& max_clique);
 
 }
 

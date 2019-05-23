@@ -27,6 +27,7 @@
 #include <sstream>
 #include <float.h>
 #include <string.h>
+#include <eigen3/Eigen/Dense>
 
 #define LINE_LENGTH 256
 
@@ -45,6 +46,7 @@ public:
 	bool readGraph(string s_InputFile, float connStrength = -DBL_MAX);
 	string getFileExtension(string fileName);
 	bool ReadMatrixMarketAdjacencyGraph(string s_InputFile, float connStrength = -DBL_MAX);
+	bool ReadEigenAdjacencyMatrix(Eigen::MatrixXd adjMatrix, float connStrength = -DBL_MAX);
 	bool ReadMeTiSAdjacencyGraph(string s_InputFile);
 	void CalculateVertexDegrees();
 

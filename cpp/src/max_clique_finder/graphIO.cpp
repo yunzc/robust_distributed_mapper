@@ -17,7 +17,7 @@
 /*   http://arxiv.org/abs/1411.7460 		 					   */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "graphIO.h"
+#include "max_clique_finder/graphIO.h"
 
 namespace FMC {
 CGraphIO::~CGraphIO()
@@ -185,6 +185,77 @@ bool CGraphIO::ReadMatrixMarketAdjacencyGraph(string s_InputFile, float connStre
 	return true;
 }
 
+bool CGraphIO::ReadEigenAdjacencyMatrix(Eigen::MatrixXd adjMatrix, float connStrength) {
+	map<int,vector<int> > nodeList;
+	map<int,vector<double> > valueList;
+	int col=0, row=0, rowIndex=0, colIndex=0;
+	int entry_counter = 0, num_of_entries = 0;
+	double value;
+
+	bool b_getValue = true;
+	int num_upper_triangular = 0;
+
+	row = adjMatrix.rows();
+	col = adjMatrix.cols();
+
+	for (size_t i = 0; i < row; i++) {
+		for (size_t j = 0; j < col; j++) {
+
+			if (i == j) {
+				continue;
+			} 
+
+			int exists = 0; 
+			for (int k = 0; k < nodeList[i].size(); k++) {
+				if (j == nodeList[i][k]) {
+					exists = 1;
+					break;
+				}
+			}
+
+			if (exists == 1) {
+				num_upper_triangular++;
+			} else {
+				if (b_getValue) {
+					if (value > connStrength) {
+						nodeList[i].push_back(j);
+						nodeList[j].push_back(i);
+					}
+				} else {
+					nodeList[i].push_back(j);
+					nodeList[j].push_back(i);
+				}
+
+				if (b_getValue && value > connStrength) {
+					valueList[i].push_back(value);
+					valueList[j].push_back(value);
+				}
+			}
+		}
+	}
+
+	//cout << "No. of upper triangular pruned: " << num_upper_triangular << endl;
+	m_vi_Vertices.push_back(m_vi_Edges.size());
+
+	for(int i=0;i < row; i++) 
+	{
+		m_vi_Edges.insert(m_vi_Edges.end(),nodeList[i].begin(),nodeList[i].end());
+		m_vi_Vertices.push_back(m_vi_Edges.size());
+	}
+
+	if(b_getValue) 
+	{
+		for(int i=0;i<row; i++) 
+		{
+			m_vd_Values.insert(m_vd_Values.end(),valueList[i].begin(),valueList[i].end());
+		}
+	}
+
+	nodeList.clear();
+	valueList.clear();
+	CalculateVertexDegrees();
+	return true;
+}
 
 bool CGraphIO::ReadMeTiSAdjacencyGraph(string s_InputFile)
 {

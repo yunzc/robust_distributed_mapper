@@ -5,7 +5,6 @@
 #include <fstream>
 #include <iostream>
 #include <math.h>
-#include <eigen3/Eigen/Geometry>
 
 namespace graph_utils {
 
@@ -105,6 +104,15 @@ void printConsistentLoopClosures(const LoopClosures& loop_closures, const std::v
     output_file << loop_closures[loop_closure_id-1].first << " " << loop_closures[loop_closure_id-1].second << std::endl;
   }
   output_file.close();
+}
+
+int findMaxClique(const Eigen::MatrixXd adjMatrix, std::vector<int>& max_clique) {
+  // Compute maximum clique
+  FMC::CGraphIO gio;
+  gio.ReadEigenAdjacencyMatrix(adjMatrix);
+  int max_clique_size = 0;
+  max_clique_size = FMC::maxClique(gio, max_clique_size, max_clique);
+  return max_clique_size;
 }
 
 }

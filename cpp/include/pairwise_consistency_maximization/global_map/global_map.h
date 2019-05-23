@@ -6,6 +6,7 @@
 #include "robot_measurements/robot_local_map.h"
 #include "robot_measurements/interrobot_measurements.h"
 #include "pairwise_consistency/pairwise_consistency.h"
+#include "max_clique_finder/findClique.h"
 #include <string>
 
 /** \namespace global_map

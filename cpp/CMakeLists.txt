@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(distributed-mapper)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -fPIC")
 add_definitions(-DLOG_DIR="${PROJECT_SOURCE_DIR}/..")
 
 ###########################################################################
@@ -29,7 +29,14 @@ message("Boost Libraries: ${Boost_LIBRARIES}")
 include_directories(
   include
   include/pairwise_consistency_maximization
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/pairwise_consistency_maximization/third_parties/fast_max-clique_finder/src/
+)
+
+# Maximum Clique Solver
+add_library(max_clique_finder
+    src/max_clique_finder/findClique.cpp
+    src/max_clique_finder/findCliqueHeu.cpp 
+    src/max_clique_finder/utils.cpp 
+    src/max_clique_finder/graphIO.cpp
 )
 
 # Graph utils library
@@ -38,6 +45,7 @@ add_library(graph_utils
 )
 target_link_libraries(graph_utils
         gtsam
+        max_clique_finder
 )
 
 # Robot local map library
@@ -58,25 +66,14 @@ target_link_libraries(pairwise_consistency
        robot_measurements
 )
 
-# Maximum Clique Solver
-add_library(fast_max-clique_finder
-    src/pairwise_consistency_maximization/third_parties/fast_max-clique_finder/src/findClique.h
-    src/pairwise_consistency_maximization/third_parties/fast_max-clique_finder/src/graphIO.h
-    src/pairwise_consistency_maximization/third_parties/fast_max-clique_finder/src/findClique.cpp
-    src/pairwise_consistency_maximization/third_parties/fast_max-clique_finder/src/findCliqueHeu.cpp 
-    src/pairwise_consistency_maximization/third_parties/fast_max-clique_finder/src/utils.cpp 
-    src/pairwise_consistency_maximization/third_parties/fast_max-clique_finder/src/graphIO.cpp
-)
-target_compile_options(fast_max-clique_finder PRIVATE -w)
-
 # Global map solver library
 add_library(global_map_solver
    src/pairwise_consistency_maximization/global_map/global_map.cpp
 )
 target_link_libraries(global_map_solver
    graph_utils
+   max_clique_finder
    pairwise_consistency
-   fast_max-clique_finder
 )
 
 # Distributed PCM library
@@ -126,9 +123,9 @@ install(TARGETS pairwise_consistency DESTINATION lib)
 file(GLOB headers_pairwise_consistency "include/pairwise_consistency_maximization/pairwise_consistency/*.h")
 install(FILES ${headers_pairwise_consistency} DESTINATION include/pairwise_consistency/)
 
-install(TARGETS fast_max-clique_finder DESTINATION lib)
-file(GLOB headers_fmc "${CMAKE_CURRENT_SOURCE_DIR}/src/pairwise_consistency_maximization/third_parties/fast_max-clique_finder/src/*.h")
-install(FILES ${headers_fmc} DESTINATION include/distributed_mapper/)
+install(TARGETS max_clique_finder DESTINATION lib)
+file(GLOB headers_max_clique_finder "include/max_clique_finder/*.h")
+install(FILES ${headers_max_clique_finder} DESTINATION include/max_clique_finder/)
 
 install(TARGETS global_map_solver DESTINATION lib)
 file(GLOB headers_global_map "include/pairwise_consistency_maximization/global_map/*.h")
