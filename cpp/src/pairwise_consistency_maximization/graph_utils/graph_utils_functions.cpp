@@ -109,7 +109,7 @@ void printConsistentLoopClosures(const LoopClosures& loop_closures, const std::v
 int findMaxClique(const Eigen::MatrixXd adjMatrix, std::vector<int>& max_clique) {
   // Compute maximum clique
   FMC::CGraphIO gio;
-  gio.ReadEigenAdjacencyMatrix(adjMatrix);
+  gio.ReadEigenAdjacencyMatrix(adjMatrix, 0.0);
   int max_clique_size = 0;
   max_clique_size = FMC::maxClique(gio, max_clique_size, max_clique);
   return max_clique_size;

@@ -217,6 +217,9 @@ bool CGraphIO::ReadEigenAdjacencyMatrix(Eigen::MatrixXd adjMatrix, float connStr
 				num_upper_triangular++;
 			} else {
 				if (b_getValue) {
+
+					value = adjMatrix(i,j);
+
 					if (value > connStrength) {
 						nodeList[i].push_back(j);
 						nodeList[j].push_back(i);
