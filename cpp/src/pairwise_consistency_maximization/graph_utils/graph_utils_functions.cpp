@@ -28,9 +28,9 @@ void poseBetween(const graph_utils::PoseWithCovariance &a,
                  const graph_utils::PoseWithCovariance &b,
                  graph_utils::PoseWithCovariance &out){
     gtsam::Matrix Ha, Hb;
-    out.pose = a.pose.between(b.pose, Ha, Hb);
-    out.covariance_matrix = Ha * a.covariance_matrix * Ha.transpose() +
-                            Hb * b.covariance_matrix * Hb.transpose();
+    out.pose = a.pose.between(b.pose, Ha, Hb); // returns between in a frame 
+    out.covariance_matrix = Hb * b.covariance_matrix * Hb.transpose() -
+                            Ha * a.covariance_matrix * Ha.transpose();
 }
 
 Trajectory buildTrajectory(const Transforms& transforms) {
