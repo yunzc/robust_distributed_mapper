@@ -31,6 +31,10 @@ void poseBetween(const graph_utils::PoseWithCovariance &a,
     out.pose = a.pose.between(b.pose, Ha, Hb); // returns between in a frame 
     out.covariance_matrix = Hb * b.covariance_matrix * Hb.transpose() -
                             Ha * a.covariance_matrix * Ha.transpose();
+    // but could be negative if one pose came first 
+    if (out.covariance_matrix(0,0) < 0) {
+      out.covariance_matrix = -out.covariance_matrix;
+    }
 }
 
 Trajectory buildTrajectory(const Transforms& transforms) {
