@@ -13,8 +13,18 @@ void poseCompose(const graph_utils::PoseWithCovariance &a,
                  graph_utils::PoseWithCovariance &out) {
   gtsam::Matrix Ha, Hb;
   out.pose = a.pose.compose(b.pose, Ha, Hb);
-  out.covariance_matrix = Ha * a.covariance_matrix * Ha.transpose() +
-          Hb * b.covariance_matrix * Hb.transpose();
+  gtsam::Matrix tau2 = b.pose.AdjointMap();
+  out.covariance_matrix = tau2 * a.covariance_matrix * tau2.transpose() +
+          b.covariance_matrix;
+  // out.covariance_matrix = Ha * a.covariance_matrix * Ha.transpose() +
+  //         Hb * b.covariance_matrix * Hb.transpose();
+  // std::cout << "POSE COMPOSE: " << std::endl; 
+  // std::cout << "pose a: \n" << a.pose << std::endl; 
+  // // std::cout << "Ha: \n" << Ha << std::endl; 
+  // std::cout << "covar a: \n" << a.covariance_matrix << std::endl; 
+  // std::cout << "pose b: \n" << b.pose << std::endl; 
+  // // std::cout << "Hb: \n" << Hb << std::endl; 
+  // std::cout << "covar b: \n" << b.covariance_matrix << std::endl; 
 }
 
 void poseInverse(const graph_utils::PoseWithCovariance &a,
@@ -27,14 +37,27 @@ void poseInverse(const graph_utils::PoseWithCovariance &a,
 void poseBetween(const graph_utils::PoseWithCovariance &a,
                  const graph_utils::PoseWithCovariance &b,
                  graph_utils::PoseWithCovariance &out){
-    gtsam::Matrix Ha, Hb;
-    out.pose = a.pose.between(b.pose, Ha, Hb); // returns between in a frame 
-    out.covariance_matrix = Hb * b.covariance_matrix * Hb.transpose() -
-                            Ha * a.covariance_matrix * Ha.transpose();
-    // but could be negative if one pose came first 
-    if (out.covariance_matrix(0,0) < 0) {
-      out.covariance_matrix = -out.covariance_matrix;
-    }
+  gtsam::Matrix Ha, Hb;
+  out.pose = a.pose.between(b.pose, Ha, Hb); // returns between in a frame 
+  // out.covariance_matrix = Ha * a.covariance_matrix * Ha.transpose() +
+  //       Hb * b.covariance_matrix * Hb.transpose();
+  gtsam::Matrix tau2 = out.pose.AdjointMap();
+
+  out.covariance_matrix = b.covariance_matrix - tau2 * a.covariance_matrix * tau2.transpose();
+
+  // std::cout << "POSE BETWEEN: " << std::endl; 
+  // std::cout << "pose a: \n" << a.pose << std::endl; 
+  // std::cout << "covar a: \n" << a.covariance_matrix << std::endl; 
+  // std::cout << "pose b: \n" << b.pose << std::endl; 
+  // std::cout << "covar b: \n" << b.covariance_matrix << std::endl;
+  // std::cout << "pose out: \n" << out.pose << std::endl; 
+  // std::cout << "covar out: \n" << out.covariance_matrix << std::endl; 
+
+  if (out.covariance_matrix(0,0) < 0) {
+    poseBetween(b, a, out);
+    out.pose = out.pose.inverse();
+  }
+
 }
 
 Trajectory buildTrajectory(const Transforms& transforms) {
